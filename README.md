@@ -2,6 +2,63 @@
 
 Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-trained language models to solve various problems by exploring multiple reasoning paths. It's designed to be plug-and-play, allowing users to easily connect their models and use the Tree of Thoughts method.
 
+## Getting started
+Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts````
+
+Navigate to the repository folder: ``` cd tree-of-thoughts````
+
+```pip install openai transformers```
+
+Create a Python script (e.g., example.py) and import the necessary classes:
+
+``` 
+from tree_of_thoughts import AbstractLanguageModel, TreeOfThoughts
+import openai
+
+# Replace 'your_api_key' with your actual OpenAI API key
+api_key = 'your_api_key'
+
+class OpenAILanguageModel(AbstractLanguageModel):
+    def __init__(self):
+        openai.api_key = api_key
+
+    def generate_thoughts(self, state, k):
+        # Implement thought generation logic using OpenAI's API
+        pass
+
+    def evaluate_states(self, states):
+        # Implement state evaluation logic using OpenAI's API
+        pass
+
+# Create an instance of the OpenAILanguageModel
+openai_model = OpenAILanguageModel()
+
+# Choose a search algorithm: 'BFS' or 'DFS'
+search_algorithm = 'BFS'
+
+# Create an instance of the TreeOfThoughts class
+tree_of_thoughts = TreeOfThoughts(openai_model, search_algorithm)
+
+# Define your input problem and other required parameters
+input_problem = "your_input_problem"
+k = 5
+T = 3
+b = 5
+vth = 0.5
+
+# Call the solve method with the input problem and other required parameters
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+
+# Print the solution
+print(solution)
+```
+
+Replace the pass statements in the generate_thoughts and evaluate_states methods with the appropriate API calls and logic for your specific problem.
+
+Run the example script:
+
+``` python example.py```
+
 🌟 Features:
 - General problem-solving framework for language models
 - Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
@@ -20,6 +77,50 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-t
 4. Choose a search algorithm (BFS or DFS) based on the tree structure.
 5. Implement the chosen search algorithm.
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
+
+## Code v1
+```
+class TreeofThoughts:
+    
+    def __init__(self, model, thought_decomposition, thought_generator, state_evaluator, search_algorithm):
+        self.model = model
+        self.thought_decomposition = thought_decomposition
+        self.thought_generator = thought_generator
+        self.state_evaluator = state_evaluator
+        self.search_algorithm = search_algorithm
+
+    def solve(self, x, k, T, b, vth):
+        if self.search_algorithm == 'BFS':
+            return self.tot_bfs(x, k, T, b)
+        elif self.search_algorithm == 'DFS':
+            return self.tot_dfs(x, k, T, vth)
+        else:
+            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+
+    def tot_bfs(self, x, k, T, b):
+        S0 = {x}
+        for t in range(1, T + 1):
+            S0_t = {(*s, z) for s in S0 for z in self.thought_generator(self.model, s, k)}
+            Vt = self.state_evaluator(self.model, S0_t)
+            St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
+            S0 = set(St)
+        return self.thought_generator(self.model, max(St, key=lambda s: Vt[s]), 1)
+
+    def tot_dfs(self, x, k, T, vth):
+        output = []
+
+        def dfs(s, t):
+            if t > T:
+                output.append(self.thought_generator(self.model, s, 1))
+                return
+            for s_prime in sorted(self.thought_generator(self.model, s, k)):
+                if self.state_evaluator(self.model, {s_prime})[s_prime] > vth:
+                    dfs((*s, s_prime), t + 1)
+
+        dfs(x, 1)
+        return output
+```
+
 
 ## Usage Examples
 
