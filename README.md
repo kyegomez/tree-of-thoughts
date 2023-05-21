@@ -20,7 +20,7 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 
 Create a Python script (e.g., example.py) and import the necessary classes:
 
-``` 
+``` python
 from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
 #v1
@@ -59,7 +59,8 @@ print(solution)
 
 Or Integrate your own custom language model:
 
-``` 
+```python
+
 class CustomLanguageModel(AbstractLanguageModel):
     def __init__(self, model):
         self.model = model
@@ -97,7 +98,7 @@ Run the example script
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
 
 ## Tree of Thoughts Class
-```
+``` python
 class TreeofThoughts:
     
     def __init__(self, model, search_algorithm):
