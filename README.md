@@ -9,7 +9,7 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-t
 # Join Agora, Creators United
 This implementation of Tree of Thoughts is brought to you by Agora, Agora is advancing Humanity with open source SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root problems like food insecurity, planetary insecurity, and disease, and hopefully death itself.
 
-[Join our Discord](https://discord.gg/qUtxnK2NMf)
+[Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
 
 ## Getting started
 Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
@@ -141,6 +141,11 @@ To use Tree of Thoughts with OpenAI's API, create a custom model class that inhe
 
 To use Tree of Thoughts with Hugging Face Transformers, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using Hugging Face Transformers. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
 
+
+# Contributing
+This algorithm is still infant yet it's potential remains unimaginable, let's advance the reasoning of AI's together under this banner.
+
+
 ## Roadmap
 
 Provide ready to use generate thoughts function -- done
@@ -150,7 +155,19 @@ Provide ready to use evaluate states function -- done
 now
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
 
-Introduce a reinforcement learning approach to fine-tune the model based on feedback from the Tree of Thoughts algorithm.
+
+Introduce a reinforcement learning, distillment, and finetuning scripts to finely tune the model based on feedback from the Tree of Thoughts algorithm.
+
+Integrate heuristics that autonomously determine the search algorithm based on indicators
+
+Integrate heuristics that autonomously determine the strategy cos or propose
+
+Integrate heuristics that autonomously set the input params:
+
+k = 
+T = 
+b = 
+vth = 
 
 
 
