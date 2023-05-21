@@ -38,11 +38,25 @@ solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 print(solution)
 ```
 
-Replace the pass statements in the generate_thoughts and evaluate_states methods with the appropriate API calls and logic for your specific problem.
+Or Integrate your own custom language model:
 
-Run the example script:
+``` 
+class CustomLanguageModel(AbstractLanguageModel):
+    def __init__(self, model):
+        self.model = model
 
-``` python example.py```
+    def generate_thoughts(self, state, k):
+        #implement the thought generation logic using self.model
+        pass
+
+    def evaluate_states(self, states):
+        #implement state evaluation logic using self.model
+        pass
+
+```
+
+
+Run the example script
 
 🌟 Features:
 - General problem-solving framework for language models
