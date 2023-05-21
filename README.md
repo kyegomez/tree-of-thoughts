@@ -63,7 +63,7 @@ class CustomLanguageModel(AbstractLanguageModel):
 
 Run the example script
 
-🌟 Features:
+## 🌟 Features:
 - General problem-solving framework for language models
 - Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
 - Easy integration with popular language models like OpenAI and Hugging Face
