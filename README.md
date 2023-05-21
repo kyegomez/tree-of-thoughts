@@ -12,6 +12,8 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` 
+from treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts
+
 model = OpenAILanguageModel('api key')
 
 class TreeofThoughts:
