@@ -29,7 +29,7 @@ model = OpenAILanguageModel('api key')
 #v2 parallel execution, caching, adaptive temperature
 model = OptimizedOpenAILanguageModel('api key')
 
-#choose search algorithm('bfs or 'dfs)
+#choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
 
 #cot or propose
