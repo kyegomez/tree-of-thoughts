@@ -1,5 +1,7 @@
 # Tree of Thoughts 🌳🌲🌴🌿🍃
 
+![tree of thoughts banner](tree-of-thoughts.jpeg)
+
 Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-trained language models to solve various problems by exploring multiple reasoning paths. It's designed to be plug-and-play, allowing users to easily connect their models and use the Tree of Thoughts method.
 
 ## Getting started
