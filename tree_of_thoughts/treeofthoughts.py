@@ -162,7 +162,10 @@ class TreeofThoughts:
             Vt = self.model.evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
-        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+        thoughts = self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+        print(thoughts)
+        return thoughts
+    
 
     def tot_dfs(self, x, k, T, vth):
         output = []
@@ -176,6 +179,7 @@ class TreeofThoughts:
                     dfs((*s, s_prime), t + 1)
 
         dfs(x, 1)
+        print(output)
         return output
     
 
