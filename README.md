@@ -169,3 +169,9 @@ The next big advancement for the Tree of Thoughts algorithm is to extend it to m
 6. Publish the results and gather feedback from the community to further improve the multi-modal Tree of Thoughts algorithm.
 
 Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
+
+
+# Join Agora, Creators United
+Agora is an community of AI researchers devoted to advancing Humanity with SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root obstacles like food insecurity, planetary insecurity, and disease, and hopefully death itself.
+
+[Join our Discord](https://discord.gg/qUtxnK2NMf)
