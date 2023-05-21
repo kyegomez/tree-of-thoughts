@@ -137,6 +137,12 @@ Provide ready to use generate thoughts function
 
 Provide ready to use evaluate states function
 
+multi-modality tree of thoughts
+
+multi-modality forest of thoughts
+
+multi-modality world of thoughts
+
 
 
 ### Multi-Modality Tree of Thoughts 🌐🌳
