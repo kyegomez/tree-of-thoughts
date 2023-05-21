@@ -172,6 +172,6 @@ Join us on this exciting journey to advance the Tree of Thoughts algorithm to mu
 
 
 # Join Agora, Creators United
-Agora is an community of AI researchers devoted to advancing Humanity with SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root obstacles like food insecurity, planetary insecurity, and disease, and hopefully death itself.
+Agora is advancing Humanity with open source SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root obstacles like food insecurity, planetary insecurity, and disease, and hopefully death itself.
 
 [Join our Discord](https://discord.gg/qUtxnK2NMf)
