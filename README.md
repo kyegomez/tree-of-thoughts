@@ -16,7 +16,7 @@ Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thou
 
 Navigate to the repository folder: ``` cd tree-of-thoughts```
 
-```pip install openai transformers```
+```pip install openai```
 
 Create a Python script (e.g., example.py) and import the necessary classes:
 
