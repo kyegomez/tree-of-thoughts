@@ -24,15 +24,82 @@ class CustomLanguageModel(AbstractLanguageModel):
         pass
 
 class OpenAILanguageModel(AbstractLanguageModel):
-    def __init__(self, api_key):
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value"):
         openai.api_key = api_key
+        self.strategy = strategy
+        self.evaluation_strategy = evaluation_strategy
 
     def generate_thoughts(self, state, k):
-        #implement logic
-        pass
+        """
+        In this example, the generate_thoughts function takes the current state and the number of thoughts to generate (k) as input. It uses the OpenAI API to generate thoughts based on the chosen strategy ('cot' or 'propose'). The function returns a list of generated thoughts.
+        """
+        state_text = ''.join(state)
+
+        if self.strategy == "cot":
+            prompt = f"{state_text} [CoT]"
+            response = openai.Completion.create(
+                engine="davinci-codex",
+                prompt=prompt,
+                n=k,
+                max_tokens=50,
+                stop=None,
+                temperature=0.5,
+            )
+            thought = [choice.text.strip() for choice in response.choices]
+
+        elif self.strategy == 'propose':
+            prompt = "f{state_text} [Propose {k} thoughts]"
+            response = openai.Completion.create(
+                engine="davinci-codex",
+                prompt=prompt,
+                n=1,
+                max_tokens=50 * k,
+                stop=None,
+                temperature=0.5,
+            )
+            thoughts = response.choices[0].text.strip().split('\n')[:k]
+
+        else:
+            raise ValueError("Invalid strategy. Choose 'cot' or 'propose'")
+        
+        return thoughts
+    
 
     def evaluate_states(self, states):
-        pass
+        if self.evaluation_strategy == 'value':
+            state_values = {}
+            for state in states:
+                state_text = ' '.join(state)
+                prompt = f"{state_text} [Value]"
+                response = openai.Completion.create(
+                    engine="davinci-codex",
+                    prompt=prompt,
+                    n=1,
+                    max_tokens=10,
+                    stop=None,
+                    temperature=0.5,
+                )
+                value = float(response.choices[0].text.strip())
+                state_values[state] = value
+            return state_values
+
+        elif self.evaluation_strategy == 'vote':
+            states_text = '\n'.join([' '.join(state) for state in states])
+            prompt = f"Vote for the best state:\n{states_text}\n[Vote]"
+            response = openai.Completion.create(
+                engine="davinci-codex",
+                prompt=prompt,
+                n=1,
+                max_tokens=50,
+                stop=None,
+                temperature=0.5,
+            )
+            best_state_text = response.choices[0].text.strip()
+            best_state = tuple(best_state_text.split())
+            return {state: 1 if state == best_state else 0 for state in states}
+
+        else:
+            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
 
 class TreeofThoughts:
