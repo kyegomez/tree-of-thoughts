@@ -80,15 +80,12 @@ Run the example script
 5. Implement the chosen search algorithm.
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
 
-## Code v1
+## Tree of Thoughts Class
 ```
 class TreeofThoughts:
     
-    def __init__(self, model, thought_decomposition, thought_generator, state_evaluator, search_algorithm):
+    def __init__(self, model, search_algorithm):
         self.model = model
-        self.thought_decomposition = thought_decomposition
-        self.thought_generator = thought_generator
-        self.state_evaluator = state_evaluator
         self.search_algorithm = search_algorithm
 
     def solve(self, x, k, T, b, vth):
@@ -102,25 +99,26 @@ class TreeofThoughts:
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
         for t in range(1, T + 1):
-            S0_t = {(*s, z) for s in S0 for z in self.thought_generator(self.model, s, k)}
-            Vt = self.state_evaluator(self.model, S0_t)
+            S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
+            Vt = self.model.evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
-        return self.thought_generator(self.model, max(St, key=lambda s: Vt[s]), 1)
+        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
     def tot_dfs(self, x, k, T, vth):
         output = []
 
         def dfs(s, t):
             if t > T:
-                output.append(self.thought_generator(self.model, s, 1))
+                output.append(self.model.generate_thoughts(s, 1))
                 return
-            for s_prime in sorted(self.thought_generator(self.model, s, k)):
-                if self.state_evaluator(self.model, {s_prime})[s_prime] > vth:
+            for s_prime in sorted(self.model.generate_thoughts(s, k)):
+                if self.model.evaluate_states({s_prime})[s_prime] > vth:
                     dfs((*s, s_prime), t + 1)
 
         dfs(x, 1)
         return output
+    
 ```
 
 
