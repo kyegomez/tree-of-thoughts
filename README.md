@@ -17,6 +17,7 @@ from treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoug
 model = OpenAILanguageModel('api key')
 
 class TreeofThoughts:
+
 ...
 
 #choose search algorithm('bfs or 'dfs)
