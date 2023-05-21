@@ -177,3 +177,10 @@ The next big advancement for the Tree of Thoughts algorithm is to extend it to m
 
 Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
 
+
+
+# Acknowledgements
+
+Thanks to: Shunyu Yao Princeton University, Dian Yu Google DeepMind, Jeffrey Zhao, Google DeepMind, Izhak Shafran Google DeepMind, Thomas L. Griffiths, Princeton University, Yuan Cao Google DeepMind, Karthik Narasimha, Princeton University for sharing this amazing work with the world!
+
+And, thanks to Phil Wang or Lucidrains for inspiring me to devote myself to open source AI Research
