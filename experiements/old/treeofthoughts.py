@@ -1,7 +1,5 @@
-
 from abc import ABC, abstractmethod
 import openai
-
 
 class AbstractLanguageModel(ABC):
     @abstractmethod
@@ -11,6 +9,7 @@ class AbstractLanguageModel(ABC):
     @abstractmethod
     def evaluate_states(self, states):
         pass
+
 
 class CustomLanguageModel(AbstractLanguageModel):
     def __init__(self, model):
@@ -33,11 +32,10 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        # Optimization 2: More sophisticated prompt engineering
         if self.strategy == 'cot':
-            prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to continue the reasoning process:"
+            prompt = f"{state_text} [CoT]"
             response = openai.Completion.create(
-                engine="text-davinci-003",  # 
+                engine="text-davinci-003",
                 prompt=prompt,
                 n=k,
                 max_tokens=50,
@@ -48,9 +46,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
             print(thoughts)
         
         elif self.strategy == 'propose':
-            prompt = f"Given the current state of reasoning: '{state_text}', propose {k} coherent thoughts to continue the reasoning process:"
+            prompt = f"{state_text} [Propose {k} thoughts]"
             response = openai.Completion.create(
-                engine="text-davinci-003",  
+                engine="text-davinci-003",
                 prompt=prompt,
                 n=1,
                 max_tokens=50 * k,
@@ -65,14 +63,16 @@ class OpenAILanguageModel(AbstractLanguageModel):
         
         return thoughts
 
+
+
     def evaluate_states(self, states):
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1:"
+                prompt = f"{state_text} [Value]"
                 response = openai.Completion.create(
-                    engine="text-davinci-003",  
+                    engine="text-davinci-003",
                     prompt=prompt,
                     n=1,
                     max_tokens=10,
@@ -90,9 +90,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote:"
+            prompt = f"Vote for the best state:\n{states_text}\n[Vote]"
             response = openai.Completion.create(
-                engine="text-davinci-003",  
+                engine="text-davinci-003",
                 prompt=prompt,
                 n=1,
                 max_tokens=50,
@@ -107,7 +107,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
-model = OpenAILanguageModel('key')
+model = OpenAILanguageModel('')
 
 class TreeofThoughts:
     """
@@ -139,8 +139,10 @@ class TreeofThoughts:
             with s and t + 1
 
     execute the chosen search algo with the input problem, thought generator, and state evaluator, and other required params
-    """
 
+
+    """
+    
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
@@ -160,7 +162,10 @@ class TreeofThoughts:
             Vt = self.model.evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
-        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+        thoughts = self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+        print(thoughts)
+        return thoughts
+    
 
     def tot_dfs(self, x, k, T, vth):
         output = []
@@ -174,25 +179,33 @@ class TreeofThoughts:
                     dfs((*s, s_prime), t + 1)
 
         dfs(x, 1)
+        print(output)
         return output
+    
+
+
 
 # usage
 
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
+
+#cot or propose
 strategy="cot"
+
+# value or vote
 evaluation_strategy = "value"
 
 #create an instance of the tree of thoughts class
 tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
-input_problem = "What are next generation reasoning methods to advance the reasoning of large multi-modality models"
+input_problem = "What is 2 + 2"
 k = 5
 T = 3
 b = 5
 vth = 0.5
 
-#call the solve method with the input problem and other params
+#call the solve method with the inpit problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
 #use the solution in your production environment

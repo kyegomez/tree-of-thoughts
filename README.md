@@ -6,6 +6,11 @@
 
 Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-trained language models to solve various problems by exploring multiple reasoning paths. It's designed to be plug-and-play, allowing users to easily connect their models and use the Tree of Thoughts method.
 
+# Join Agora, Creators United
+Tree of Thoughts is brought to you by Agora, Agora is advancing Humanity with open source SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root problems like food insecurity, planetary insecurity, and disease, and hopefully death itself.
+
+[Join our Discord](https://discord.gg/qUtxnK2NMf)
+
 ## Getting started
 Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
 
@@ -172,8 +177,3 @@ The next big advancement for the Tree of Thoughts algorithm is to extend it to m
 
 Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
 
-
-# Join Agora, Creators United
-Agora is advancing Humanity with open source SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root obstacles like food insecurity, planetary insecurity, and disease, and hopefully death itself.
-
-[Join our Discord](https://discord.gg/qUtxnK2NMf)
