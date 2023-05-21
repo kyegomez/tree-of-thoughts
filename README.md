@@ -140,6 +140,13 @@ Provide ready to use generate thoughts function
 
 Provide ready to use evaluate states function
 
+now
+Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
+
+Introduce a reinforcement learning approach to fine-tune the model based on feedback from the Tree of Thoughts algorithm.
+
+
+
 multi-modality tree of thoughts
 
 multi-modality forest of thoughts
