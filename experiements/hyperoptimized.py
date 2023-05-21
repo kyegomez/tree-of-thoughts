@@ -108,6 +108,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
+#hhyer potimized
 class OptimizedOpenAILanguageModel(OpenAILanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True):
         super().__init__(api_key, strategy, evaluation_strategy)
