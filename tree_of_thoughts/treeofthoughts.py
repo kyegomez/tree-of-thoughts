@@ -211,7 +211,7 @@ strategy = "cot"
 evaluation_strategy="value"
 
 #create instance
-model = OptimizedOpenAILanguageModel('nope')
+model = OptimizedOpenAILanguageModel('api-key')
 
 tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 

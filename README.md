@@ -21,9 +21,13 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` 
-from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts
+from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
+#v1
 model = OpenAILanguageModel('api key')
+
+#v2 parallel execution, caching, adaptive temperature
+model = OptimizedOpenAILanguageModel('api key')
 
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
@@ -34,8 +38,11 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-#create an instance of the tree of thoughts class
-tree_of_thoughts= TreeofThoughts(model, search_algorithm)
+#create an instance of the tree of thoughts class v1
+tree_of_thoughts = TreeofThoughts(model, search algorithm)
+
+#or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
+tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "What are next generation reasoning methods for Large Language Models"
 k = 5
