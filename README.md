@@ -5,7 +5,7 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-t
 ## Getting started
 Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
 
-Navigate to the repository folder: ``` cd tree-of-thoughts````
+Navigate to the repository folder: ``` cd tree-of-thoughts```
 
 ```pip install openai transformers```
 
