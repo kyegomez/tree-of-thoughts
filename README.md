@@ -18,10 +18,6 @@ from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofTho
 
 model = OpenAILanguageModel('api key')
 
-class TreeofThoughts:
-
-...
-
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
 strategy="cot"
