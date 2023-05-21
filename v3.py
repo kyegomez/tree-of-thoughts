@@ -107,7 +107,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
-model = OpenAILanguageModel('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')
+model = OpenAILanguageModel('')
 
 class TreeofThoughts:
     """
