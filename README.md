@@ -12,44 +12,29 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` 
-from tree_of_thoughts import AbstractLanguageModel, TreeOfThoughts
-import openai
+model = OpenAILanguageModel('api key')
 
-# Replace 'your_api_key' with your actual OpenAI API key
-api_key = 'your_api_key'
+class TreeofThoughts:
+...
 
-class OpenAILanguageModel(AbstractLanguageModel):
-    def __init__(self):
-        openai.api_key = api_key
+#choose search algorithm('bfs or 'dfs)
+search_algorithm = "BFS"
+strategy="cot"
+evaluation_strategy = "value"
 
-    def generate_thoughts(self, state, k):
-        # Implement thought generation logic using OpenAI's API
-        pass
+#create an instance of the tree of thoughts class
+tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
-    def evaluate_states(self, states):
-        # Implement state evaluation logic using OpenAI's API
-        pass
-
-# Create an instance of the OpenAILanguageModel
-openai_model = OpenAILanguageModel()
-
-# Choose a search algorithm: 'BFS' or 'DFS'
-search_algorithm = 'BFS'
-
-# Create an instance of the TreeOfThoughts class
-tree_of_thoughts = TreeOfThoughts(openai_model, search_algorithm)
-
-# Define your input problem and other required parameters
-input_problem = "your_input_problem"
+input_problem = "What is 2 + 2"
 k = 5
 T = 3
 b = 5
 vth = 0.5
 
-# Call the solve method with the input problem and other required parameters
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+#call the solve method with the inpit problem and other params
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
-# Print the solution
+#use the solution in your production environment
 print(solution)
 ```
 
