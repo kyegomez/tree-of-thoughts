@@ -33,6 +33,12 @@ To use Tree of Thoughts with Hugging Face Transformers, create a custom model cl
 
 ## Roadmap
 
+Provide ready to use generate thoughts function
+
+Provide ready to use evaluate states function
+
+
+
 ### Multi-Modality Tree of Thoughts 🌐🌳
 
 The next big advancement for the Tree of Thoughts algorithm is to extend it to multi-modality, enabling it to handle not only text but also images, audio, and other data types. This will bring us closer to multi-modal superintelligence.
