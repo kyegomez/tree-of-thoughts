@@ -37,7 +37,7 @@ evaluation_strategy = "value"
 #create an instance of the tree of thoughts class
 tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
-input_problem = "What is 2 + 2"
+input_problem = "What are next generation reasoning methods for Large Language Models"
 k = 5
 T = 3
 b = 5
