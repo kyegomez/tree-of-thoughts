@@ -136,9 +136,9 @@ To use Tree of Thoughts with Hugging Face Transformers, create a custom model cl
 
 ## Roadmap
 
-Provide ready to use generate thoughts function
+Provide ready to use generate thoughts function -- done
 
-Provide ready to use evaluate states function
+Provide ready to use evaluate states function -- done
 
 now
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
