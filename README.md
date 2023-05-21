@@ -20,7 +20,11 @@ model = OpenAILanguageModel('api key')
 
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
+
+#cot or propose
 strategy="cot"
+
+# value or vote
 evaluation_strategy = "value"
 
 #create an instance of the tree of thoughts class
@@ -32,7 +36,7 @@ T = 3
 b = 5
 vth = 0.5
 
-#call the solve method with the input problem and other params
+#call the solve method with the inpit problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
 #use the solution in your production environment
