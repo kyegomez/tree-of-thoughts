@@ -36,7 +36,7 @@ T = 3
 b = 5
 vth = 0.5
 
-#call the solve method with the inpit problem and other params
+#call the solve method with the input problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
 #use the solution in your production environment

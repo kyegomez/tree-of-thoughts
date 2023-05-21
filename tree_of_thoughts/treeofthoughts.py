@@ -189,7 +189,11 @@ class TreeofThoughts:
 
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
+
+#cot or propose
 strategy="cot"
+
+# value or vote
 evaluation_strategy = "value"
 
 #create an instance of the tree of thoughts class
