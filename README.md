@@ -153,6 +153,21 @@ To use Tree of Thoughts with Hugging Face Transformers, create a custom model cl
 # Contributing
 This algorithm is still infant yet it's potential remains unimaginable, let's advance the reasoning of AI's together under this banner.
 
+# Share With Your Network
+
+We are excited about the potential of the Tree of Thoughts project and we hope you are too! If you like this project, we'd greatly appreciate it if you could share it with your friends, colleagues, and social network. Every share helps us reach more people, get more feedback, and continue improving the project.
+
+You can easily share this repository by clicking on the following buttons:
+
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
+[![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
+
+For Instagram, while it doesn't directly support sharing of web links, you can share the screenshot of our project and the link in your caption or bio. You can download the project screenshot by clicking the image below:
+
+[![Tree of Thoughts](https://github.com/kyegomez/tree-of-thoughts/raw/main/tree-of-thoughts.jpeg)](https://github.com/kyegomez/tree-of-thoughts/raw/main/tree-of-thoughts.jpeg)
+
+We greatly appreciate any help in spreading the word about our project. Thank you for your support!
+
 
 ## Roadmap
 
