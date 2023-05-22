@@ -27,7 +27,7 @@ else:
     #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
     tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
-input_problem = "What are next generation reasoning methods for Large Language Models"
+input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 k = 5
 T = 3
 b = 5
