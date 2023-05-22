@@ -260,7 +260,7 @@ vth = 0.5
 #call the solve method with the input problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
 
-#use the solution in env
+#use the solution in yes
 print(f"solution: {solution}")
 
 """
