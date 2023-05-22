@@ -1,4 +1,4 @@
-from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
 use_v2 = False
 api_key=""
@@ -6,10 +6,10 @@ api_base= "" # leave it blank if you simply use default openai api url
 
 if not use_v2:
     #v1
-    model = OpenAILanguageModel(api_key, api_base=api_base)
+    model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
 else:
     #v2 parallel execution, caching, adaptive temperature
-    model = OptimizedOpenAILanguageModel(api_key, api_base=api_base)
+    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
