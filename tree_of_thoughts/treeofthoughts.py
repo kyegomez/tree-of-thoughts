@@ -61,29 +61,35 @@ class OpenAILanguageModel(AbstractLanguageModel):
         self.evaluation_strategy = evaluation_strategy
 
     def openai_api_call_handler(self, prompt, max_tokens, temperature, k=1, stop=None):
-        if self.use_chat_api:
-            message = [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-            response = openai.ChatCompletion.create(
-                model=self.api_model,
-                messages=message,
-                max_tokens=max_tokens,
-                temperature=temperature,
-            )
-        else:
-            response = openai.Completion.create(
-                engine=self.api_model,
-                prompt=prompt,
-                n=k,
-                max_tokens=max_tokens,
-                stop=stop,
-                temperature=temperature,
-            )
-        return response
+        while True:
+            try:
+                if self.use_chat_api:
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ]
+                    response = openai.ChatCompletion.create(
+                        model=self.api_model,
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature,
+                    )
+                else:
+                    response = openai.Completion.create(
+                        engine=self.api_model,
+                        prompt=prompt,
+                        n=k,
+                        max_tokens=max_tokens,
+                        stop=stop,
+                        temperature=temperature,
+                    )
+                return response
+            except openai.error.RateLimitError as e:
+                sleep_duratoin = os.environ.get("OPENAI_RATE_TIMEOUT", 30)
+                print(f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
+                time.sleep(sleep_duratoin)
 
     def openai_choice2text_handler(self, choice):
         if self.use_chat_api:
@@ -95,7 +101,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to continue the reasoning process:"
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to continue the reasoning process:"
         prompt += self.ReAct_prompt
         if self.use_chat_api:
             new_prompt_success = False
@@ -112,14 +118,15 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     new_prompt_success = len(thoughts) == k 
                     if not new_prompt_success:
                         print(f"Fall back to multi-prompt for chat-completion due to parse fail {text}")
-            """
 
+            """
             if not new_prompt_success:
                 thoughts = []
                 for _ in range(k):
-                    response = self.openai_api_call_handler(prompt, 100, 0.5, 1)
+                    response = self.openai_api_call_handler(prompt, 50, 0.5, k)
                     text = self.openai_choice2text_handler(response.choices[0])
                     thoughts += [text]
+            
         else:
             response = self.openai_api_call_handler(prompt, 50, 0.5, k)
             thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
