@@ -176,7 +176,7 @@ class TreeofThoughts:
             S0 = set(St)
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
-    def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
