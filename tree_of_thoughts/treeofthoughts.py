@@ -1,6 +1,7 @@
 import concurrent.futures
 from abc import ABC, abstractmethod
 import openai
+import os
 
 class AbstractLanguageModel(ABC):
     @abstractmethod
@@ -24,8 +25,29 @@ class CustomLanguageModel(AbstractLanguageModel):
         #implement state evaluation logic using self.model
         pass
 class OpenAILanguageModel(AbstractLanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value"):
-        openai.api_key = api_key
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model=""):
+        if api_key == "" or api_key == None:
+            api_key = os.environ.get("OPENAI_API_KEY", "")
+        if api_key != "":
+            openai.api_key = api_key
+        else:
+            raise Exception("Please provide OpenAI API key")
+
+        if api_base == ""or api_base == None:
+            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.
+        if api_base != "":
+            # e.g. https://api.openai.com/v1/ or your custom url
+            openai.api_base = api_base
+            print(f'Using custom api_base {self.api_base}')
+            
+        if api_model == "" or api_model == None:
+            api_model = os.environ.get("OPENAI_API_MODEL", "")
+        if api_model != "":
+            self.api_model = api_model
+        else:
+            self.api_model = "text-davinci-003"
+        print(f'Using api_model {self.api_model}')
+        
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
 
@@ -34,7 +56,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         
         prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to continue the reasoning process:"
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine=self.api_model,
             prompt=prompt,
             n=k,
             max_tokens=50,
@@ -90,8 +112,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
 class OptimizedOpenAILanguageModel(OpenAILanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True):
-        super().__init__(api_key, strategy, evaluation_strategy)
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True, api_base="", api_model=""):
+        super().__init__(api_key, strategy, evaluation_strategy, api_base, api_model)
         self.cache_enabled = cache_enabled
         self.thought_cache = {}
         self.state_evaluation_cache = {}
