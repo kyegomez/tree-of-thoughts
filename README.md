@@ -164,6 +164,9 @@ now
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
 
 
+Script that generates an dataset based on a topic input, -> set of questions are asked, then multiple trees of thoughts are run concurrently to generate the decision making rich dataset
+
+
 Introduce a reinforcement learning, distillment, and finetuning scripts to finely tune the model based on feedback from the Tree of Thoughts algorithm.
 
 Integrate heuristics that autonomously determine the search algorithm based on indicators
