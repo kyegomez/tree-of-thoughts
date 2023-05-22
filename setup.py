@@ -17,7 +17,8 @@ setup(
     "Prompt Engineering"
   ],
   install_requires=[
-    'torch>=1.6'
+    'torch>=1.6',
+    'openai'
   ],
   classifiers=[
     'Development Status :: 4 - Beta',
