@@ -111,10 +111,6 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
         return state_values
     
 
-# model = OptimizedOpenAILanguageModel('your_openai_api_key_here')
-# model = OptimizedOpenAILanguageModel('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')
-
-#update tree of thoughts to use optimized models mehtods
 
 class TreeofThoughts:
     """
@@ -219,7 +215,7 @@ class TreeofThoughts:
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k, T, b, vth, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def solve(self, x, k, T, b, vth, timeout=None, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
@@ -239,26 +235,30 @@ strategy = "cot"
 evaluation_strategy="vote"
 
 #create instance
-model = OptimizedOpenAILanguageModel('api-key')
+model = OptimizedOpenAILanguageModel('api key')
 
 
 tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
-input_problem = "What is 3032 * 322 - 1"
+
+input_problem = "What are next generation reasoning methods for Large Language Models"
 k = 5
 T = 3
 b = 5
 vth = 0.5
-timeout = 10
 
-# Optimal nominal values for the stopping conditions
-confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
-max_iterations = 5 # MAX ITERATIONS 10
-convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
-convergence_count = 5
+# # Optimal nominal values for the stopping conditions
+
+# confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
+
+# max_iterations = 5 # MAX ITERATIONS 10
+
+# convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
+
+# convergence_count = 5
 
 #call the solve method with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth=vth, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
 
 #use the solution in env
 print(f"solution: {solution}")
