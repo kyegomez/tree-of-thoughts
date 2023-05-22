@@ -244,7 +244,7 @@ model = OptimizedOpenAILanguageModel('api-key')
 
 tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
-input_problem = "What is 3032 * 322"
+input_problem = "What is 3032 * 322 - 1"
 k = 5
 T = 3
 b = 5
