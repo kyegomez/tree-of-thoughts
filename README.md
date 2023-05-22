@@ -55,11 +55,23 @@ T = 3
 b = 5
 vth = 0.5
 
-#call the solve method with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
+# # Optimal nominal values for the stopping conditions
 
-#use the solution in your production environment
-print(solution)
+# confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
+
+# max_iterations = 5 # MAX ITERATIONS 10
+
+# convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
+
+# convergence_count = 5
+
+#call the solve method with the input problem and other params
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+
+#use the solution in env
+print(f"solution: {solution}")
+
+
 ```
 
 Or Integrate your own custom language model:
