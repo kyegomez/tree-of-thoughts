@@ -42,7 +42,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
             temperature=0.5,
         )
         thoughts = [choice.text.strip() for choice in response.choices]
-        print(thoughts)
+        # print(thoughts)
+        print(f"Generated thoughts: {thoughts}")
         return thoughts
 
     def evaluate_states(self, states):
@@ -60,9 +61,10 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     temperature=0.5,
                 )
                 try:
-                    print(response.choices[0].text.strip())
+                    value_text = response.choices[0].text.strip()
+                    print(f"Value text {value_text}")
                     value = float(response.choices[0].text.strip())
-                    print(value)
+                    print(f"value: {value}")
                 except ValueError:
                     value = 0  # Assign a default value if the conversion fails
                 state_values[state] = value
@@ -80,7 +82,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 temperature=0.5,
             )
             best_state_text = response.choices[0].text.strip()
-            print(best_state_text)
+            print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
             return {state: 1 if state == best_state else 0 for state in states}
 
@@ -97,13 +99,13 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
     def parallel_generate_thoughts(self, states, k):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             thoughts = list(executor.map(lambda state: self.generate_thoughts(state, k), states))
-            print(thoughts)
+            print(f"Parallel generated thoughts: {thoughts}")
         return thoughts
 
     def parallel_evaluate_states(self, states):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             state_values = list(executor.map(self.evaluate_states, states))
-            print(state_values)
+            print(f"Parallel evaluated state values: {state_values}")
         return state_values
     
 

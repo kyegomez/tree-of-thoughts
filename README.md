@@ -183,6 +183,15 @@ Provide ready to use evaluate states function -- done
 now
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
 
+Make TreeofThoughts class completely customizable with a config yml file with params like
+chatbot:
+    type: "openai"
+    max_context_length: 8000
+    include_chat_history_in_query: false
+openai:
+    model: <model_name>
+    api_key: <your_open_ai_api_key>
+
 
 Script that generates an dataset based on a topic input, -> set of questions are asked, then multiple trees of thoughts are run concurrently to generate the decision making rich dataset
 
