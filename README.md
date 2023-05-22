@@ -14,6 +14,11 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 ## Getting started
 Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
 
+or:
+
+```pip install tree-of-thoughts ```
+
+
 Navigate to the repository folder: ``` cd tree-of-thoughts```
 
 ```pip install openai```
