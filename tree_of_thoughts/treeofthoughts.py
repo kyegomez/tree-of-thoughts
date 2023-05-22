@@ -26,7 +26,7 @@ class CustomLanguageModel(AbstractLanguageModel):
         #implement state evaluation logic using self.model
         pass
 class OpenAILanguageModel(AbstractLanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model=""):
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
         if api_key == "" or api_key == None:
             api_key = os.environ.get("OPENAI_API_KEY", "")
         if api_key != "":
@@ -35,7 +35,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
             raise Exception("Please provide OpenAI API key")
 
         if api_base == ""or api_base == None:
-            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.
+            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.com/v1"
         if api_base != "":
             # e.g. https://api.openai.com/v1/ or your custom url
             openai.api_base = api_base
@@ -48,6 +48,11 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             self.api_model = "text-davinci-003"
         print(f'Using api_model {self.api_model}')
+
+        # reference : https://www.promptingguide.ai/techniques/react
+        self.ReAct_prompt = ''
+        if enable_ReAct_prompting:
+            self.ReAct_prompt = "Write down your observations in format 'Observation : \\n xxxx \\n', then write down your thoughts in format 'Thoughts : \\n xxxx \\n'."
         
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
@@ -56,6 +61,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         state_text = ' '.join(state)
         
         prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to continue the reasoning process:"
+        prompt += self.ReAct_prompt
         response = openai.Completion.create(
             engine=self.api_model,
             prompt=prompt,
@@ -74,9 +80,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1:"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:"
                 response = openai.Completion.create(
-                    engine="text-davinci-003",
+                    engine=self.api_model,
                     prompt=prompt,
                     n=1,
                     max_tokens=10,
@@ -95,9 +101,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote:"
+            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, and NOTHING ELSE:"
             response = openai.Completion.create(
-                engine="text-davinci-003",
+                engine=self.api_model,
                 prompt=prompt,
                 n=1,
                 max_tokens=50,
@@ -113,8 +119,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
 class OptimizedOpenAILanguageModel(OpenAILanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True, api_base="", api_model=""):
-        super().__init__(api_key, strategy, evaluation_strategy, api_base, api_model)
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True, api_base="", api_model="", enable_ReAct_prompting=True):
+        super().__init__(api_key, strategy, evaluation_strategy, api_base, api_model, enable_ReAct_prompting)
         self.cache_enabled = cache_enabled
         self.thought_cache = {}
         self.state_evaluation_cache = {}
