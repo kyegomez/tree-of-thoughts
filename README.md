@@ -39,7 +39,7 @@ strategy="cot"
 evaluation_strategy = "value"
 
 #create an instance of the tree of thoughts class v1
-tree_of_thoughts = TreeofThoughts(model, search algorithm)
+tree_of_thoughts = TreeofThoughts(model, search_algorithm)
 
 #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
 tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
