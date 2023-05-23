@@ -248,6 +248,8 @@ Join us on this exciting journey to advance the Tree of Thoughts algorithm to mu
 
 # The Compiler
 
+[Utilizing Tree of Thoughts for optimal program synthesis](https://github.com/kyegomez/the-compiler)
+
 ![the compiler banner](https://github.com/kyegomez/the-compiler/raw/main/the-compiler.png)
 
 Welcome to _The Compiler_, a novel child project under the Tree of Thoughts (ToT) paradigm. This project is crafted with the intent of making autonomous programming not just a reality, but an effortless task for you. 
