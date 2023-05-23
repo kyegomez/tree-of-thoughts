@@ -232,9 +232,9 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
         
         try:
                 # Replace the prompt with a Guidance program
-            program = guidance(f"Given the current state of reasoning: '{state_text}', generate {{{k}}} coherent thoughts to continue the reasoning process:")
-            thoughts_text = program(state_text=state_text)
-            thoughts = thoughts_text.split('\n')
+            program = guidance(f"Given the current state of reasoning: '{{state_text}}', generate {{{k}}} coherent thoughts to continue the reasoning process:{{#each (gen 'thoughts' k=k)}}\n{{this}}{{/each}}")
+            thoughts_text = program(state_text=state_text, k=k)
+            thoughts = thoughts_text
             
             print(f"Generated thoughts: {thoughts}")
             return thoughts
@@ -255,7 +255,7 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
 
                 try:
                     #replace prompt with a guidnace program
-                    program = guidance(f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:")
+                    program = guidance(f"Given the current state of reasoning: '{{state_text}}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:{{select 'value' options=(gen 'value')}}")
                     value_text = str(program(state_text=state_text))
                     value = float(value_text)
                     print(f"Value {value}")
