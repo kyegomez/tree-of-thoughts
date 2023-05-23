@@ -192,11 +192,9 @@ We greatly appreciate any help in spreading the word about our project. Thank yo
 
 ## Roadmap
 
-Provide ready to use generate thoughts function -- done
+now:
+Generate suite of evaluations used in the paper testing AI agents with other reasoning methods like COT and self consistency and run them in parallel to conduct evaluation experiments.
 
-Provide ready to use evaluate states function -- done
-
-now
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
 
 Make TreeofThoughts class completely customizable with a config yml file with params like
