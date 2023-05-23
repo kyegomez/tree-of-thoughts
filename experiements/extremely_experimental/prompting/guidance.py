@@ -225,15 +225,24 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
         print(f'Using api_model {self.api_model}')
         
         super().__init__(guidance.llms.OpenAI(self.api_model), strategy, evaluation_strategy)
+        self.evaluation_strategy = evaluation_strategy
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        # Replace the prompt with a Guidance program
-        program = guidance(f"Given the current state of reasoning: '{state_text}', generate {{1}} coherent thoughts to continue the reasoning process:")
-        thoughts = program()
+        try:
+                # Replace the prompt with a Guidance program
+            program = guidance(f"Given the current state of reasoning: '{state_text}', generate {{{k}}} coherent thoughts to continue the reasoning process:")
+            thoughts_text = str(program())
+            thoughts = thoughts_text.split('\n')
+            
+            print(f"Generated thoughts: {thoughts}")
+            return thoughts
+        except Exception as e:
+            print(f"Error Generating thoughts {e} ")
+            traceback.print_exc()
+            thoughts = []
         
-        print(f"Generated thoughts: {thoughts}")
         return thoughts
     
     def evaluate_states(self, states):
@@ -247,7 +256,7 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
                 try:
                     #replace prompt with a guidnace program
                     program = guidance(f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:")
-                    value_text = program()
+                    value_text = str(program())
                     value = float(value_text)
                     print(f"Value {value}")
                 except ValueError:
