@@ -233,7 +233,7 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
         try:
                 # Replace the prompt with a Guidance program
             program = guidance(f"Given the current state of reasoning: '{state_text}', generate {{{k}}} coherent thoughts to continue the reasoning process:")
-            thoughts_text = str(program())
+            thoughts_text = program(state_text=state_text)
             thoughts = thoughts_text.split('\n')
             
             print(f"Generated thoughts: {thoughts}")
@@ -256,7 +256,7 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
                 try:
                     #replace prompt with a guidnace program
                     program = guidance(f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:")
-                    value_text = str(program())
+                    value_text = str(program(state_text=state_text))
                     value = float(value_text)
                     print(f"Value {value}")
                 except ValueError:
@@ -272,7 +272,7 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
             
             # Replace the prompt with a Guidance program
             program = guidance(f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, and NOTHING ELSE:")
-            best_state_text = program()
+            best_state_text = program(state_text=state_text)
             
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
@@ -408,7 +408,8 @@ class OptimizedTreeofThoughts(TreeofThoughts):
 
 
 
-api_key = "d"
+
+api_key = "api key"
 language_model = GuidanceOpenAILanguageModel(api_key)
 
 search_algorithm = "DFS"
