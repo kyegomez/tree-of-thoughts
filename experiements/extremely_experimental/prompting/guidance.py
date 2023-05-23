@@ -1,6 +1,7 @@
 
 import concurrent.futures
 from abc import ABC, abstractmethod
+import traceback
 import openai
 import os
 import re
@@ -223,36 +224,53 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
             self.api_model = "text-davinci-003"
         print(f'Using api_model {self.api_model}')
         
-        super.__init__(guidance.llms.OpenAI(self.api_model), strategy, evaluation_strategy)
+        super().__init__(guidance.llms.OpenAI(self.api_model), strategy, evaluation_strategy)
 
     def generate_thoughts(self, state, k):
-        state_text = "".join(state)
-
-        #replace prompt with guidnace program
+        state_text = ' '.join(state)
+        
+        # Replace the prompt with a Guidance program
         program = guidance(f"Given the current state of reasoning: '{state_text}', generate {{1}} coherent thoughts to continue the reasoning process:")
         thoughts = program()
-
+        
         print(f"Generated thoughts: {thoughts}")
         return thoughts
     
     def evaluate_states(self, states):
+        # ... (rest of the method remains unchanged)
+
+        if self.evaluation_strategy == 'value':
+            state_values = {}
+            for state in states:
+                state_text = ''.join(state)
+
+                try:
+                    #replace prompt with a guidnace program
+                    program = guidance(f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:")
+                    value_text = program()
+                    value = float(value_text)
+                    print(f"Value {value}")
+                except ValueError:
+                    print(f"Error parsing value: {value_text}")
+                    traceback.print_exc()
+                    value = 0 #assign a default value if the conversionfail
+
+                state_values[state] = value
+            return state_values
 
         if self.evaluation_strategy == 'vote':
-            states_text = '\n'.join([''.join(state) for state in states])
-
-
-
-            #replace prompt with guidance program
+            states_text = '\n'.join([' '.join(state) for state in states])
+            
+            # Replace the prompt with a Guidance program
             program = guidance(f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, and NOTHING ELSE:")
             best_state_text = program()
-
+            
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
             return {state: 1 if state == best_state else 0 for state in states}
-        
-        else:
-            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'")
 
+        else:
+            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
 
 
@@ -376,3 +394,34 @@ class OptimizedTreeofThoughts(TreeofThoughts):
                     return result
         else:
             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+
+
+
+
+
+api_key = "d"
+language_model = GuidanceOpenAILanguageModel(api_key)
+
+search_algorithm = "DFS"
+#init optimized tree of thoughts
+tree_of_thoughts = OptimizedTreeofThoughts(language_model, search_algorithm)
+
+#define the inital state 
+
+# Set the input problem and parameters for the Tree of Thoughts algorithm
+input_problem = "What are next generation reasoning methods for Large Language Models"
+k = 5
+T = 3
+b = 5
+vth = 0.5
+timeout = 10
+confidence = 1.0
+max_iterations = 40
+convergence_threshold = 0.01
+convergence_count = 5
+
+# Run the Tree of Thoughts algorithm
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+
+# Print the solution
+print(f"Solution: {solution}")
