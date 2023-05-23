@@ -62,13 +62,8 @@ else:
     tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-k = 5
-T = 3
-b = 5
-vth = 0.5
-
-#call the solve method with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
+    
+solution = tree_of_thoughts.solve(input_problem)
 
 #use the solution in your production environment
 print(f'solution {solution}')
