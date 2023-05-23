@@ -325,7 +325,7 @@ class TreeofThoughts:
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
@@ -352,7 +352,7 @@ if __name__ == '__main__':
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
     
     
-    input_problem = "What are next generation reasoning methods for Large Language Models"
+    input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
     k = 5
     T = 3
     b = 5

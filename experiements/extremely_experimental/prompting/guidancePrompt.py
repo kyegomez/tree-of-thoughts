@@ -29,6 +29,7 @@ class CustomLanguageModel(AbstractLanguageModel):
     def evaluate_states(self, states):
         #implement state evaluation logic using self.model
         pass
+
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
         if api_key == "" or api_key == None:
@@ -76,7 +77,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     response = openai.ChatCompletion.create(
                         model=self.api_model,
                         messages=messages,
-                        max_tokens=400,
+                        max_tokens=max_tokens,
                         temperature=temperature,
                     )
                 else:
