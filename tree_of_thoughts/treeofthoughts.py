@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 import openai
 import os
 import re
+import guidance
 import time
 
 class AbstractLanguageModel(ABC):
@@ -182,7 +183,44 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
             print(f"Parallel evaluated state values: {state_values}")
         return state_values
     
+class GuidanceLanguageModel(AbstractLanguageModel):
+    def __init__(self, model, strategy="cot", evaluation_strategy="value"):
+        # guidance.llms.OpenAI("gpt-4")
+        self.model = model
 
+    def generate_thoughts(self, state, k):
+        #implement the thought generation logic using self.model
+        pass
+
+    def evaluate_states(self, states):
+        #implement state evaluation logic using self.model
+        pass
+
+class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model=""):
+        if api_key == "" or api_key == None:
+            api_key = os.environ.get("OPENAI_API_KEY", "")
+        if api_key != "":
+            openai.api_key = api_key
+        else:
+            raise Exception("Please provide OpenAI API key")
+
+        if api_base == ""or api_base == None:
+            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.com/v1"
+        if api_base != "":
+            # e.g. https://api.openai.com/v1/ or your custom url
+            openai.api_base = api_base
+            print(f'Using custom api_base {api_base}')
+            
+        if api_model == "" or api_model == None:
+            api_model = os.environ.get("OPENAI_API_MODEL", "")
+        if api_model != "":
+            self.api_model = api_model
+        else:
+            self.api_model = "text-davinci-003"
+        print(f'Using api_model {self.api_model}')
+        
+        super.__init__(guidance.llms.OpenAI(self.api_model), strategy, evaluation_strategy)
 
 class TreeofThoughts:
     """

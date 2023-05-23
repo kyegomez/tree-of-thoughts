@@ -17,7 +17,8 @@ setup(
     "Prompt Engineering"
   ],
   install_requires=[
-    'openai'
+    'guidance',
+    'openai',
   ],
   classifiers=[
     'Development Status :: 4 - Beta',
