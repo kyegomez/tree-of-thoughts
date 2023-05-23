@@ -287,7 +287,7 @@ class TreeofThoughts:
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k, T, b, vth, timeout=None, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
+    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=None, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
@@ -315,23 +315,9 @@ if __name__ == '__main__':
     
     
     input_problem = "What are next generation reasoning methods for Large Language Models"
-    k = 5
-    T = 3
-    b = 5
-    vth = 0.5
+
     
-    # # Optimal nominal values for the stopping conditions
-    
-    # confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
-    
-    # max_iterations = 5 # MAX ITERATIONS 10
-    
-    # convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
-    
-    # convergence_count = 5
-    
-    #call the solve method with the input problem and other params
-    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+    solution = tree_of_thoughts.solve(input_problem)
     
     #use the solution in yes
     print(f"solution: {solution}")
