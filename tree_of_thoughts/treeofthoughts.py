@@ -1,3 +1,4 @@
+
 import concurrent.futures
 from abc import ABC, abstractmethod
 import openai
@@ -73,7 +74,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     response = openai.ChatCompletion.create(
                         model=self.api_model,
                         messages=messages,
-                        max_tokens=max_tokens,
+                        max_tokens=400,
                         temperature=temperature,
                     )
                 else:
@@ -143,7 +144,6 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
-                    print(f"Value text {value_text}")
                     value = float(value_text)
                     print(f"value: {value}")
                 except ValueError:
@@ -244,7 +244,7 @@ class TreeofThoughts:
             S0 = set(St)
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
-    def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
+    def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
@@ -287,7 +287,7 @@ class TreeofThoughts:
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=None, confidence_threshold=0.9, max_iterations=10, convergence_threshold=0.1, convergence_count=5):
+    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
@@ -315,9 +315,20 @@ if __name__ == '__main__':
     
     
     input_problem = "What are next generation reasoning methods for Large Language Models"
+    k = 5
+    T = 3
+    b = 5
+    vth = 0.5
+    timeout = 10
+    confidence = 1.0 #cmodel is confident on performance
+    max_iterations = 40 #tree branh nodes 
+    convergence_threshold = 0.01
+    convergence_count = 5
+
+
 
     
-    solution = tree_of_thoughts.solve(input_problem)
+    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
     #use the solution in yes
     print(f"solution: {solution}")
