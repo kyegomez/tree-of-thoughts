@@ -37,4 +37,4 @@ vth = 0.5
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
 #use the solution in your production environment
-print(solution)
+print(f'solution {solution}')

@@ -32,13 +32,18 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
-from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
-#v1
-model = OpenAILanguageModel('api key')
+use_v2 = False
+api_key=""
+api_base= "" # leave it blank if you simply use default openai api url
 
-#v2 parallel execution, caching, adaptive temperature
-model = OptimizedOpenAILanguageModel('api key')
+if not use_v2:
+    #v1
+    model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
+else:
+    #v2 parallel execution, caching, adaptive temperature
+    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
@@ -49,11 +54,12 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-#create an instance of the tree of thoughts class v1
-tree_of_thoughts = TreeofThoughts(model, search_algorithm)
-
-#or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
-tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
+if not use_v2:
+    #create an instance of the tree of thoughts class v1
+    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
+else:
+    #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
+    tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 k = 5
@@ -61,21 +67,11 @@ T = 3
 b = 5
 vth = 0.5
 
-# # Optimal nominal values for the stopping conditions
-
-# confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
-
-# max_iterations = 5 # MAX ITERATIONS 10
-
-# convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
-
-# convergence_count = 5
-
 #call the solve method with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, )
 
-#use the solution in env
-print(f"solution: {solution}")
+#use the solution in your production environment
+print(f'solution {solution}')
 
 
 ```
