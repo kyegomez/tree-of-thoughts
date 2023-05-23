@@ -4,7 +4,7 @@
 
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
 
-Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-trained language models to solve various problems by exploring multiple reasoning paths. It's designed to be plug-and-play, allowing users to easily connect their models and use the Tree of Thoughts method.
+Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
 
 Share this repository by clicking on the following buttons 😊 
