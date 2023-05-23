@@ -1,7 +1,8 @@
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from experiements.extremely_experimental.prompting.LangChain_model import LangchainCustomLanguageModel
 
-use_v2 = False
-api_key=""
+use_v2 = True
+api_key = ""
 api_base= "" # leave it blank if you simply use default openai api url
 
 if not use_v2:
@@ -9,7 +10,7 @@ if not use_v2:
     model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
 else:
     #v2 parallel execution, caching, adaptive temperature
-    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
+    model = LangchainCustomLanguageModel(api_key=api_key)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
@@ -37,8 +38,6 @@ confidence = 1.0 #cmodel is confident on performance
 max_iterations = 40 #tree branh nodes 
 convergence_threshold = 0.01
 convergence_count = 5
-
-
 
 
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)

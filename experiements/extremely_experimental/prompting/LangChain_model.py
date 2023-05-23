@@ -1,10 +1,11 @@
 from abc import abstractmethod, ABC
-from langchain import OpenAI, Wikipedia
+from langchain import OpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 from langchain.agents.react.base import DocstoreExplorer
 from langchain.prompts import StringPromptTemplate
 from pydantic import BaseModel, validator
+
 
 
 class AbstractLanguageModel(ABC):
@@ -30,22 +31,23 @@ class CustomLanguageModel(AbstractLanguageModel):
         pass
 
 class LangchainCustomLanguageModel(AbstractLanguageModel):
-    def __init__(self, model):
-        self.model = model
-        docstore = DocstoreExplorer(Wikipedia())
-        tools = [
-            Tool(
-                name="Search",
-                func=docstore.search,
-                description="useful for when you need to ask with search"
-            ),
-            Tool(
-                name="Lookup",
-                func=docstore.lookup,
-                description="useful for when you need to ask with lookup"
-            )
-        ]
-        self.agent = initialize_agent(tools, model, agent=AgentType.REACT_DOCSTORE, verbose=True)
+    def __init__(self, api_key):
+        # self.model = model
+        # docstore = DocstoreExplorer()
+        model = OpenAI(temperature=0.5, openai_api_key=api_key)
+        # tools = [
+        #     Tool(
+        #         name="Search",
+        #         func=docstore.search,
+        #         description="useful for when you need to ask with search"
+        #     ),
+        #     Tool(
+        #         name="Lookup",
+        #         func=docstore.lookup,
+        #         description="useful for when you need to ask with lookup"
+        #     )
+        # ]
+        self.agent = initialize_agent(llm=model, agent=AgentType.REACT_DOCSTORE, verbose=True)
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
