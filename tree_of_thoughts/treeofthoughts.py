@@ -299,7 +299,7 @@ class GuidanceLanguageModel(AbstractLanguageModel):
             raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
 
 class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model=""):
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=False):
         if api_key == "" or api_key == None:
             api_key = os.environ.get("OPENAI_API_KEY", "")
         if api_key != "":
