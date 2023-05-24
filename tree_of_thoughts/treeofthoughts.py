@@ -258,7 +258,7 @@ class TreeofThoughts:
         self.model = model
         self.search_algorithm = search_algorithm
 
-    def solve(self, x, k, T, b, vth, timeout=None):
+    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
