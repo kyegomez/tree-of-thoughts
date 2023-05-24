@@ -40,10 +40,12 @@ api_base= "" # leave it blank if you simply use default openai api url
 
 if not use_v2:
     #v1
-    model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
+    model = OpenAILanguageModel(api_key=api_key, api_base=api_base # api_model="gpt4" # for higher performance base model is not smart
+    ) 
 else:
     #v2 parallel execution, caching, adaptive temperature
-    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
+    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, # api_model="gpt4" # for higher performance base model is not smart
+    )
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
