@@ -1,12 +1,18 @@
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
 use_v2 = False
+use_guidance = False
 api_key="enter api key"
 api_base= "" # leave it blank if you simply use default openai api url
+api_model= "gpt-4"
 
 if not use_v2:
-    #v1
-    model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
+    if not use_guidance:
+        #v1
+        model = OpenAILanguageModel(api_key=api_key, api_base=api_base, api_model=api_model)
+    else:
+        #v1 with guidance
+        model = GuidanceOpenAILanguageModel(api_key=api_key, api_base=api_base, api_model=api_model)
 else:
     #v2 parallel execution, caching, adaptive temperature
     model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
