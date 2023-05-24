@@ -1,1 +1,2 @@
 from tree_of_thoughts.treeofthoughts import TreeofThoughts, CustomLanguageModel, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from experiements.extremely_experimental.prompting.LangChain_model import LangchainCustomLanguageModel

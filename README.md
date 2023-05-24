@@ -4,7 +4,7 @@
 
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
 
-Tree of Thoughts (ToT) is a powerful and flexible algorithm for leveraging pre-trained language models to solve various problems by exploring multiple reasoning paths. It's designed to be plug-and-play, allowing users to easily connect their models and use the Tree of Thoughts method.
+Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
 
 Share this repository by clicking on the following buttons 😊 
@@ -32,13 +32,18 @@ Navigate to the repository folder: ``` cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
-from tree_of_thoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
-#v1
-model = OpenAILanguageModel('api key')
+use_v2 = False
+api_key=""
+api_base= "" # leave it blank if you simply use default openai api url
 
-#v2 parallel execution, caching, adaptive temperature
-model = OptimizedOpenAILanguageModel('api key')
+if not use_v2:
+    #v1
+    model = OpenAILanguageModel(api_key=api_key, api_base=api_base)
+else:
+    #v2 parallel execution, caching, adaptive temperature
+    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
@@ -49,33 +54,33 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-#create an instance of the tree of thoughts class v1
-tree_of_thoughts = TreeofThoughts(model, search_algorithm)
-
-#or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
-tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
+if not use_v2:
+    #create an instance of the tree of thoughts class v1
+    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
+else:
+    #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
+    tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
+    
 k = 5
 T = 3
 b = 5
 vth = 0.5
+timeout = 10
+confidence = 1.0 #cmodel is confident on performance
+max_iterations = 40 #tree branh nodes 
+convergence_threshold = 0.01
+convergence_count = 5
 
-# # Optimal nominal values for the stopping conditions
 
-# confidence = 0.9 #HIGH QUALITY SOLIUTION FOUND
 
-# max_iterations = 5 # MAX ITERATIONS 10
 
-# convergence_threshold = 0.01 #Convergence Check: Monitor the change in evaluation values between consecutive iterations. If the change in evaluation values is below a certain threshold for a specified number of consecutive iterations, the algorithm can stop and return the solution.
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+    
 
-# convergence_count = 5
-
-#call the solve method with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
-
-#use the solution in env
-print(f"solution: {solution}")
+#use the solution in your production environment
+print(f'solution {solution}')
 
 
 ```
