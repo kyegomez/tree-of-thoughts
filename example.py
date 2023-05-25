@@ -40,7 +40,7 @@ b = 5
 vth = 0.5
 timeout = 10
 confidence = 1.0 #cmodel is confident on performance
-max_iterations = 40 #tree branh nodes 
+max_iterations = 40 #tree branch nodes 
 convergence_threshold = 0.01
 convergence_count = 5
 
