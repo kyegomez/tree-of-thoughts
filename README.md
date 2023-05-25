@@ -25,7 +25,7 @@ or:
 ```pip install tree-of-thoughts ```
 
 
-Navigate to the repository folder: ``` cd tree-of-thoughts```
+Navigate to the repository folder: ```cd tree-of-thoughts```
 
 ```pip install openai```
 
