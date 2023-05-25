@@ -308,9 +308,9 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
             print(f"Parallel generated thoughts: {thoughts}")
         return thoughts
 
-    def parallel_evaluate_states(self, states):
+    def parallel_evaluate_states(self, states, inital_prompt):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            state_values = list(executor.map(self.evaluate_states, states))
+            state_values = list(executor.map(self.evaluate_states, states, inital_prompt))
             print(f"Parallel evaluated state values: {state_values}")
         return state_values
     
