@@ -7,6 +7,11 @@ import re
 import guidance
 import time
 
+DATA_PATH = './data'
+
+
+
+
 class AbstractLanguageModel(ABC):
     @abstractmethod
     def generate_thoughts(self, state, k):
@@ -28,6 +33,132 @@ class CustomLanguageModel(AbstractLanguageModel):
     def evaluate_states(self, states):
         #implement state evaluation logic using self.model
         pass
+
+
+
+class Task:
+    def __init__(self):
+        pass
+
+    def __len__(self) -> int:
+        pass
+
+    def get_input(self, idx:int) -> str:
+        pass
+
+    def test_output(self, idx: int, output: str):
+        pass
+
+
+def get_task(name, file=None):
+    if name == 'game24':
+        from .game24 import Game24Task
+        return Game24Task(file)
+    elif name == 'text':
+        from .text import TextTask
+        return TextTask(file)
+    elif name == 'crosswords':
+        from .crosswords import MiniCrosswordsTask
+        return MiniCrosswordsTask(file)
+    else:
+        raise NotImplementedError
+    
+
+class TextTask(Task):
+    """
+    Input (x)   : a text instruction
+    Output (y)  : a text generation
+    Reward (r)  : # TODO
+    Input Example: 
+    Output Example: 
+    """
+    def __init__(self, file='data_100_random_text.txt'):
+        """
+        file: a text file, each line is some sentences
+        """
+        super().__init__()
+        path = os.path.join(DATA_PATH, 'text', file)
+        self.data = open(path).readlines()
+        self.steps = 2
+        self.stops = ['\nPassage:\n', None]
+
+    def __len__(self) -> int:
+        return len(self.data)
+    
+    def get_input(self, idx: int) -> str:
+        return self.data[idx]
+    
+    def test_output(self, idx: int, output: str):
+        output = output.split('Passage:\n')[-1]
+        prompt = score_prompt + output
+        score_outputs = gpt(prompt, n=5, model='gpt-4')
+        scores = []
+        for score_output in score_outputs:
+            # print(score_output)
+            pattern = r".*coherency score is (\d+).*"
+            match = re.match(pattern, score_output, re.DOTALL)
+            if match:
+                score = int(match.groups()[0])
+                scores.append(score)
+            else:
+                print(f'------------------score no match: {[score_output]}')
+        print(scores)
+        # print('------------')
+        info = {'rs': scores, 'r': sum(scores) / len(scores) if scores else 0}
+        return info
+    
+    @staticmethod
+    def standard_prompt_wrap(x: str, y:str='') -> str:
+        return standard_prompt.format(input=x) + y
+
+    @staticmethod
+    def cot_prompt_wrap(x: str, y:str='') -> str:
+        return cot_prompt.format(input=x) + y
+
+    @staticmethod
+    def vote_prompt_wrap(x: str, ys: list) -> str:
+        prompt = vote_prompt
+        for i, y in enumerate(ys, 1):
+            # y = y.replace('Plan:\n', '')
+            # TODO: truncate the plan part?
+            prompt += f'Choice {i}:\n{y}\n'
+        return prompt
+    
+    @staticmethod
+    def vote_outputs_unwrap(vote_outputs: list, n_candidates: int) -> list:
+        vote_results = [0] * n_candidates
+        for vote_output in vote_outputs:
+            pattern = r".*best choice is .*(\d+).*"
+            match = re.match(pattern, vote_output, re.DOTALL)
+            if match:
+                vote = int(match.groups()[0]) - 1
+                if vote in range(n_candidates):
+                    vote_results[vote] += 1
+            else:
+                print(f'vote no match: {[vote_output]}')
+        return vote_results
+
+    @staticmethod
+    def compare_prompt_wrap(x: str, ys: list) -> str:
+        assert len(ys) == 2, 'compare prompt only supports 2 candidates'
+        ys = [y.split('Passage:\n')[-1] for y in ys]
+        prompt = compare_prompt + f'Passage 1:\n{ys[0]}\n\nPassage 2:\n{ys[1]}\n'
+        return prompt
+    
+    @staticmethod
+    def compare_output_unwrap(compare_output: str):
+        if 'more coherent passage is 1' in compare_output:
+            return 0
+        elif 'more coherent passage is 2' in compare_output:
+            return 1
+        elif 'two passages are similarly coherent' in compare_output:
+            return 0.5
+        else:
+            print(f'-----------------compare no match: {[compare_output]}')
+            return -1
+
+
+
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=False):
         if api_key == "" or api_key == None:
@@ -103,7 +234,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to continue the reasoning process:"
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process:"
         prompt += self.ReAct_prompt
         if self.use_chat_api:
             new_prompt_success = False
@@ -136,12 +267,12 @@ class OpenAILanguageModel(AbstractLanguageModel):
         print(f"Generated thoughts: {thoughts}")
         return thoughts
 
-    def evaluate_states(self, states):
+    def evaluate_states(self, states, inital_prompt):
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, on the probability of this state of reasoning achieveing {prompt} and NOTHING ELSE:"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE:"
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
@@ -154,7 +285,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {prompt} and NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE"
             response = self.openai_api_call_handler(prompt, 50, 1)
             best_state_text = self.openai_choice2text_handler(response.choices[0])
             print(f"Best state text: {best_state_text}")
@@ -402,7 +533,7 @@ class TreeofThoughts:
         S0 = {x}
         for t in range(1, T + 1):
             S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
-            Vt = self.model.evaluate_states(S0_t)
+            Vt = self.model.evaluate_states(S0_t, x)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
@@ -417,7 +548,7 @@ class TreeofThoughts:
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count
             if t > T:
                 thought = self.model.generate_thoughts(s, 1)
-                value = self.model.evaluate_states({s})[s]
+                value = self.model.evaluate_states({s}, x)[s]
                 output.append((thought, value))
 
                 if confidence_threshold is not None and value >= confidence_threshold:
@@ -438,7 +569,7 @@ class TreeofThoughts:
                 return False
 
             for s_prime in sorted(self.model.generate_thoughts(s, k)):
-                state_value = self.model.evaluate_states({s_prime})[s_prime]
+                state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
                 if state_value > vth and (pruning_threshold is None or state_value >= pruning_threshold):
                     if dfs((*s, s_prime), t + 1):
                         return True
@@ -447,6 +578,53 @@ class TreeofThoughts:
 
         dfs(x, 1)
         return max(output, key=lambda x: x[1]) if output else None
+
+
+
+class TreeofThoughtsV2:
+    def __init__(self, args, model):
+        self.args = args
+        self.task = get_task(self.args.task, self.args.task_file_path)
+        self.model = CustomLanguageModel(model)
+
+    def get_value(self, x, y, n_evaluate_sample, cache_value=True):
+        value_prompt = self.task.value_prompt(x, y)
+        if cache_value and value_prompt in self.task.value_cache:
+            return self.task.value_cache[value_prompt]
+        value_outputs = self.gpt(value_prompt, n=n_evaluate_sample, stop=None)
+        value = self.task.value_outputs_unwrap(x, y, value_outputs)
+        if cache_value:
+            self.task_value_cache[value_prompt] = value
+        return value
+    
+    def get_votes(task, x, ys, n_evaluate_sample):
+        vote_prompt = task.vote_prompt_wrap(x, ys)
+        vote_outputs = self.model(vote_prompt, n=n_evaluate_sample, stop=None)
+        values = task.voice_outputs_unwrap(vote_output, len(ys))
+        return values
+    
+    
+    def get_proposals(task, x, y):
+        propose_prompt = task.propose_prompt_wrap(x, y)
+        proposals = self.model(propose_prompt, n=1, stop=None)[0].split("\n")
+        return [y + _ + '\n' for _ in proposals]
+    
+    def get_samples(task, x, y, n_generate_sample, promp_sample, stop):
+        if prompt_sample == "standard":
+            prompt = task.standard_prompt_wrap(x, y)
+        elif prompt_sample == "cot":
+            prompt = task.cot_prompt_wrap(x, y)
+        else:
+            raise ValueError(f"prompt_sample {prompt_sample} not recognized")
+        samples = self.model(prompt, n=n_generate_sample, stop=stop)
+        return [y + _ for _ in samples]
+    
+    def solve(args, task, idx, to_print=True):
+        print()
+
+    
+
+
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
