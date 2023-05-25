@@ -7,6 +7,7 @@ import re
 import guidance
 import time
 
+
 class AbstractLanguageModel(ABC):
     @abstractmethod
     def generate_thoughts(self, state, k):
@@ -22,12 +23,14 @@ class CustomLanguageModel(AbstractLanguageModel):
         self.model = model
 
     def generate_thoughts(self, state, k):
-        #implement the thought generation logic using self.model
+        # implement the thought generation logic using self.model
         pass
 
     def evaluate_states(self, states):
-        #implement state evaluation logic using self.model
+        # implement state evaluation logic using self.model
         pass
+
+
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=False):
         if api_key == "" or api_key == None:
@@ -37,13 +40,14 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             raise Exception("Please provide OpenAI API key")
 
-        if api_base == ""or api_base == None:
-            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.com/v1"
+        if api_base == "" or api_base == None:
+            # if not set, use the default base path of "https://api.openai.com/v1"
+            api_base = os.environ.get("OPENAI_API_BASE", "")
         if api_base != "":
             # e.g. https://api.openai.com/v1/ or your custom url
             openai.api_base = api_base
             print(f'Using custom api_base {api_base}')
-            
+
         if api_model == "" or api_model == None:
             api_model = os.environ.get("OPENAI_API_MODEL", "")
         if api_model != "":
@@ -58,7 +62,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         self.ReAct_prompt = ''
         if enable_ReAct_prompting:
             self.ReAct_prompt = "Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx'."
-        
+
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
 
@@ -90,7 +94,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 return response
             except openai.error.RateLimitError as e:
                 sleep_duratoin = os.environ.get("OPENAI_RATE_TIMEOUT", 30)
-                print(f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
+                print(
+                    f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
                 time.sleep(sleep_duratoin)
 
     def openai_choice2text_handler(self, choice):
@@ -102,7 +107,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
-        
+
         prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to continue the reasoning process:"
         prompt += self.ReAct_prompt
         if self.use_chat_api:
@@ -128,10 +133,11 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     response = self.openai_api_call_handler(prompt, 50, 0.5, k)
                     text = self.openai_choice2text_handler(response.choices[0])
                     thoughts += [text]
-            
+
         else:
             response = self.openai_api_call_handler(prompt, 50, 0.5, k)
-            thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
+            thoughts = [self.openai_choice2text_handler(
+                choice) for choice in response.choices]
         # print(thoughts)
         print(f"Generated thoughts: {thoughts}")
         return thoughts
@@ -144,7 +150,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, and NOTHING ELSE:"
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
-                    value_text = self.openai_choice2text_handler(response.choices[0])
+                    value_text = self.openai_choice2text_handler(
+                        response.choices[0])
                     value = float(value_text)
                     print(f"value: {value}")
                 except ValueError:
@@ -156,24 +163,29 @@ class OpenAILanguageModel(AbstractLanguageModel):
             states_text = '\n'.join([' '.join(state) for state in states])
             prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, and NOTHING ELSE:"
             response = self.openai_api_call_handler(prompt, 50, 1)
-            best_state_text = self.openai_choice2text_handler(response.choices[0])
+            best_state_text = self.openai_choice2text_handler(
+                response.choices[0])
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
             return {state: 1 if state == best_state else 0 for state in states}
 
         else:
-            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
+            raise ValueError(
+                "Invalid evaluation strategy. Choose 'value' or 'vote'.")
+
 
 class OptimizedOpenAILanguageModel(OpenAILanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", cache_enabled=True, api_base="", api_model="", enable_ReAct_prompting=False):
-        super().__init__(api_key, strategy, evaluation_strategy, api_base, api_model, enable_ReAct_prompting)
+        super().__init__(api_key, strategy, evaluation_strategy,
+                         api_base, api_model, enable_ReAct_prompting)
         self.cache_enabled = cache_enabled
         self.thought_cache = {}
         self.state_evaluation_cache = {}
 
     def parallel_generate_thoughts(self, states, k):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            thoughts = list(executor.map(lambda state: self.generate_thoughts(state, k), states))
+            thoughts = list(executor.map(
+                lambda state: self.generate_thoughts(state, k), states))
             print(f"Parallel generated thoughts: {thoughts}")
         return thoughts
 
@@ -182,23 +194,24 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
             state_values = list(executor.map(self.evaluate_states, states))
             print(f"Parallel evaluated state values: {state_values}")
         return state_values
-    
+
+
 class GuidanceLanguageModel(AbstractLanguageModel):
     def __init__(self, model, strategy="cot", evaluation_strategy="value", enable_ReAct_prompting=False):
         # gpt4 = guidance.llms.OpenAI("gpt-4")
         # vicuna = guidance.llms.transformers.Vicuna("your_path/vicuna_13B", device_map="auto")
         self.model = model
-        
+
         # reference : https://www.promptingguide.ai/techniques/react
         self.ReAct_prompt = ''
         if enable_ReAct_prompting:
             self.ReAct_prompt = '''{{#assistant~}}
             {{gen 'Observation' temperature=0.5 max_tokens=50}}
             {{~/assistant}}'''
-        
+
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
-        
+
         self.thoughts_program = guidance('''
             {{#system~}}
             You are a logical and rational assistant.
@@ -217,7 +230,7 @@ class GuidanceLanguageModel(AbstractLanguageModel):
             {{gen 'Thoughts' temperature=0.5 max_tokens=50}}
             {{~/assistant}}
             ''' % self.ReAct_prompt, llm=self.model)
-        
+
         self.value_program = guidance('''
             {{#system~}}
             You are a logical and rational assistant.
@@ -234,7 +247,7 @@ class GuidanceLanguageModel(AbstractLanguageModel):
             {{gen 'Value' temperature=1 max_tokens=10}}
             {{~/assistant}}
             ''', llm=self.model)
-        
+
         self.vote_program = guidance('''
             {{#system~}}
             You are a logical and rational assistant.
@@ -251,19 +264,21 @@ class GuidanceLanguageModel(AbstractLanguageModel):
             {{gen 'Vote' temperature=1 max_tokens=10}}
             {{~/assistant}}
             ''', llm=self.model)
-        
+
     def model_response_handler(self, program, **kargs):
-        print("Calling guidance model(Modify Me to handle specific LLM response excpetions!)")
+        print(
+            "Calling guidance model(Modify Me to handle specific LLM response excpetions!)")
         reponse = program(**kargs)
         return reponse
 
     def generate_thoughts(self, state, k):
-        #implement the thought generation logic using self.model
+        # implement the thought generation logic using self.model
         state_text = ' '.join(state)
-        
+
         thoughts = []
         for _ in range(k):
-            response = self.model_response_handler(self.thoughts_program, state_text=state_text, k=1)
+            response = self.model_response_handler(
+                self.thoughts_program, state_text=state_text, k=1)
             text = response['Thoughts']
             thoughts += [text]
         # print(thoughts)
@@ -271,12 +286,13 @@ class GuidanceLanguageModel(AbstractLanguageModel):
         return thoughts
 
     def evaluate_states(self, states):
-        #implement state evaluation logic using self.model
+        # implement state evaluation logic using self.model
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                response = self.model_response_handler(self.value_program, state_text=state_text)
+                response = self.model_response_handler(
+                    self.value_program, state_text=state_text)
                 try:
                     value_text = response['Value']
                     print(f"Value text {value_text}")
@@ -289,14 +305,17 @@ class GuidanceLanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            response = self.model_response_handler(self.vote_program, states_text=states_text)
+            response = self.model_response_handler(
+                self.vote_program, states_text=states_text)
             best_state_text = response['Vote']
             print(f"Best state text: {best_state_text}")
             best_state = int(best_state_text)
             return {state: 1 if i == best_state else 0 for i in range(len(states))}
 
         else:
-            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
+            raise ValueError(
+                "Invalid evaluation strategy. Choose 'value' or 'vote'.")
+
 
 class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=False):
@@ -307,13 +326,14 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
         else:
             raise Exception("Please provide OpenAI API key")
 
-        if api_base == ""or api_base == None:
-            api_base = os.environ.get("OPENAI_API_BASE", "")  # if not set, use the default base path of "https://api.openai.com/v1"
+        if api_base == "" or api_base == None:
+            # if not set, use the default base path of "https://api.openai.com/v1"
+            api_base = os.environ.get("OPENAI_API_BASE", "")
         if api_base != "":
             # e.g. https://api.openai.com/v1/ or your custom url
             openai.api_base = api_base
             print(f'Using custom api_base {api_base}')
-            
+
         if api_model == "" or api_model == None:
             api_model = os.environ.get("OPENAI_API_MODEL", "")
         if api_model != "":
@@ -322,9 +342,9 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
             self.api_model = "text-davinci-003"
         print(f'Using api_model {self.api_model}')
 
-        super().__init__(guidance.llms.OpenAI(self.api_model), strategy, evaluation_strategy, enable_ReAct_prompting)
-        
-    
+        super().__init__(guidance.llms.OpenAI(self.api_model),
+                         strategy, evaluation_strategy, enable_ReAct_prompting)
+
     def model_response_handler(self, program, **kargs):
         error_msg = ''
         while True:
@@ -335,17 +355,20 @@ class GuidanceOpenAILanguageModel(GuidanceLanguageModel):
                 return response
             except openai.error.RateLimitError as e:
                 sleep_duratoin = os.environ.get("OPENAI_RATE_TIMEOUT", 30)
-                print(f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
+                print(
+                    f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
                 time.sleep(sleep_duratoin)
             except Exception as e:
                 if str(e) == f'''Too many (more than {guidance.llm.max_retries}) OpenAI API RateLimitError's in a row!''':
                     sleep_duratoin = os.environ.get("OPENAI_RATE_TIMEOUT", 30)
-                    print(f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
+                    print(
+                        f'{str(e)}, sleep for {sleep_duratoin}s, set it by env OPENAI_RATE_TIMEOUT')
                     time.sleep(sleep_duratoin)
                 else:
                     error_msg = str(e)
                     break
         raise Exception(error_msg)
+
 
 class TreeofThoughts:
     """
@@ -372,7 +395,7 @@ class TreeofThoughts:
         if t > T record the output by generating the thought for current state S
 
         for each candidate state s in the sorted list of generated thoughts for s:
-            
+
             if the evaluated value of s is greater the the threshold of vth call the dfs function recursively
             with s and t + 1
 
@@ -396,12 +419,14 @@ class TreeofThoughts:
                 if result:
                     return result
         else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+            raise ValueError(
+                "Invalid search algorithm. Choose 'BFS' or 'DFS'.")
 
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
         for t in range(1, T + 1):
-            S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
+            S0_t = {(*s, z)
+                    for s in S0 for z in self.model.generate_thoughts(s, k)}
             Vt = self.model.evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
@@ -459,43 +484,42 @@ class OptimizedTreeofThoughts(TreeofThoughts):
                     return result
         elif self.search_algorithm == 'DFS':
             while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_dfs(x, k, T, vth, confidence_threshold=confidence_threshold, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+                result = self.tot_dfs(x, k, T, vth, confidence_threshold=confidence_threshold, max_iterations=max_iterations,
+                                      convergence_threshold=convergence_threshold, convergence_count=convergence_count)
                 if result:
                     return result
         else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+            raise ValueError(
+                "Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+
 
 if __name__ == '__main__':
     search_algorithm = "DFS"
     strategy = "cot"
-    evaluation_strategy="vote"
-    
-    #create instance
+    evaluation_strategy = "vote"
+
+    # create instance
     model = OptimizedOpenAILanguageModel('api key')
-    
-    
+
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
-    
-    
+
     input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
     k = 5
     T = 3
     b = 5
     vth = 0.5
     timeout = 10
-    confidence = 1.0 #cmodel is confident on performance
-    max_iterations = 40 #tree branh nodes 
+    confidence = 1.0  # cmodel is confident on performance
+    max_iterations = 40  # tree branch nodes
     convergence_threshold = 0.01
     convergence_count = 5
 
+    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence,
+                                      max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
 
-
-    
-    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
-    
-    #use the solution in yes
+    # use the solution in yes
     print(f"solution: {solution}")
-    
+
     """
     should return something like this:
     
@@ -523,4 +547,3 @@ if __name__ == '__main__':
     
     
     """
-    

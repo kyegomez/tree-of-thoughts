@@ -6,32 +6,32 @@
 
 Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
-
-Share this repository by clicking on the following buttons 😊 
+Share this repository by clicking on the following buttons 😊
 
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
 [![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
 
 # Join Agora, Creators United
+
 This implementation of Tree of Thoughts is brought to you by Agora, Agora advances Humanity with open source SOTA Multi-Modality AI research! We plan on combating Humanity's grandest root problems like food insecurity, planetary insecurity, and disease, and hopefully death itself.
 
 [Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
 
 ## Getting started
-Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
+
+Clone this repository with `git clone https://github.com/kyegomez/tree-of-thoughts`
 
 or:
 
-```pip install tree-of-thoughts ```
+`pip install tree-of-thoughts `
 
+Navigate to the repository folder: ` cd tree-of-thoughts`
 
-Navigate to the repository folder: ``` cd tree-of-thoughts```
-
-```pip install openai```
+`pip install openai`
 
 Create a Python script (e.g., example.py) and import the necessary classes:
 
-``` python
+```python
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
 use_v2 = False
@@ -41,7 +41,7 @@ api_base= "" # leave it blank if you simply use default openai api url
 if not use_v2:
     #v1
     model = OpenAILanguageModel(api_key=api_key, api_base=api_base # api_model="gpt4" # for higher performance base model is not smart
-    ) 
+    )
 else:
     #v2 parallel execution, caching, adaptive temperature
     model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, # api_model="gpt4" # for higher performance base model is not smart
@@ -64,14 +64,14 @@ else:
     tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-    
+
 k = 5
 T = 3
 b = 5
 vth = 0.5
 timeout = 10
 confidence = 1.0 #cmodel is confident on performance
-max_iterations = 40 #tree branh nodes 
+max_iterations = 40 #tree branch nodes
 convergence_threshold = 0.01
 convergence_count = 5
 
@@ -79,7 +79,7 @@ convergence_count = 5
 
 
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
-    
+
 
 #use the solution in your production environment
 print(f'solution {solution}')
@@ -105,10 +105,10 @@ class CustomLanguageModel(AbstractLanguageModel):
 
 ```
 
-
 Run the example script
 
 ## 🌟 Features:
+
 - General problem-solving framework for language models
 - Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
 - Easy integration with popular language models like OpenAI and Hugging Face
@@ -128,9 +128,10 @@ Run the example script
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
 
 ## Tree of Thoughts Class
-``` python
+
+```python
 class TreeofThoughts:
-    
+
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
@@ -165,9 +166,8 @@ class TreeofThoughts:
 
         dfs(x, 1)
         return output
-    
-```
 
+```
 
 ## Usage Examples
 
@@ -179,8 +179,8 @@ To use Tree of Thoughts with OpenAI's API, create a custom model class that inhe
 
 To use Tree of Thoughts with Hugging Face Transformers, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using Hugging Face Transformers. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
 
-
 # Contributing
+
 This algorithm is still infant yet it's potential remains unimaginable, let's advance the reasoning of AI's together under this banner.
 
 # Share With Your Network
@@ -196,7 +196,6 @@ For Instagram, while it doesn't directly support sharing of web links, you can s
 
 We greatly appreciate any help in spreading the word about our project. Thank you for your support!
 
-
 ## Roadmap
 
 now:
@@ -206,16 +205,14 @@ Implement a more sophisticated prompt engineering strategy to guide the model's 
 
 Make TreeofThoughts class completely customizable with a config yml file with params like
 chatbot:
-    type: "openai"
-    max_context_length: 8000
-    include_chat_history_in_query: false
+type: "openai"
+max_context_length: 8000
+include_chat_history_in_query: false
 openai:
-    model: <model_name>
-    api_key: <your_open_ai_api_key>
-
+model: <model_name>
+api_key: <your_open_ai_api_key>
 
 Script that generates an dataset based on a topic input, -> set of questions are asked, then multiple trees of thoughts are run concurrently to generate the decision making rich dataset
-
 
 Introduce a reinforcement learning, distillment, and finetuning scripts to finely tune the model based on feedback from the Tree of Thoughts algorithm.
 
@@ -225,20 +222,16 @@ Integrate heuristics that autonomously determine the strategy cos or propose
 
 Integrate heuristics that autonomously set the input params:
 
-k = 
-T = 
-b = 
-vth = 
-
-
+k =
+T =
+b =
+vth =
 
 multi-modality tree of thoughts
 
 multi-modality forest of thoughts
 
 multi-modality world of thoughts
-
-
 
 ### Multi-Modality Tree of Thoughts 🌐🌳
 
@@ -261,13 +254,13 @@ Join us on this exciting journey to advance the Tree of Thoughts algorithm to mu
 
 ![the compiler banner](https://github.com/kyegomez/the-compiler/raw/main/the-compiler.png)
 
-Welcome to _The Compiler_, a novel child project under the Tree of Thoughts (ToT) paradigm. This project is crafted with the intent of making autonomous programming not just a reality, but an effortless task for you. 
+Welcome to _The Compiler_, a novel child project under the Tree of Thoughts (ToT) paradigm. This project is crafted with the intent of making autonomous programming not just a reality, but an effortless task for you.
 
-In essence, _The Compiler_ allows you to "grow" any program you can dream of. By providing a high-level specification of the product you would like, you can sit back and let _The Compiler_ do the heavy lifting. 
+In essence, _The Compiler_ allows you to "grow" any program you can dream of. By providing a high-level specification of the product you would like, you can sit back and let _The Compiler_ do the heavy lifting.
 
-## Overview 
+## Overview
 
-_The Compiler_ leverages the ToT framework and large language models (LLMs) to handle the programming process, from abstract specifications to a working program. 
+_The Compiler_ leverages the ToT framework and large language models (LLMs) to handle the programming process, from abstract specifications to a working program.
 
 Here's a basic breakdown of the workflow:
 
@@ -278,7 +271,7 @@ Here's a basic breakdown of the workflow:
 
 ## Architecture
 
-The Compiler, leveraging the Tree of Thoughts paradigm, consists of several primary components, including the Specification Parser, Thought Decomposer, Thought Generator, State Evaluator, and the Search Algorithm. 
+The Compiler, leveraging the Tree of Thoughts paradigm, consists of several primary components, including the Specification Parser, Thought Decomposer, Thought Generator, State Evaluator, and the Search Algorithm.
 
 1. **Specification Parser**: This interprets your high-level input specifications and translates them into a format that the Thought Decomposer can understand and work with.
 
@@ -299,8 +292,6 @@ If you find this project exciting and think others might benefit from it, feel f
 - [Share on Facebook](http://www.facebook.com/sharer.php?u=https://github.com/kyegomez/the-compiler)
 
 Let's revolutionize the world of programming together with _The Compiler_!
-
-
 
 # Acknowledgements
 
