@@ -18,7 +18,7 @@ convergence_count = 5
 class DatasetGenerator:
     def __init__(self, openai_language_model, tree_of_thoughts):
         self.openai_language_model = openai_language_model
-        self.tree_of_thoughts = tree_of_thoughts
+        self.tree_of_thoughts = OptimizedOpenAILanguageModel(openai_api_key, api_model="gpt-3.5-turbo")
 
     def generate_questions(self, topic, n_questions=100):
         prompt=f"Generate {n_questions} unique questions related to the topic '{topic}':"
@@ -45,12 +45,12 @@ class DatasetGenerator:
     
 
 
-openai_api_key="sas"
+openai_api_key=""
 
-openai_language_model = OptimizedOpenAILanguageModel(openai_api_key, api_model="gpt-3.5-turbo")
-tree_of_thoughts = OptimizedTreeofThoughts(openai_language_model, search_algorithm="DFS")
+# openai_language_model = OptimizedOpenAILanguageModel(openai_api_key, api_model="gpt-3.5-turbo")
+tree_of_thoughts = OptimizedTreeofThoughts(search_algorithm="DFS")
 
-dataset_generator = DatasetGenerator(openai_language_model, tree_of_thoughts)
+dataset_generator = DatasetGenerator(tree_of_thoughts)
 topic = "Artificial Intelligence"
 dataset = dataset_generator.generate_dataset(topic)
 

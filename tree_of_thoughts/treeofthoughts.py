@@ -272,7 +272,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE:"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE:"
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
@@ -285,7 +285,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very very pessimistic NOTHING ELSE"
             response = self.openai_api_call_handler(prompt, 50, 1)
             best_state_text = self.openai_choice2text_handler(response.choices[0])
             print(f"Best state text: {best_state_text}")
@@ -581,46 +581,48 @@ class TreeofThoughts:
 
 
 
-class TreeofThoughtsV2:
-    def __init__(self, args, model):
-        self.args = args
-        self.task = get_task(self.args.task, self.args.task_file_path)
-        self.model = CustomLanguageModel(model)
 
-    def get_value(self, x, y, n_evaluate_sample, cache_value=True):
-        value_prompt = self.task.value_prompt(x, y)
-        if cache_value and value_prompt in self.task.value_cache:
-            return self.task.value_cache[value_prompt]
-        value_outputs = self.gpt(value_prompt, n=n_evaluate_sample, stop=None)
-        value = self.task.value_outputs_unwrap(x, y, value_outputs)
-        if cache_value:
-            self.task_value_cache[value_prompt] = value
-        return value
+# #original implementation
+# class TreeofThoughtsV2:
+#     def __init__(self, args, model):
+#         self.args = args
+#         self.task = get_task(self.args.task, self.args.task_file_path)
+#         self.model = CustomLanguageModel(model)
+
+#     def get_value(self, x, y, n_evaluate_sample, cache_value=True):
+#         value_prompt = self.task.value_prompt(x, y)
+#         if cache_value and value_prompt in self.task.value_cache:
+#             return self.task.value_cache[value_prompt]
+#         value_outputs = self.gpt(value_prompt, n=n_evaluate_sample, stop=None)
+#         value = self.task.value_outputs_unwrap(x, y, value_outputs)
+#         if cache_value:
+#             self.task_value_cache[value_prompt] = value
+#         return value
     
-    def get_votes(task, x, ys, n_evaluate_sample):
-        vote_prompt = task.vote_prompt_wrap(x, ys)
-        vote_outputs = self.model(vote_prompt, n=n_evaluate_sample, stop=None)
-        values = task.voice_outputs_unwrap(vote_output, len(ys))
-        return values
+#     def get_votes(task, x, ys, n_evaluate_sample):
+#         vote_prompt = task.vote_prompt_wrap(x, ys)
+#         vote_outputs = self.model(vote_prompt, n=n_evaluate_sample, stop=None)
+#         values = task.voice_outputs_unwrap(vote_output, len(ys))
+#         return values
     
     
-    def get_proposals(task, x, y):
-        propose_prompt = task.propose_prompt_wrap(x, y)
-        proposals = self.model(propose_prompt, n=1, stop=None)[0].split("\n")
-        return [y + _ + '\n' for _ in proposals]
+#     def get_proposals(task, x, y):
+#         propose_prompt = task.propose_prompt_wrap(x, y)
+#         proposals = self.model(propose_prompt, n=1, stop=None)[0].split("\n")
+#         return [y + _ + '\n' for _ in proposals]
     
-    def get_samples(task, x, y, n_generate_sample, promp_sample, stop):
-        if prompt_sample == "standard":
-            prompt = task.standard_prompt_wrap(x, y)
-        elif prompt_sample == "cot":
-            prompt = task.cot_prompt_wrap(x, y)
-        else:
-            raise ValueError(f"prompt_sample {prompt_sample} not recognized")
-        samples = self.model(prompt, n=n_generate_sample, stop=stop)
-        return [y + _ for _ in samples]
+#     def get_samples(task, x, y, n_generate_sample, promp_sample, stop):
+#         if prompt_sample == "standard":
+#             prompt = task.standard_prompt_wrap(x, y)
+#         elif prompt_sample == "cot":
+#             prompt = task.cot_prompt_wrap(x, y)
+#         else:
+#             raise ValueError(f"prompt_sample {prompt_sample} not recognized")
+#         samples = self.model(prompt, n=n_generate_sample, stop=stop)
+#         return [y + _ for _ in samples]
     
-    def solve(args, task, idx, to_print=True):
-        print()
+#     def solve(args, task, idx, to_print=True):
+#         print()
 
     
 
@@ -643,13 +645,14 @@ class OptimizedTreeofThoughts(TreeofThoughts):
         else:
             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
 
+
 if __name__ == '__main__':
     search_algorithm = "DFS"
     strategy = "cot"
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('api key')
+    model = OptimizedOpenAILanguageModel('')
     
     
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)

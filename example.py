@@ -1,10 +1,10 @@
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
 
-use_v2 = False
+use_v2 = True
 use_guidance = False
-api_key="enter api key"
+api_key=""
 api_base= "" # leave it blank if you simply use default openai api url
-api_model= "gpt-4"
+api_model= "gpt-3.5-turbo"
 
 if not use_v2:
     if not use_guidance:
@@ -15,7 +15,7 @@ if not use_v2:
         model = GuidanceOpenAILanguageModel(api_key=api_key, api_base=api_base, api_model=api_model)
 else:
     #v2 parallel execution, caching, adaptive temperature
-    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base)
+    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, api_model=api_model)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
@@ -39,13 +39,10 @@ T = 3
 b = 5
 vth = 0.5
 timeout = 10
-confidence = 1.0 #cmodel is confident on performance
+confidence = 0.8 #cmodel is confident on performance
 max_iterations = 40 #tree branh nodes 
 convergence_threshold = 0.01
 convergence_count = 5
-
-
-
     
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
