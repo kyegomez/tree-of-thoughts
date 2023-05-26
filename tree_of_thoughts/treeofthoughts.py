@@ -967,7 +967,7 @@ if __name__ == '__main__':
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel(', api_model="gpt-3.5-turbo")
+    model = OptimizedOpenAILanguageModel('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', api_model="gpt-3.5-turbo")
     
 
 
@@ -980,7 +980,7 @@ if __name__ == '__main__':
     vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
     timeout = 10 #10 seconds timeout before stop
     confidence = 0.8 #cmodel is confident on performance
-    max_iterations = 40 #tree branh nodes 
+    max_iterations = 40 #tree branch nodes 
     convergence_threshold = 0.01 #determining when the search process has converged
     convergence_count = 5 # number of searchers to be considered converged
     #read documentation for more
