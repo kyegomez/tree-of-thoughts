@@ -49,7 +49,7 @@ else:
 
 #huggingface
 # model_name="gpt2"
-# huggingface_model = HuggingLanguageModel(model_name)
+# model = HuggingLanguageModel(model_name)
 
 
 #choose search algorithm('BFS' or 'DFS')
