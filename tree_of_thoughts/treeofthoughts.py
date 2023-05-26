@@ -12,7 +12,6 @@ DATA_PATH = './data'
 
 
 
-
 class AbstractLanguageModel(ABC):
     @abstractmethod
     def generate_thoughts(self, state, k):
@@ -37,158 +36,54 @@ class CustomLanguageModel(AbstractLanguageModel):
 
 
 
-class Task:
-    def __init__(self):
-        pass
-
-    def __len__(self) -> int:
-        pass
-
-    def get_input(self, idx:int) -> str:
-        pass
-
-    def test_output(self, idx: int, output: str):
-        pass
-
-
-def get_task(name, file=None):
-    if name == 'game24':
-        from .game24 import Game24Task
-        return Game24Task(file)
-    elif name == 'text':
-        from .text import TextTask
-        return TextTask(file)
-    elif name == 'crosswords':
-        from .crosswords import MiniCrosswordsTask
-        return MiniCrosswordsTask(file)
-    else:
-        raise NotImplementedError
-    
-
-class TextTask(Task):
-    """
-    Input (x)   : a text instruction
-    Output (y)  : a text generation
-    Reward (r)  : # TODO
-    Input Example: 
-    Output Example: 
-    """
-    def __init__(self, file='data_100_random_text.txt'):
-        """
-        file: a text file, each line is some sentences
-        """
-        super().__init__()
-        path = os.path.join(DATA_PATH, 'text', file)
-        self.data = open(path).readlines()
-        self.steps = 2
-        self.stops = ['\nPassage:\n', None]
-
-    def __len__(self) -> int:
-        return len(self.data)
-    
-    def get_input(self, idx: int) -> str:
-        return self.data[idx]
-    
-    def test_output(self, idx: int, output: str):
-        output = output.split('Passage:\n')[-1]
-        prompt = score_prompt + output
-        score_outputs = gpt(prompt, n=5, model='gpt-4')
-        scores = []
-        for score_output in score_outputs:
-            # print(score_output)
-            pattern = r".*coherency score is (\d+).*"
-            match = re.match(pattern, score_output, re.DOTALL)
-            if match:
-                score = int(match.groups()[0])
-                scores.append(score)
-            else:
-                print(f'------------------score no match: {[score_output]}')
-        print(scores)
-        # print('------------')
-        info = {'rs': scores, 'r': sum(scores) / len(scores) if scores else 0}
-        return info
-    
-    @staticmethod
-    def standard_prompt_wrap(x: str, y:str='') -> str:
-        return standard_prompt.format(input=x) + y
-
-    @staticmethod
-    def cot_prompt_wrap(x: str, y:str='') -> str:
-        return cot_prompt.format(input=x) + y
-
-    @staticmethod
-    def vote_prompt_wrap(x: str, ys: list) -> str:
-        prompt = vote_prompt
-        for i, y in enumerate(ys, 1):
-            # y = y.replace('Plan:\n', '')
-            # TODO: truncate the plan part?
-            prompt += f'Choice {i}:\n{y}\n'
-        return prompt
-    
-    @staticmethod
-    def vote_outputs_unwrap(vote_outputs: list, n_candidates: int) -> list:
-        vote_results = [0] * n_candidates
-        for vote_output in vote_outputs:
-            pattern = r".*best choice is .*(\d+).*"
-            match = re.match(pattern, vote_output, re.DOTALL)
-            if match:
-                vote = int(match.groups()[0]) - 1
-                if vote in range(n_candidates):
-                    vote_results[vote] += 1
-            else:
-                print(f'vote no match: {[vote_output]}')
-        return vote_results
-
-    @staticmethod
-    def compare_prompt_wrap(x: str, ys: list) -> str:
-        assert len(ys) == 2, 'compare prompt only supports 2 candidates'
-        ys = [y.split('Passage:\n')[-1] for y in ys]
-        prompt = compare_prompt + f'Passage 1:\n{ys[0]}\n\nPassage 2:\n{ys[1]}\n'
-        return prompt
-    
-    @staticmethod
-    def compare_output_unwrap(compare_output: str):
-        if 'more coherent passage is 1' in compare_output:
-            return 0
-        elif 'more coherent passage is 2' in compare_output:
-            return 1
-        elif 'two passages are similarly coherent' in compare_output:
-            return 0.5
-        else:
-            print(f'-----------------compare no match: {[compare_output]}')
-            return -1
-
-
 class HuggingLanguageModel(AbstractLanguageModel):
-    def __init__(self, model_name, model_tokenizer):
+    def __init__(self, model_name, model_tokenizer=None, verbose=False):
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer or model_name)
+        self.verbose = verbose
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve {state_text}"
 
-        inputs = self.tokenizer(prompt, return_tensors="pt")
-        outputs = self.model.generate(**inputs, num_return_sequences=k)
-        thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+        if self.verbose:
+            print(f"Generating thoughts for state: {state_text}")
+
+        try:
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            outputs = self.model.generate(**inputs, num_return_sequences=1)
+            thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+        except Exception as e:
+            if self.verbose:
+                print(f"Error generating thoughts for state: {state_text}")
+                print(f"Error: {e}")
+            thoughts = []
 
         return thoughts
 
     def evaluate_states(self, states, inital_prompt):
         state_values = {}
         for state in states:
-            
             state_text = ' '.join(state)
             prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
 
-            inputs = self.tokenizer(prompt, return_tensors="pt")
-            outputs = self.model.generate(**inputs, num_return_sequences=1)
-            value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            if self.verbose:
+                print(f"Evaluating state: {state_text}")
 
             try:
+                inputs = self.tokenizer(prompt, return_tensors="pt")
+                outputs = self.model.generate(**inputs, num_return_sequences=1)
+                value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
                 value = float(value_text)
             except ValueError:
+                if self.verbose:
+                    print(f"Error converting value to float for state: {state_text}")
                 value = 0  # Assign a default value if the conversion fails
+            except Exception as e:
+                if self.verbose:
+                    print(f"Error evaluating state: {state_text}")
+                    print(f"Error: {e}")
+                value = 0
 
             state_values[state] = value
 
@@ -622,49 +517,7 @@ class TreeofThoughts:
 
 
 
-# #original implementation
-# class TreeofThoughtsV2:
-#     def __init__(self, args, model):
-#         self.args = args
-#         self.task = get_task(self.args.task, self.args.task_file_path)
-#         self.model = CustomLanguageModel(model)
 
-#     def get_value(self, x, y, n_evaluate_sample, cache_value=True):
-#         value_prompt = self.task.value_prompt(x, y)
-#         if cache_value and value_prompt in self.task.value_cache:
-#             return self.task.value_cache[value_prompt]
-#         value_outputs = self.gpt(value_prompt, n=n_evaluate_sample, stop=None)
-#         value = self.task.value_outputs_unwrap(x, y, value_outputs)
-#         if cache_value:
-#             self.task_value_cache[value_prompt] = value
-#         return value
-    
-#     def get_votes(task, x, ys, n_evaluate_sample):
-#         vote_prompt = task.vote_prompt_wrap(x, ys)
-#         vote_outputs = self.model(vote_prompt, n=n_evaluate_sample, stop=None)
-#         values = task.voice_outputs_unwrap(vote_output, len(ys))
-#         return values
-    
-    
-#     def get_proposals(task, x, y):
-#         propose_prompt = task.propose_prompt_wrap(x, y)
-#         proposals = self.model(propose_prompt, n=1, stop=None)[0].split("\n")
-#         return [y + _ + '\n' for _ in proposals]
-    
-#     def get_samples(task, x, y, n_generate_sample, promp_sample, stop):
-#         if prompt_sample == "standard":
-#             prompt = task.standard_prompt_wrap(x, y)
-#         elif prompt_sample == "cot":
-#             prompt = task.cot_prompt_wrap(x, y)
-#         else:
-#             raise ValueError(f"prompt_sample {prompt_sample} not recognized")
-#         samples = self.model(prompt, n=n_generate_sample, stop=stop)
-#         return [y + _ for _ in samples]
-    
-#     def solve(args, task, idx, to_print=True):
-#         print()
-
-    
 
 
 
@@ -684,6 +537,34 @@ class OptimizedTreeofThoughts(TreeofThoughts):
                     return result
         else:
             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+
+
+
+class AdaptiveTreeofThoughts(TreeofThoughts):
+    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=10, confidence_threshold=0.9, max_iterations=40, convergence_threshold=0.01, convergence_count=5):
+        #implement adaptive search strategies
+        #for example adjust k, b, or vth based on the problems complexity or the current search state
+        return super().solve(x, k, T, b, vth, timeout, confidence_threshold, max_iterations, convergence_threshold, convergence_count)
+    
+    def tot_iddfs(self, x, k, T, vth):
+        #implement iterative deepening depth first search IDDFs here
+        #perform a series of depth limited dfs searches with increasing depth lmits
+        for depth_limit in range(1, T + 1):
+            result = self.tot_dfs(x, k, depth_limit, vth)
+            if result:
+                return result
+        return None
+    
+    def generate_thoughts(self, state, k):
+        #incorporate heuristics or domain specific knowledge into the thought generation process
+        #for example use a heuristic function to priortize certain thoughts ot generate thoughts based on domain-specific rules
+        return super().generate_thoughts(state, k)
+    
+    def evaluate_states(self, states, inital_prompt):
+        #incorporate heuristics or domain specific knowledge into the state evaluation process
+        #for example use a heuristics funtion to estimate the quality of a state evaluating it fully
+        return super().evaluate_states(states, inital_prompt)
+
 
 
 if __name__ == '__main__':
@@ -717,31 +598,4 @@ if __name__ == '__main__':
     #use the solution in yes
     print(f"solution: {solution}")
     
-    """
-    should return something like this:
-    
-    ['1. Utilizing reinforcement learning techniques to train large language models can be an effective approach to advancing them.\n2. Developing methods to better incorporate contextual information into large language models can help in their advancement.\n3. Incorpor', '1. Utilizing reinforcement learning techniques to allow for more efficient training of large language models.\n2. Incorporating transfer learning to leverage existing language models for faster and more accurate inference.\n3. Exploring the use of distributed', '1. Identifying and understanding key components of large language models such as natural language processing and machine learning algorithms.\n2. Utilizing methods such as transfer learning to quickly and efficiently train large language models.\n3. Incorporating', '1. Utilizing reinforcement learning techniques to train large language models can be an effective method of advancing them.\n2. Incorporating techniques such as transfer learning and data augmentation can help improve the performance of large language models.', '1. Identifying and understanding the underlying structure of language is essential to advancing large language models.\n2. Developing methods to effectively capture and represent the complexities of language is necessary for the advancement of large language models.\n3. Ut']
-    0.8
-    0.8
-    ['4. Analyzing and interpreting large language models to identify areas of improvement.\n5. Utilizing reinforcement learning to enable models to learn from mistakes and further improve accuracy.\n6. Leveraging automated data augmentation techniques to further improve', '4. Experimenting with different architectures and hyperparameters to determine the best model for a given task.\n5. Incorporating techniques such as data augmentation and ensembling to improve the performance of large language models.\n6', '4. Exploring methods to improve the efficiency of large language models such as using distributed computing techniques.\n5. Developing methods to reduce overfitting and improve generalization of large language models.\n6. Incorporating techniques such as', '4. Exploring and utilizing different types of data sets to train large language models.\n5. Developing strategies to optimize the training process and improve the performance of large language models.\n6. Applying advanced techniques such as deep learning', '4. Exploring methods such as reinforcement learning to improve the accuracy and robustness of large language models.\n5. Utilizing data augmentation techniques to increase the amount of training data available to the model.\n6. Incorpor']
-    0.8
-    0.8
-    ['7. Developing automated testing frameworks to validate the accuracy of large language models.\n8. Exploring ways to improve the scalability of large language models.\n9. Exploring ways to improve the efficiency of large language models.', '7. Applying methods such as active learning to further refine large language models.\n8. Developing and utilizing techniques such as knowledge distillation to compress large language models.\n9. Incorporating techniques such as semi-supervised', '7. Applying regularization techniques to reduce overfitting and improve generalization of large language models.\n8. Exploring the use of generative adversarial networks to improve the accuracy of large language models.\n9. Applying deep', '7. Developing methods to evaluate the performance of large language models on various tasks.\n8. Applying techniques such as hyperparameter tuning to optimize the performance of large language models.\n9. Utilizing adversarial training to', '7. Developing strategies to ensure large language models are able to generalize to unseen data.\n8. Incorporating methods such as meta-learning to further improve model performance.\n9. Utilizing techniques such as unsuper']
-    0.7
-    0.7
-    ['Once the key components of large language models have been identified and understood, the best reasoning methods to advance them include utilizing transfer learning to quickly train them, analyzing and interpreting them to identify areas of improvement, leveraging reinforcement learning to enable them to learn']
-    0.7
-    0.7
-    ['Exploring the use of meta-learning to enable models to rapidly adapt to new data and improve accuracy.']
-    0.7
-    0.7
-    ['One potential way to further advance large language models is to incorporate automated data augmentation techniques to create more varied datasets to train the models on, as well as leveraging reinforcement learning to enable the models to learn from mistakes and continually improve accuracy.']
-    0.7
-    0.7
-    ['By utilizing these methods, we can continue to advance large language models by improving their accuracy and performance. We can also use these methods to identify weaknesses in the models and make modifications to address them. Additionally, these methods can help us to develop']
-    0.7
-    0.7
-    
-    
-    """
     

@@ -25,6 +25,10 @@ confidence = 0.8 #cmodel is confident on performance
 max_iterations = 40 #tree branh nodes 
 convergence_threshold = 0.01
 convergence_count = 5
+
+gpt2_model = HuggingLanguageModel(model_name)
+
+generated_text = gpt2_model.generate_thoughts(input_problem)
     
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
