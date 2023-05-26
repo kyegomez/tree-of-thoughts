@@ -1,2 +1,2 @@
-from tree_of_thoughts.treeofthoughts import TreeofThoughts, CustomLanguageModel, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
+from tree_of_thoughts.treeofthoughts import TreeofThoughts, CustomLanguageModel, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel, HFPipelineModel
 from experiements.extremely_experimental.prompting.LangChain_model import LangchainCustomLanguageModel
