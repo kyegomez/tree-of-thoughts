@@ -1,7 +1,8 @@
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
 
 model_name="gpt2"
-model = HuggingLanguageModel(model_name)
+model_tokenizer="gpt2tokenizer"
+model = HuggingLanguageModel(model_name, model_tokenizer)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"

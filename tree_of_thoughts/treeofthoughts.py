@@ -160,9 +160,9 @@ class TextTask(Task):
 
 
 class HuggingLanguageModel(AbstractLanguageModel):
-    def __init__(self, model_name):
+    def __init__(self, model_name, tokenizer_name):
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
@@ -323,7 +323,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very very pessimistic NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
             response = self.openai_api_call_handler(prompt, 50, 1)
             best_state_text = self.openai_choice2text_handler(response.choices[0])
             print(f"Best state text: {best_state_text}")
