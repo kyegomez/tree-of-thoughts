@@ -281,7 +281,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
             response = self.openai_api_call_handler(prompt, 50, 1)
             best_state_text = self.openai_choice2text_handler(response.choices[0])
             print(f"Best state text: {best_state_text}")
@@ -585,6 +585,29 @@ class TreeofThoughts:
 
 
 class OptimizedTreeofThoughts(TreeofThoughts):
+    def tot_bfs(self, x, k, T, b):
+        S0 = {x}
+        for t in range(1, T + 1):
+            S0_t = {(*s, z) for s in S0 for z in self.model.parallel_generate_thoughts(s, k)}
+            Vt = self.model.parallel_evaluate_states(S0_t)
+            St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
+            S0 = set(St)
+        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+
+    def tot_dfs(self, x, k, T, vth):
+        output = []
+
+        def dfs(s, t):
+            if t > T:
+                output.append(self.model.generate_thoughts(s, 1))
+                return
+            for s_prime in sorted(self.model.generate_thoughts(s, k)):
+                if self.model.evaluate_states({s_prime})[s_prime] > vth:
+                    dfs((*s, s_prime), t + 1)
+
+        dfs(x, 1)
+        return output
+
     def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=20, confidence_threshold=0.8, max_iterations=50, convergence_threshold=0.01, convergence_count=5):
         start_time = time.time()
         if self.search_algorithm == 'BFS':
