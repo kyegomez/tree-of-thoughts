@@ -1,10 +1,14 @@
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
 
 use_v2 = True
 use_guidance = False
 api_key=""
 api_base= "" # leave it blank if you simply use default openai api url
 api_model= "gpt-3.5-turbo"
+
+
+#model_name="gpt2
+#huggingface_model = HuggingLanguageModel(model_name)
 
 if not use_v2:
     if not use_guidance:

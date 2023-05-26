@@ -32,9 +32,9 @@ Navigate to the repository folder: ```cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts
+from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
 
-use_v2 = False
+use_v2 = True
 api_key=""
 api_base= "" # leave it blank if you simply use default openai api url
 
@@ -46,6 +46,11 @@ else:
     #v2 parallel execution, caching, adaptive temperature
     model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, # api_model="gpt4" # for higher performance base model is not smart
     )
+
+#huggingface
+# model_name="gpt2"
+# huggingface_model = HuggingLanguageModel(model_name)
+
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
@@ -177,7 +182,56 @@ To use Tree of Thoughts with OpenAI's API, create a custom model class that inhe
 
 ### Hugging Face Transformers
 
-To use Tree of Thoughts with Hugging Face Transformers, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using Hugging Face Transformers. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
+To use huggingface pass in model_name 
+
+```python
+from tree_of_thoughts import HuggingLanguageModel
+
+model_name="gpt2
+
+huggingface_model = HuggingLanguageModel(model_name)
+```
+
+
+
+```python
+
+class HuggingLanguageModel(AbstractLanguageModel):
+    def __init__(self, model_name):
+        self.model = AutoModelForCausalLM.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    def generate_thoughts(self, state, k):
+        state_text = ' '.join(state)
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve the reasoning process:"
+
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        outputs = self.model.generate(**inputs, num_return_sequences=k)
+        thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+
+        return thoughts
+
+    def evaluate_states(self, states, inital_prompt):
+        state_values = {}
+        for state in states:
+            state_text = ' '.join(state)
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            outputs = self.model.generate(**inputs, num_return_sequences=1)
+            value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+            try:
+                value = float(value_text)
+            except ValueError:
+                value = 0  # Assign a default value if the conversion fails
+
+            state_values[state] = value
+
+        return state_values
+
+
+```
 
 
 # Contributing

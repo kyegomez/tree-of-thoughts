@@ -6,6 +6,7 @@ import os
 import re
 import guidance
 import time
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 DATA_PATH = './data'
 
@@ -156,6 +157,42 @@ class TextTask(Task):
         else:
             print(f'-----------------compare no match: {[compare_output]}')
             return -1
+
+
+class HuggingLanguageModel(AbstractLanguageModel):
+    def __init__(self, model_name):
+        self.model = AutoModelForCausalLM.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    def generate_thoughts(self, state, k):
+        state_text = ' '.join(state)
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve the reasoning process:"
+
+        inputs = self.tokenizer(prompt, return_tensors="pt")
+        outputs = self.model.generate(**inputs, num_return_sequences=k)
+        thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+
+        return thoughts
+
+    def evaluate_states(self, states, inital_prompt):
+        state_values = {}
+        for state in states:
+            state_text = ' '.join(state)
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            outputs = self.model.generate(**inputs, num_return_sequences=1)
+            value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+            try:
+                value = float(value_text)
+            except ValueError:
+                value = 0  # Assign a default value if the conversion fails
+
+            state_values[state] = value
+
+        return state_values
+
 
 
 
