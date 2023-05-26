@@ -192,8 +192,9 @@ python3 huggingfaceExample.py
 from tree_of_thoughts import HuggingLanguageModel
 
 model_name="gpt2"
+model_tokenizer="your tokenizer"
 
-huggingface_model = HuggingLanguageModel(model_name)
+huggingface_model = HuggingLanguageModel(model_name, model_tokenizer)
 ```
 
 
