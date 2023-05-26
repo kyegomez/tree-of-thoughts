@@ -53,7 +53,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         try:
             inputs = self.tokenizer(prompt, return_tensors="pt")
-            outputs = self.model.generate(**inputs, max_length, num_return_sequences=k)
+            outputs = self.model.generate(**inputs, max_length=max_length, num_return_sequences=k)
             thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
         except Exception as e:
             if self.verbose:
@@ -91,7 +91,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return state_values
 
-
+@staticmethod
 class HFPipelineModel(AbstractLanguageModel):
     def __init__(self, model_name, verbose=False):
         self.pipeline = pipeline("text-generation", model=model_name)
@@ -105,9 +105,9 @@ class HFPipelineModel(AbstractLanguageModel):
             print(f"Generating thoughts for state: {state_text}")
 
         try:
-            generated_outputs = self.pipeline(prompt, max_length=max_length, num_return_sequences=1)
-            thoughts = [output["generated_text"] for output in generated_outputs]
-            print(f'thoughts: {thoughts}')
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            outputs = self.model.generate(input_ids=inputs["input_ids"], max_length=max_length, num_return_sequences=k)
+            thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
         except Exception as e:
             if self.verbose:
                 print(f"Error generating thoughts for state: {state_text}")
@@ -143,6 +143,11 @@ class HFPipelineModel(AbstractLanguageModel):
             state_values[state] = value
 
         return state_values
+    
+    @staticmethod
+    def load(model_nmae, verbose=False):
+        return HFPipelineModel(model_name, verbose)
+    
         
 
 
@@ -223,8 +228,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process:"
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process: {state_text}"
         prompt += self.ReAct_prompt
+        print(prompt)
         if self.use_chat_api:
             new_prompt_success = False
             """
@@ -629,7 +635,7 @@ if __name__ == '__main__':
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('api key')
+    model = OptimizedOpenAILanguageModel('api key', api_model="gpt-3.5-turbo")
     
     
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)

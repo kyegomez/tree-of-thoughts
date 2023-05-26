@@ -70,20 +70,9 @@ else:
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for super intelligent responses you'll have to be more explicit in your prompt and select a better model
     
-k = 5
-T = 3
-b = 5
-vth = 0.5
-timeout = 10
-confidence = 1.0 #cmodel is confident on performance
-max_iterations = 40 #tree branch nodes 
-convergence_threshold = 0.01
-convergence_count = 5
 
-
-
-
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+solution = tree_of_thoughts.solve(input_problem)
+# k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
 
 #use the solution in your production environment
