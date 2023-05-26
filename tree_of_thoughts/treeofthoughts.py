@@ -99,7 +99,7 @@ class HFPipelineModel(AbstractLanguageModel):
 
     def generate_thoughts(self, state, k, max_length=100):
         state_text = ' '.join(state)
-        prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve {state_text}"
+        prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve"
 
         if self.verbose:
             print(f"Generating thoughts for state: {state_text}")
@@ -228,7 +228,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process: {state_text}"
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process: "
         prompt += self.ReAct_prompt
         print(prompt)
         if self.use_chat_api:
@@ -852,9 +852,11 @@ class TreeofThoughts:
         S0 = {x}
         for t in range(1, T + 1):
             S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
-            Vt = self.model.evaluate_states(S0_t)
+            Vt = self.model.evaluate_states(S0_t, x)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
+
+            # print(f'S0_t: {S0_t} Vt: {Vt} St: {St} S0: {S0}')
 
 
             #store thoughts evaluations and parent nodes in a json file
@@ -876,7 +878,7 @@ class TreeofThoughts:
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count
             if t > T:
                 thought = self.model.generate_thoughts(s, 1)
-                value = self.model.evaluate_states({s})[s]
+                value = self.model.evaluate_states({s}, x)[s]
                 output.append((thought, value))
 
                 if confidence_threshold is not None and value >= confidence_threshold:
@@ -897,7 +899,7 @@ class TreeofThoughts:
                 return False
 
             for s_prime in sorted(self.model.generate_thoughts(s, k)):
-                state_value = self.model.evaluate_states({s_prime})[s_prime]
+                state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
                 if state_value > vth and (pruning_threshold is None or state_value >= pruning_threshold):
                     if dfs((*s, s_prime), t + 1):
                         return True
@@ -917,9 +919,11 @@ class TreeofThoughts:
 class OptimizedTreeofThoughts(TreeofThoughts):
     def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
+        print(f'Start time {start_time}')
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
                 result = self.tot_bfs(x, k, T, b)
+                print(f'resultttt in optimized tree of thoughts: {result}')
                 if result:
                     return result
         elif self.search_algorithm == 'DFS':
@@ -963,14 +967,14 @@ if __name__ == '__main__':
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('', api_model="gpt-3.5-turbo")
+    model = OptimizedOpenAILanguageModel(', api_model="gpt-3.5-turbo")
     
 
 
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
     input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-    k = 5 #number of thoughts to input
+    k = 1#number of thoughts to input
     T = 3 # maximum depth of the search tree
     b = 5 # branching factor -< number of child nodes for each branch
     vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
