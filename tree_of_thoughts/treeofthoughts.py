@@ -881,7 +881,7 @@ class TreeofThoughts:
         dfs(x, 1)
         return max(output, key=lambda x: x[1]) if output else None
 
-
+#does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
     def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
@@ -938,20 +938,20 @@ if __name__ == '__main__':
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
     input_problem = "What are the best reasoning methods to advance Large Language Models"
-    k = 5
-    T = 3
-    b = 5
-    vth = 0.5
-    timeout = 10
+    k = 5 #number of thoughts to input
+    T = 3 # maximum depth of the search tree
+    b = 5 # branching factor -< number of child nodes for each branch
+    vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
+    timeout = 10 #10 seconds timeout before stop
     confidence = 0.8 #cmodel is confident on performance
     max_iterations = 40 #tree branh nodes 
-    convergence_threshold = 0.01
-    convergence_count = 5
+    convergence_threshold = 0.01 #determining when the search process has converged
+    convergence_count = 5 # number of searchers to be considered converged
+    #read documentation for more
 
     #call the solve emthod with the input problem and other params
     solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
     
-    # solution = tree_of_thoughts.solve(input_problem)
     
     #use the solution in yes
     print(f"solution: {solution}")

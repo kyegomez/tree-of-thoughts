@@ -71,12 +71,23 @@ else:
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for super intelligent responses you'll have to be more explicit in your prompt and select a better model
     
 
-solution = tree_of_thoughts.solve(input_problem)
-# k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
-    
 
-#use the solution in your production environment
-print(f'solution {solution}')
+input_problem = "What are the best reasoning methods to advance Large Language Models"
+k = 5 #number of thoughts to input
+T = 3 # maximum depth of the search tree
+b = 5 # branching factor -< number of child nodes for each branch
+vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
+timeout = 10 #10 seconds timeout before stop
+confidence = 0.8 #cmodel is confident on performance
+max_iterations = 40 #tree branh nodes 
+convergence_threshold = 0.01 #determining when the search process has converged
+convergence_count = 5 # number of searchers to be considered converged
+#read documentation for more
+
+#call the solve emthod with the input problem and other params
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
+
+    
 
 
 # Save the tree and metrics to a JSON file

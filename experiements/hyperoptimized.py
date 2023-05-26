@@ -179,6 +179,7 @@ class TreeofThoughts:
         return output
 
 
+#does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
