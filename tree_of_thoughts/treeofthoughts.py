@@ -42,7 +42,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
         self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer or model_name)
         self.verbose = verbose
 
-    def generate_thoughts(self, state, k):
+    def generate_thoughts(self, state, k, max_length=100):
         state_text = ' '.join(state)
         prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve {state_text}"
 
@@ -51,7 +51,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         try:
             inputs = self.tokenizer(prompt, return_tensors="pt")
-            outputs = self.model.generate(**inputs, num_return_sequences=1)
+            outputs = self.model.generate(**inputs, max_length, num_return_sequences=1,)
             thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
         except Exception as e:
             if self.verbose:
@@ -61,7 +61,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return thoughts
 
-    def evaluate_states(self, states, inital_prompt):
+    def evaluate_states(self, states, inital_prompt, max_length=10):
         state_values = {}
         for state in states:
             state_text = ' '.join(state)
@@ -72,7 +72,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
             try:
                 inputs = self.tokenizer(prompt, return_tensors="pt")
-                outputs = self.model.generate(**inputs, num_return_sequences=1)
+                outputs = self.model.generate(**inputs, num_return_sequences=1, max_length=max_length)
                 value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
                 value = float(value_text)
             except ValueError:
