@@ -35,7 +35,9 @@ Create a Python script (e.g., example.py) and import the necessary classes:
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
 
 use_v2 = False
+
 api_key=""
+
 api_base= "" # leave it blank if you simply use default openai api url
 
 if not use_v2:
@@ -61,12 +63,16 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-if not use_v2:
-    #create an instance of the tree of thoughts class v1
-    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
-else:
-    #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts # does not work now use regular tree of thoughts
-    tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
+# if not use_v2:
+#     #create an instance of the tree of thoughts class v1
+
+
+tree_of_thoughts = TreeofThoughts(model, search_algorithm)
+
+
+# else:
+#     #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts # does not work now use regular tree of thoughts
+#     tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for super intelligent responses you'll have to be more explicit in your prompt and select a better model
     
@@ -90,9 +96,9 @@ solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confiden
     
 
 
-# Save the tree and metrics to a JSON file
-file_name = "logs/tree_of_thoughts_output.json"
-tree_of_thoughts.save_tree_to_json(file_name)
+# # Save the tree and metrics to a JSON file
+# file_name = "logs/tree_of_thoughts_output.json"
+# tree_of_thoughts.save_tree_to_json(file_name)
 
 ```
 
