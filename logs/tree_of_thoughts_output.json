@@ -1,0 +1,15 @@
+{
+    "tree": {
+        "thoughts": [],
+        "states": []
+    },
+    "metrics": {
+        "vth": [],
+        "b": [],
+        "k": [],
+        "x": [],
+        "new_best_value": [],
+        "result": [],
+        "search_algorithm": "BFS"
+    }
+}

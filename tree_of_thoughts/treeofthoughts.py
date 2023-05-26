@@ -8,8 +8,8 @@ import guidance
 import time
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import pipeline
-
-
+import heapq
+import json
 DATA_PATH = './data'
 
 
@@ -154,7 +154,7 @@ class HFPipelineModel(AbstractLanguageModel):
 
 
 class OpenAILanguageModel(AbstractLanguageModel):
-    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=False):
+    def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
         if api_key == "" or api_key == None:
             api_key = os.environ.get("OPENAI_API_KEY", "")
         if api_key != "":
@@ -268,10 +268,12 @@ class OpenAILanguageModel(AbstractLanguageModel):
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and NOTHING ELSE:"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
+                
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
+                    print(f'state: {value_text}')
                     value = float(value_text)
                     print(f"value: {value}")
                 except ValueError:
@@ -281,12 +283,21 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
+
             prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+
             response = self.openai_api_call_handler(prompt, 50, 1)
+
+            print(f'state response: {response}')
+
             best_state_text = self.openai_choice2text_handler(response.choices[0])
+
             print(f"Best state text: {best_state_text}")
+
             best_state = tuple(best_state_text.split())
+
             print(f'best_state: {best_state}')
+
             return {state: 1 if state == best_state else 0 for state in states}
 
         else:
@@ -533,6 +544,7 @@ class TreeofThoughts:
             Vt = self.model.evaluate_states(S0_t, x)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
+            print(f'S0L {S0}')
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=0.8, max_iterations=40, convergence_threshold=0.01, convergence_count=5):
@@ -544,8 +556,9 @@ class TreeofThoughts:
         def dfs(s, t):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count
             if t > T:
-                thought = self.model.generate_thoughts(s, 1)
+                thought = self.model.generate_thouhts(s, 1)
                 value = self.model.evaluate_states({s}, x)[s]
+                print(f'thought {thought} and value: {value}')
                 output.append((thought, value))
 
                 if confidence_threshold is not None and value >= confidence_threshold:
@@ -584,44 +597,189 @@ class TreeofThoughts:
 
 
 
+# class OptimizedTreeofThoughts(TreeofThoughts):
+#     # def tot_bfs(self, x, k, T, b):
+#     #     S0 = {x}
+#     #     for t in range(1, T + 1):
+#     #         S0_t = {(*s, z) for s in S0 for z in self.model.parallel_generate_thoughts(s, k)}
+#     #         Vt = self.model.parallel_evaluate_states(S0_t)
+#     #         St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
+#     #         S0 = set(St)
+#     #     return self.model.parallel_generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+
+#     # def tot_dfs(self, x, k, T, vth):
+#     #     output = []
+
+#     #     def dfs(s, t):
+#     #         if t > T:
+#     #             output.append(self.model.parallel_generate_thoughts(s, 1))
+#     #             return
+#     #         for s_prime in sorted(self.model.parallel_generate_thoughts(s, k)):
+#     #             if self.model.parallel_evaluate_states({s_prime})[s_prime] > vth:
+#     #                 dfs((*s, s_prime), t + 1)
+
+#     #     dfs(x, 1)
+#     #     return output
+
+#     def tot_bfs(self, x, k, T, b):
+#         S0 = {x}
+#         for t in range(1, T + 1):
+#             S0_t = {(*s, z) for s in S0 for z in self.model.parallel_generate_thoughts(s, k)}
+#             Vt = self.model.parallel_evaluate_states(S0_t)
+#             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
+#             S0 = set(St)
+#         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+
+#     def tot_dfs(self, x, k, T, vth):
+#         output = []
+
+#         def dfs(s, t):
+#             if t > T:
+#                 output.append(self.model.generate_thoughts(s, 1))
+#                 return
+#             for s_prime in sorted(self.model.generate_thoughts(s, k)):
+#                 if self.model.evaluate_states({s_prime})[s_prime] > vth:
+#                     dfs((*s, s_prime), t + 1)
+
+#         dfs(x, 1)
+#         return output
+
+#     def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=20, confidence_threshold=0.8, max_iterations=50, convergence_threshold=0.01, convergence_count=5):
+#         start_time = time.time()
+#         if self.search_algorithm == 'BFS':
+#             while timeout is None or time.time() - start_time < timeout:
+#                 result = self.tot_bfs(x, k, T, b)
+#                 print(f'result: {result}')
+#                 if result:
+#                     return result
+#         elif self.search_algorithm == 'DFS':
+#             while timeout is None or time.time() - start_time < timeout:
+#                 result = self.tot_dfs(x, k, T, vth, 
+#                                       confidence_threshold=confidence_threshold, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+#                 print(f'result: {result}')
+#                 if result:
+#                     return result
+#         else:
+#             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+
+
 class OptimizedTreeofThoughts(TreeofThoughts):
+
+    def __init__(self, model, search_algorithm):
+        super().__init__(model, search_algorithm)
+        self.tree = {
+            "thoughts": [],
+            "states": []
+        }
+        self.metrics = {
+            "x": [],
+            "vth": [],
+            # "evaluations "
+            "b": [],
+            "k": [],
+            "new_best_value": [],
+            "result": [],
+            "search_algorithm": search_algorithm
+        }
+
+    def parallel_generate_thoughts(self, states, k):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            thoughts = list(executor.map(lambda state: self.model.generate_thoughts(state, k), states))
+            print(f"Parallel generated thoughts: {thoughts}")
+        return thoughts
+
+    def parallel_evaluate_states(self, states, initial_prompt):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            state_values = list(executor.map(lambda state: self.model.evaluate_states(state, initial_prompt), states))
+            print(f"Parallel evaluated state values: {state_values}")
+        return state_values
+
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
         for t in range(1, T + 1):
-            S0_t = {(*s, z) for s in S0 for z in self.model.parallel_generate_thoughts(s, k)}
-            Vt = self.model.parallel_evaluate_states(S0_t)
+            S0_t = {(*s, z) for s in S0 for z in self.parallel_generate_thoughts(s, k)}
+            Vt = self.parallel_evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
-    def tot_dfs(self, x, k, T, vth):
+    def tot_dfs(self, x, k, T, vth, dynamic_pruning=True, early_stopping=True, early_stopping_threshold=0.001):
         output = []
 
-        def dfs(s, t):
+        def dfs(s, t, best_value):
+            nonlocal output
             if t > T:
-                output.append(self.model.generate_thoughts(s, 1))
-                return
-            for s_prime in sorted(self.model.generate_thoughts(s, k)):
-                if self.model.evaluate_states({s_prime})[s_prime] > vth:
-                    dfs((*s, s_prime), t + 1)
+                thought = self.model.generate_thoughts(s, 1)
+                value = self.model.evaluate_states({s}, x)[s]
+                output.append((thought, value))
+                return value
 
-        dfs(x, 1)
-        return output
+            max_value = -1
+            for s_prime in sorted(self.model.generate_thoughts(s, k)):
+                state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
+                if state_value > vth and (not dynamic_pruning or state_value >= best_value):
+                    new_best_value = dfs((*s, s_prime), t + 1, max(best_value, state_value))
+                    max_value = max(max_value, new_best_value)
+
+                    if early_stopping and abs(new_best_value - best_value) < early_stopping_threshold:
+                        break
+
+            return max_value
+
+        dfs(x, 1, -1)
+        return max(output, key=lambda x: x[1]) if output else None
+    
+
+    def save_tree_to_json(self, file_name):
+        output_data = {
+            "tree": self.tree,
+            "metrics": self.metrics
+        }
+
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
+
+        with open(file_name, 'w') as json_file:
+            json.dump(output_data, json_file, indent=4)
+
+
 
     def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=20, confidence_threshold=0.8, max_iterations=50, convergence_threshold=0.01, convergence_count=5):
         start_time = time.time()
-        if self.search_algorithm == 'BFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_bfs(x, k, T, b)
-                if result:
-                    return result
-        elif self.search_algorithm == 'DFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_dfs(x, k, T, vth, confidence_threshold=confidence_threshold, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
-                if result:
-                    return result
-        else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
+        try:
+            if self.search_algorithm == 'BFS':
+                while timeout is None or time.time() - start_time < timeout:
+                    result = self.tot_bfs(x, k, T, b)
+                    print(f'result: {result}')
+                    if result:
+                        self.metrics["result"].append(result)
+                        self.metrics["x"].append(x)
+                        self.metrics["k"].append(k)
+                        self.metrics["T"].append(T)
+                        self.metrics["b"].append(b)
+                        self.metrics["vth"].append(vth)
+                        self.save_tree_to_json(file_name)
+                        return result
+            elif self.search_algorithm == 'DFS':
+                while timeout is None or time.time() - start_time < timeout:
+                    result = self.tot_dfs(x, k, T, vth, dynamic_pruning=True, early_stopping=True, early_stopping_threshold=0.001)
+                    print(f'result: {result}')
+                    if result:
+                        self.metrics["result"].append(result)
+                        self.metrics["x"].append(x)
+                        self.metrics["k"].append(k)
+                        self.metrics["T"].append(T)
+                        self.metrics["b"].append(b)
+                        self.metrics["vth"].append(vth)
+                        self.save_tree_to_json(file_name)
+                        return result
+            else:
+                raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+        except KeyboardInterrupt:
+            print("Keyboard interrupt detected.")
+        finally:
+            print("Saving the current tree and metrics.")
+            self.save_tree_to_json(file_name)
 
 
 
@@ -653,35 +811,29 @@ class AdaptiveTreeofThoughts(TreeofThoughts):
 
 
 if __name__ == '__main__':
-    search_algorithm = "DFS"
+    search_algorithm = "BFS"
     strategy = "cot"
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('api key', api_model="gpt-3.5-turbo")
+    model = OptimizedOpenAILanguageModel('api key ', api_model="gpt-3.5-turbo")
     
     
-    tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
+    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
     
     
     input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-    # k = 5
-    # T = 3
-    # b = 5
-    # vth = 0.5
-    # timeout = 10
-    # confidence = 1.0 #cmodel is confident on performance
-    # max_iterations = 40 #tree branh nodes 
-    # convergence_threshold = 0.01
-    # convergence_count = 5
 
 
 
     
     solution = tree_of_thoughts.solve(input_problem)
-                                    #   k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
     #use the solution in yes
     print(f"solution: {solution}")
     
     
+
+# # Save the tree and metrics to a JSON file
+#     file_name = "logs/tree_of_thoughts_output.json"
+#     tree_of_thoughts.save_tree_to_json(file_name)

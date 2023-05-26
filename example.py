@@ -24,8 +24,7 @@ else:
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
 
-#cot or propose
-strategy="cot"
+
 
 # value or vote
 evaluation_strategy = "value"
@@ -53,3 +52,8 @@ solution = tree_of_thoughts.solve(input_problem)
     
 #use the solution in your production environment
 print(f"solution: {solution}")
+
+
+# Save the tree and metrics to a JSON file
+file_name = "logs/tree_of_thoughts_output.json"
+tree_of_thoughts.save_tree_to_json(file_name)
