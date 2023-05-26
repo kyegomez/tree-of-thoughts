@@ -980,8 +980,3 @@ if __name__ == '__main__':
     #use the solution in yes
     print(f"solution: {solution}")
     
-    
-
-# # Save the tree and metrics to a JSON file
-#     file_name = "logs/tree_of_thoughts_output.json"
-#     tree_of_thoughts.save_tree_to_json(file_name)
