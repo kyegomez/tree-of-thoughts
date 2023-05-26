@@ -79,7 +79,7 @@ input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 
 
 
 input_problem = "What are the best reasoning methods to advance Large Language Models"
-k = 5 #number of thoughts to input
+k = 5 #number of thoughts to generate
 T = 3 # maximum depth of the search tree
 b = 5 # branching factor -< number of child nodes for each branch
 vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
