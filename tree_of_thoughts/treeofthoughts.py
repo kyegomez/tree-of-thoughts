@@ -160,9 +160,9 @@ class TextTask(Task):
 
 
 class HuggingLanguageModel(AbstractLanguageModel):
-    def __init__(self, model_name, tokenizer_name):
+    def __init__(self, model_name, model_tokenizer):
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer)
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
@@ -691,7 +691,7 @@ if __name__ == '__main__':
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('')
+    model = OptimizedOpenAILanguageModel('api key')
     
     
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
