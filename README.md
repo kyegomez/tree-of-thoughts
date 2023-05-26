@@ -181,13 +181,17 @@ class TreeofThoughts:
 To use Tree of Thoughts with OpenAI's API, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using OpenAI's API. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
 
 ### Hugging Face Transformers
-
-To use huggingface pass in model_name 
+To run huggingface transformers
+``` 
+git clone https://github.com/kyegomez/tree-of-thoughts
+cd tree-of-thoughts
+python3 huggingfaceExample.py
+```
 
 ```python
 from tree_of_thoughts import HuggingLanguageModel
 
-model_name="gpt2
+model_name="gpt2"
 
 huggingface_model = HuggingLanguageModel(model_name)
 ```
@@ -195,7 +199,6 @@ huggingface_model = HuggingLanguageModel(model_name)
 
 
 ```python
-
 class HuggingLanguageModel(AbstractLanguageModel):
     def __init__(self, model_name):
         self.model = AutoModelForCausalLM.from_pretrained(model_name)

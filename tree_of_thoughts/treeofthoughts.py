@@ -296,6 +296,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     response = self.openai_api_call_handler(prompt, 50, 0.5, k)
                     text = self.openai_choice2text_handler(response.choices[0])
                     thoughts += [text]
+                    print(f'thoughts: {thoughts}')
             
         else:
             response = self.openai_api_call_handler(prompt, 50, 0.5, k)
@@ -327,6 +328,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
             best_state_text = self.openai_choice2text_handler(response.choices[0])
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
+            print(f'best_state: {best_state}')
             return {state: 1 if state == best_state else 0 for state in states}
 
         else:
