@@ -105,7 +105,7 @@ class HFPipelineModel(AbstractLanguageModel):
             print(f"Generating thoughts for state: {state_text}")
 
         try:
-            generated_outputs = self.pipeline(prompt, max_length=max_length, num_return_sequences=k)
+            generated_outputs = self.pipeline(prompt, max_length=max_length, num_return_sequences=1)
             thoughts = [output["generated_text"] for output in generated_outputs]
             print(f'thoughts: {thoughts}')
         except Exception as e:

@@ -313,50 +313,28 @@ The next big advancement for the Tree of Thoughts algorithm is to extend it to m
 
 Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
 
-# The Compiler
+# Here's the documentation for the inputs of the optimized Tree of Thoughts model:
 
-[Utilizing Tree of Thoughts for optimal program synthesis](https://github.com/kyegomez/the-compiler)
+x (str): The initial problem statement or prompt for which the Tree of Thoughts algorithm will generate a solution.
 
-![the compiler banner](https://github.com/kyegomez/the-compiler/raw/main/the-compiler.png)
+k (int, default=5): The number of thoughts to generate at each state. A higher value of k will result in more thoughts being generated, potentially leading to a more diverse set of solutions. However, increasing k may also increase the computational complexity and time required to find a solution.
 
-Welcome to _The Compiler_, a novel child project under the Tree of Thoughts (ToT) paradigm. This project is crafted with the intent of making autonomous programming not just a reality, but an effortless task for you. 
+T (int, default=3): The maximum depth of the search tree. A higher value of T allows the algorithm to explore deeper states, potentially leading to better solutions. However, increasing T may also increase the computational complexity and time required to find a solution.
 
-In essence, _The Compiler_ allows you to "grow" any program you can dream of. By providing a high-level specification of the product you would like, you can sit back and let _The Compiler_ do the heavy lifting. 
+b (int, default=5): The branching factor of the search tree, which determines the maximum number of child nodes for each parent node. A higher value of b allows the algorithm to explore more states, potentially leading to better solutions. However, increasing b may also increase the computational complexity and time required to find a solution.
 
-## Overview 
+vth (float, default=0.5): The value threshold for pruning states. States with a value below this threshold will be discarded, reducing the search space. A higher value of vth will result in a more aggressive pruning strategy, potentially speeding up the search process. However, setting vth too high may cause the algorithm to discard promising states, leading to suboptimal solutions.
 
-_The Compiler_ leverages the ToT framework and large language models (LLMs) to handle the programming process, from abstract specifications to a working program. 
+timeout (int, default=10): The maximum time (in seconds) allowed for the search process. If the search process exceeds this time limit, the algorithm will return the best solution found so far.
 
-Here's a basic breakdown of the workflow:
+confidence_threshold (float, default=0.8): The confidence threshold for determining when a solution is satisfactory. If the algorithm finds a solution with a confidence value above this threshold, it will return the solution immediately.
 
-1. **Input**: You provide an abstract specification for the product you would like.
-2. **Unit Tests Generation**: We use an LLM on ToT to produce a suite of unit tests for the code.
-3. **Run ToT**: We run the Tree of Thoughts LLM on the given specification, using the generated unit tests as the evaluation score.
-4. **Output**: Ready to use program!
+max_iterations (int, default=40): The maximum number of iterations allowed for the search process. If the search process exceeds this number of iterations, the algorithm will return the best solution found so far.
 
-## Architecture
+convergence_threshold (float, default=0.01): The convergence threshold for determining when the search process has converged. If the difference in confidence values between consecutive iterations is below this threshold for a specified number of iterations (convergence_count), the algorithm will return the best solution found so far.
 
-The Compiler, leveraging the Tree of Thoughts paradigm, consists of several primary components, including the Specification Parser, Thought Decomposer, Thought Generator, State Evaluator, and the Search Algorithm. 
+convergence_count (int, default=5): The number of consecutive iterations required for the search process to be considered converged. If the difference in confidence values between consecutive iterations is below the convergence_threshold for this number of iterations, the algorithm will return the best solution found so far.
 
-1. **Specification Parser**: This interprets your high-level input specifications and translates them into a format that the Thought Decomposer can understand and work with.
-
-2. **Thought Decomposer**: This component breaks down the programming problem into manageable "thoughts" or steps.
-
-3. **Thought Generator**: It generates potential thoughts or steps from the current state using two strategies, either sampling thoughts independently or proposing thoughts sequentially.
-
-4. **State Evaluator**: It evaluates the progress of different states towards solving the programming problem, acting as a heuristic for the Search Algorithm.
-
-5. **Search Algorithm**: This module determines which states to keep exploring and in which order. It employs either Breadth-First Search (BFS) or Depth-First Search (DFS), depending on the nature of the problem.
-
-## Share The Compiler
-
-If you find this project exciting and think others might benefit from it, feel free to share it. Use the buttons below to share it on various social media platforms:
-
-- [Share on Twitter](http://twitter.com/share?text=Check%20out%20The%20Compiler%20project%20on%20GitHub!%20It%20allows%20you%20to%20autonomously%20create%20programs%20using%20abstract%20specifications.&url=https://github.com/kyegomez/the-compiler)
-- [Share on LinkedIn](http://www.linkedin.com/shareArticle?mini=true&url=https://github.com/kyegomez/the-compiler&title=The%20Compiler%20Project&summary=This%20project%20is%20a%20revolution%20in%20autonomous%20programming!%20Check%20it%20out%20on%20GitHub.)
-- [Share on Facebook](http://www.facebook.com/sharer.php?u=https://github.com/kyegomez/the-compiler)
-
-Let's revolutionize the world of programming together with _The Compiler_!
 
 
 
