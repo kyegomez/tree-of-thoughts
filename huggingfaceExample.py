@@ -20,7 +20,7 @@ from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAIL
 # Initialize the HuggingLanguageModel with the GPT-2 model
 model_name = "gpt2"
 model = HuggingLanguageModel(model_name, 
-                             model_Tokenizer="gpt2", 
+                             model_tokenizer="gpt2", 
                              verbose=True)
                              
 
