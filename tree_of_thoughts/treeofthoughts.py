@@ -815,21 +815,38 @@ class TreeofThoughts:
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
+        self.tree = {
+            "nodes": [],
+            "metrics": {
+                "thoughts": [],
+                "evaluations": []
+            }
+        }
 
     def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
-        if self.search_algorithm == 'BFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_bfs(x, k, T, b)
-                if result:
-                    return result
-        elif self.search_algorithm == 'DFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_dfs(x, k, T, vth)
-                if result:
-                    return result
-        else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
+        try:
+            if self.search_algorithm == 'BFS':
+                while timeout is None or time.time() - start_time < timeout:
+                    result = self.tot_bfs(x, k, T, b)
+                    if result:
+                        self.save_tree_to_json(file_name)
+                        return result
+            elif self.search_algorithm == 'DFS':
+                while timeout is None or time.time() - start_time < timeout:
+                    result = self.tot_dfs(x, k, T, vth)
+                    if result:
+                        self.save_tree_to_json(file_name)
+                        return result
+            else:
+                raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
+        except KeyboardInterrupt:
+            print("Keyboard interrupt detected.")
+        finally:
+            print("Saving the current tree and metrics.")
+            self.save_tree_to_json(file_name)
+
 
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
@@ -838,6 +855,15 @@ class TreeofThoughts:
             Vt = self.model.evaluate_states(S0_t)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
+
+
+            #store thoughts evaluations and parent nodes in a json file
+            for s in S0_t:
+                self.tree['nodes'].append(s)
+                self.tree["metrics"]["thoughts"].append(s[-1])
+                self.tree["metrics"]["evaluations"].append(Vt[s])
+
+
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
@@ -880,6 +906,12 @@ class TreeofThoughts:
 
         dfs(x, 1)
         return max(output, key=lambda x: x[1]) if output else None
+    
+    def save_tree_to_json(self, file_name):
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
+
+        with open(file_name, 'w') as json_file:
+            json.dump(self.tree, json_file, indent=4)
 
 #does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
@@ -931,13 +963,13 @@ if __name__ == '__main__':
     evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('api key ', api_model="gpt-3.5-turbo")
+    model = OptimizedOpenAILanguageModel('', api_model="gpt-3.5-turbo")
     
 
 
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
-    input_problem = "What are the best reasoning methods to advance Large Language Models"
+    input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
     k = 5 #number of thoughts to input
     T = 3 # maximum depth of the search tree
     b = 5 # branching factor -< number of child nodes for each branch
