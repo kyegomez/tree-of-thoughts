@@ -166,7 +166,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve the reasoning process:"
+        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve {state_text}"
 
         inputs = self.tokenizer(prompt, return_tensors="pt")
         outputs = self.model.generate(**inputs, num_return_sequences=k)
