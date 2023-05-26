@@ -177,7 +177,7 @@ class TreeofThoughts:
         return output
 
 # usage
-
+model = OpenAILanguageModel(api_key="")
 #choose search algorithm('bfs or 'dfs)
 search_algorithm = "BFS"
 strategy="cot"

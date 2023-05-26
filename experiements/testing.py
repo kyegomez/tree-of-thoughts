@@ -11,7 +11,10 @@ from transformers import pipeline
 import heapq
 import json
 DATA_PATH = './data'
+import logging 
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class AbstractLanguageModel(ABC):
@@ -228,7 +231,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
     def generate_thoughts(self, state, k):
         state_text = ' '.join(state)
         
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve the reasoning process: "
+        prompt = f"Given the current state of reasoning: '{state_text}', generate the next coherent {k} to achieve the objective: "
         prompt += self.ReAct_prompt
         print(prompt)
         if self.use_chat_api:
@@ -269,7 +272,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
             for state in states:
                 state_text = ' '.join(state)
                 prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
-                
+                print(f'prompt: {prompt}')
+
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
@@ -285,6 +289,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
             states_text = '\n'.join([' '.join(state) for state in states])
 
             prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+            print(f'prompt: {prompt}')
 
             response = self.openai_api_call_handler(prompt, 50, 1)
 
@@ -842,9 +847,11 @@ class TreeofThoughts:
             else:
                 raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
         except KeyboardInterrupt:
-            print("Keyboard interrupt detected.")
+            logger.error("Keyboard interrupt detected.")
+        except ValueError as e:
+            logger.error(f"Error: {e}")
         finally:
-            print("Saving the current tree and metrics.")
+            logger.info("Saving the current tree and metrics.")
             self.save_tree_to_json(file_name)
 
 
@@ -856,23 +863,23 @@ class TreeofThoughts:
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
 
-            # print(f'S0_t: {S0_t} Vt: {Vt} St: {St} S0: {S0}')
+            logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
-
-            #store thoughts evaluations and parent nodes in a json file
             for s in S0_t:
                 self.tree['nodes'].append(s)
                 self.tree["metrics"]["thoughts"].append(s[-1])
                 self.tree["metrics"]["evaluations"].append(Vt[s])
 
-
         return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
         prev_best_value = None
+        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
+
 
         def dfs(s, t):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count
@@ -900,20 +907,25 @@ class TreeofThoughts:
 
             for s_prime in sorted(self.model.generate_thoughts(s, k)):
                 state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
+                logger.info(f"State: {s_prime}, Value: {state_value}")
+
                 if state_value > vth and (pruning_threshold is None or state_value >= pruning_threshold):
                     if dfs((*s, s_prime), t + 1):
                         return True
 
+            self.save_tree_to_json(file_name)
             return False
+            
 
         dfs(x, 1)
         return max(output, key=lambda x: x[1]) if output else None
-    
+
     def save_tree_to_json(self, file_name):
         os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
         with open(file_name, 'w') as json_file:
             json.dump(self.tree, json_file, indent=4)
+
 
 #does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
@@ -935,6 +947,7 @@ class OptimizedTreeofThoughts(TreeofThoughts):
             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
 
 
+
 if __name__ == '__main__':
     search_algorithm = "DFS"
     strategy = "cot"
@@ -952,15 +965,16 @@ if __name__ == '__main__':
     T = 5 # maximum depth of the search tree
     b = 14 # branching factor -< number of child nodes for each branch
     vth = 0.8 # pruning state -> any evaluated thought below this is eliminated
-    timeout = 10 #10 seconds timeout before stop
-    confidence = 0.8 #cmodel is confident on performance
-    max_iterations = 40 #tree branch nodes 
-    convergence_threshold = 0.01 #determining when the search process has converged
-    convergence_count = 5 # number of searchers to be considered converged
+    # timeout = 10 #10 seconds timeout before stop
+    # confidence = 0.8 #cmodel is confident on performance
+    # max_iterations = 40 #tree branch nodes 
+    # convergence_threshold = 0.01 #determining when the search process has converged
+    # convergence_count = 5 # number of searchers to be considered converged
     #read documentation for more
 
     #call the solve emthod with the input problem and other params
-    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
+    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth)
+                                    #   timeout, confidence, max_iterations, convergence_threshold, convergence_count)
     
     
     #use the solution in yes
