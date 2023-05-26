@@ -60,7 +60,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     temperature=0.5,
                 )
                 try:
-                    print(response.choices[0].text.strip())
+                    # print(response.choices[0].text.strip())
                     value = float(response.choices[0].text.strip())
                     print(value)
                 except ValueError:

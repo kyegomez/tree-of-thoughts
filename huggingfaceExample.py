@@ -51,8 +51,8 @@ max_iterations = 40 #tree branh nodes
 convergence_threshold = 0.01
 convergence_count = 5
 
-    
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+#call the solve emthod with the input problem and other params
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
     
 #use the solution in your production environment
 print(f"solution: {solution}")
