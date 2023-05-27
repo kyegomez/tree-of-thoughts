@@ -56,13 +56,13 @@ class TreeofThoughts:
             }
         }
 
-    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, prunning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
             if self.search_algorithm == 'BFS':
                 while timeout is None or time.time() - start_time < timeout:
-                    result = self.tot_bfs(x, k, T, b)
+                    result = self.tot_bfs(x, k, T, b, prunning_threshold)
                     if result:
                         self.save_tree_to_json(file_name)
                         # printed_tree = self.print_tree(result)
@@ -104,7 +104,7 @@ class TreeofThoughts:
 
             St = sorted(pruned_S0_t.keys(), key=lambda s: pruned_S0_t[s], reverse=True)[:b]
             S0 = set(St)
-
+            
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
         best_state = max(St, key=lambda s: Vt[s])

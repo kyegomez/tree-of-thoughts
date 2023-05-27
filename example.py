@@ -28,6 +28,7 @@ k = 5
 T = 3
 b = 5
 vth = 0.5
+pruning_threshold = 0.5
 timeout = 10
 confidence = 0.8 #cmodel is confident on performance
 max_iterations = 40 #tree branh nodes 
