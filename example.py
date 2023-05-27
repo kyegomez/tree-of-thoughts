@@ -36,7 +36,7 @@ convergence_threshold = 0.01
 convergence_count = 5
 
 #call the solve emthod with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, pruning_threshold, confidence, max_iterations, convergence_threshold, convergence_count)
     
                   
     
