@@ -3,7 +3,7 @@
 import os
 import time
 import json
-from .openaiModels import OptimizedOpenAILanguageModel
+from tree_of_thoughts.openaiModels import OptimizedOpenAILanguageModel
 DATA_PATH = './data'
 import logging 
 import argparse
@@ -190,6 +190,7 @@ class TreeofThoughts:
         for child, parent in self.tree["nodes"].items():
             if parent == node:
                 tree_info += self.print_tree(child, depth + 1)
+                print(f'tree info: {tree_info}')
 
         return tree_info
 
@@ -264,7 +265,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     
-    model = OptimizedOpenAILanguageModel(os.getenv('OPENAI_API_KEY'), api_model="gpt4")
+    model = OptimizedOpenAILanguageModel('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')
     #solve the problem using the tree of thoughts class
     optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
 
