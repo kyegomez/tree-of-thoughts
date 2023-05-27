@@ -49,10 +49,10 @@ class TreeofThoughts:
         self.model = model
         self.search_algorithm = search_algorithm
         self.tree = {
-            "nodes": [],
+            "nodes": {},
             "metrics": {
-                "thoughts": [],
-                "evaluations": []
+                "thoughts": {},
+                "evaluations": {}
             }
         }
 
@@ -65,12 +65,16 @@ class TreeofThoughts:
                     result = self.tot_bfs(x, k, T, b)
                     if result:
                         self.save_tree_to_json(file_name)
+                        # printed_tree = self.print_tree(result)
+                        # logger.info(f"Tree structure and metrics:\n{printed_tree}")
                         return result
             elif self.search_algorithm == 'DFS':
                 while timeout is None or time.time() - start_time < timeout:
                     result = self.tot_dfs(x, k, T, vth)
                     if result:
                         self.save_tree_to_json(file_name)
+                        # printed_tree=self.print_tree(result)
+                        # logger.info(f"Tree structure and metrics:\n{printed_tree}")
                         return result
             else:
                 raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
@@ -113,7 +117,7 @@ class TreeofThoughts:
         iteration_count = 0
         consecutive_convergence_count = 0
         prev_best_value = None
-        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
+        file_name = f"logs/tree_of_thoughts_output_{self.x}.json"
 
 
         def dfs(s, t):
@@ -170,30 +174,22 @@ class TreeofThoughts:
         best_state = max(output, key=lambda x: x[1])
         return best_state[0]
 
+
     def save_tree_to_json(self, file_name):
         os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
         with open(file_name, 'w') as json_file:
             json.dump(self.tree, json_file, indent=4)
 
-    def print_tree(self, x, node=None, depth=0):
-        if node is None:
-            node = self.tree["nodes"][x]
+    def print_tree(self, node, depth=0):
+        thought = self.tree["metrics"]["thoughts"].get(node, "")
+        evaluation = self.tree["metrics"]["evaluations"].get(node, "")
 
-        thought = self.tree["metrics"]["thoughts"][node]
-        evaluation = self.tree["metrics"]["evaluations"][node]
-
-        tree_info = {
-            "node": node,
-            "thought": thought,
-            "evaluation": evaluation,
-            "children": []
-        }
+        tree_info = f"{'  ' * depth}Node: {node}, Thought: {thought}, Evaluation: {evaluation}\n"
 
         for child, parent in self.tree["nodes"].items():
             if parent == node:
-                child_info = self.print_tree(child, depth + 1)
-                tree_info["children"].append(child_info)
+                tree_info += self.print_tree(child, depth + 1)
 
         return tree_info
 
