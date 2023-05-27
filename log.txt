@@ -318,6 +318,7 @@ thoughts: ['If we can identify the underlying assumptions and biases in our reas
 thoughts: ['One possible coherent thought to achieve the reasoning process of \'p\' could be: "Based on the available evidence and logical analysis, it is reasonable to conclude that \'p\' is true."', "If 'p' is true, then we can use deductive reasoning to derive logical conclusions based on the premises and evidence available.", "If 'p' is true, then it logically follows that we should take appropriate actions based on that truth."]
 ^CTraceback (most recent call last):
 
+<<<<<<< HEAD
 ^CTraceback (most recent call last):
   File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/tree_of_thoughts/treeofthoughts.py", line 681, in <module>
     
@@ -6002,3 +6003,94 @@ Traceback (most recent call last):
     ^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'TreeofThoughts' object has no attribute 'save_tree_to_json'
 defalt@owl tree-of-thoughts % 
+=======
+
+
+
+
+
+Now we need to develop an solution evaluator that takes into the best state and summarizes the chains of thoughts.   generate solution prompt --> give me an solution is right now -> get_final_answer that takes into account the best state and provides the response then integrate this when the tree search is done evaluating with the best state
+
+
+
+    def generate_thoughts(self, state, k):
+        state_text = ' '.join(state)
+        
+        prompt = f"Given the current state of objective: '{state_text}', generate the next coherent {k} solutions to achieve the objective: "
+        prompt += self.ReAct_prompt
+        print(prompt)
+        if self.use_chat_api:
+            new_prompt_success = False
+            """
+            # Try prompt and parse in a single shot to save tokens (but if we fail, we end up spending more tokens)
+            new_prompt = prompt + "Thought string should be output in a format that can be parsed into python array in format [xxx,xxx,xxx]"
+            response = self.openai_api_call_handler(new_prompt, 100 * k, 0.5, 1)
+            text = self.openai_choice2text_handler(response.choices[0])
+            re_parse = re.search(r'\[(.*?)\]', text)
+            if re_parse:
+                thoughts_str = re_parse.group(1)
+                if thoughts_str:
+                    thoughts = thoughts_str.split(',')
+                    new_prompt_success = len(thoughts) == k 
+                    if not new_prompt_success:
+                        print(f"Fall back to multi-prompt for chat-completion due to parse fail {text}")
+
+            """
+            if not new_prompt_success:
+                thoughts = []
+                for _ in range(k):
+                    response = self.openai_api_call_handler(prompt, 50, 0.5, k)
+                    text = self.openai_choice2text_handler(response.choices[0])
+                    thoughts += [text]
+                    print(f'thoughts: {thoughts}')
+            
+        else:
+            response = self.openai_api_call_handler(prompt, 50, 0.5, k)
+            thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
+        # print(thoughts)
+        print(f"Generated thoughts: {thoughts}")
+        return thoughts
+
+    def evaluate_states(self, states, inital_prompt):
+        if self.evaluation_strategy == 'value':
+            state_values = {}
+            for state in states:
+                state_text = ' '.join(state)
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
+                print(f'prompt: {prompt}')
+
+                response = self.openai_api_call_handler(prompt, 10, 1)
+                try:
+                    value_text = self.openai_choice2text_handler(response.choices[0])
+                    print(f'state: {value_text}')
+                    value = float(value_text)
+                    print(f"value: {value}")
+                except ValueError:
+                    value = 0  # Assign a default value if the conversion fails
+                state_values[state] = value
+            return state_values
+
+        elif self.evaluation_strategy == 'vote':
+            states_text = '\n'.join([' '.join(state) for state in states])
+
+            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n\n\n{states_text}\n\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+            print(f'prompt: {prompt}')
+
+            response = self.openai_api_call_handler(prompt, 50, 1)
+
+            print(f'state response: {response}')
+
+            best_state_text = self.openai_choice2text_handler(response.choices[0])
+
+            print(f"Best state text: {best_state_text}")
+
+            best_state = tuple(best_state_text.split())
+
+            print(f'best_state: {best_state}')
+
+            return {state: 1 if state == best_state else 0 for state in states}
+
+        else:
+            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
+        
+>>>>>>> main

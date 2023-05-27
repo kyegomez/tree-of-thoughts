@@ -11,11 +11,15 @@ from transformers import pipeline
 import heapq
 import json
 DATA_PATH = './data'
+import logging 
+import argparse 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-DATA_PATH = './data'
 
 class AbstractLanguageModel(ABC):
     @abstractmethod
@@ -24,20 +28,6 @@ class AbstractLanguageModel(ABC):
 
     @abstractmethod
     def evaluate_states(self, states):
-        pass
-
-
-class Task:
-    def __init__(self):
-        pass
-    
-    def __len__(self) -> int:
-        pass
-
-    def get_input(self, idx:int) -> str:
-        pass
-
-    def test_output(self, idx:int, output: str):
         pass
 
 
@@ -52,138 +42,6 @@ class CustomLanguageModel(AbstractLanguageModel):
     def evaluate_states(self, states):
         #implement state evaluation logic using self.model
         pass
-
-
-###########------------------------------------------< original implementation >--------------------
-
-class TextTask(Task):
-    """
-    Input (x)   : a text instruction
-    Output (y)  : a text generation
-    Reward (r)  : # TODO
-    Input Example: 
-    Output Example: 
-    """
-
-    # standard_prompt = "Given the input text:\n\n{input}\n\nGenerate a coherent passage:"
-    # cot_prompt = "Considering the input text:\n\n{input}\n\nDevise a coherent passage:"
-    # vote_prompt = "Given the following passages\n\n {input}\n\n, vote for the most coherent one:\n\n"
-    # value_prompt = "Considering the passage:\n\n{passage}\n\nEvaluate its coherence as a float between 0 and 1:"
-
-    standard_prompt = '''
-        Write a coherent passage of 4 short paragraphs. The end sentence of each paragraph must be: {input}'''
-
-    cot_prompt = '''
-    Write a coherent passage of 4 short paragraphs. The end sentence of each paragraph must be: {input}
-
-    Make a plan then write. Your output should be of the following format:
-
-    Plan:
-    Your plan here.
-
-    Passage:
-    Your passage here.
-    '''
-
-
-    vote_prompt = '''Given an instruction and several choices, decide which choice is most promising. Analyze each choice in detail, then conclude in the last line "The best choice is {s}", where s the integer id of the choice.'''
-
-    compare_prompt = '''Briefly analyze the coherency of the following two passages. Conclude in the last line "The more coherent passage is 1", "The more coherent passage is 2", or "The two passages are similarly coherent".'''
-
-    score_prompt = '''Analyze the following passage, then at the last line conclude "Thus the coherency score is {s}", where s is an integer from 1 to 10.'''
-
-    # Other methods and
-    def __init__(self, input_text=None):
-        super().__init__()
-        self.data = [input_text] if input_text else []
-        self.steps = 2
-        self.stops = ['\nPassage:\n', None]
-
-
-
-    def __len__(self) -> int:
-        return len(self.data)
-    
-    def get_input(self, idx: int) -> str:
-        return self.data[idx]
-    
-    def test_output(self, idx: int, output: str):
-        output = output.split('Passage:\n')[-1]
-        prompt = score_prompt + output
-        score_outputs = gpt(prompt, n=5, model='gpt-4')
-        scores = []
-        for score_output in score_outputs:
-            # print(score_output)
-            pattern = r".*coherency score is (\d+).*"
-            match = re.match(pattern, score_output, re.DOTALL)
-            if match:
-                score = int(match.groups()[0])
-                scores.append(score)
-            else:
-                print(f'------------------score no match: {[score_output]}')
-        print(scores)
-        # print('------------')
-        info = {'rs': scores, 'r': sum(scores) / len(scores) if scores else 0}
-        return info
-    
-    @staticmethod
-    def standard_prompt_wrap(x: str, y:str='') -> str:
-        #standard prompt
-        return TextTask.standard_prompt.format(input=x) + y
-
-    @staticmethod
-    def cot_prompt_wrap(x: str, y:str='') -> str:
-        #prompts
-        return TextTask.cot_prompt.format(input=x) + y
-
-    @staticmethod
-    def vote_prompt_wrap(x: str, ys: list) -> str:
-        prompt = TextTask.vote_prompt
-        for i, y in enumerate(ys, 1):
-            # y = y.replace('Plan:\n', '')
-            # TODO: truncate the plan part?
-            prompt += f'Choice {i}:\n{y}\n'
-        return prompt
-    
-    @staticmethod
-    def vote_outputs_unwrap(vote_outputs: list, n_candidates: int) -> list:
-        vote_results = [0] * n_candidates
-        for vote_output in vote_outputs:
-            pattern = r".*best choice is .*(\d+).*"
-            match = re.match(pattern, vote_output, re.DOTALL)
-            if match:
-                vote = int(match.groups()[0]) - 1
-                if vote in range(n_candidates):
-                    vote_results[vote] += 1
-            else:
-                print(f'vote no match: {[vote_output]}')
-        return vote_results
-
-    @staticmethod
-    def compare_prompt_wrap(x: str, ys: list) -> str:
-        assert len(ys) == 2, 'compare prompt only supports 2 candidates'
-        ys = [y.split('Passage:\n')[-1] for y in ys]
-        prompt = TextTask.compare_prompt + f'Passage 1:\n{ys[0]}\n\nPassage 2:\n{ys[1]}\n'
-        return prompt
-    
-    @staticmethod
-    def compare_output_unwrap(compare_output: str):
-        if 'more coherent passage is 1' in compare_output:
-            return 0
-        elif 'more coherent passage is 2' in compare_output:
-            return 1
-        elif 'two passages are similarly coherent' in compare_output:
-            return 0.5
-        else:
-            print(f'-----------------compare no match: {[compare_output]}')
-            return -1
-        
-
-###########------------------------------------------< original implementation >--------------------
-
-
-
-
 
 
 
@@ -240,48 +98,6 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return state_values
 
-
-############################################-----------------------------------------origiinal implementation
-import backoff 
-
-completion_tokens = prompt_tokens = 0
-
-@backoff.on_exception(backoff.expo, openai.error.OpenAIError)
-def completions_with_backoff(**kwargs):
-    return openai.ChatCompletion.create(**kwargs)
-
-def gpt(prompt, model="gpt-4", temperature=0.7, max_tokens=1000, n=1, stop=None) -> list:
-    messages = [{"role": "user", "content": prompt}]
-    return chatgpt(messages, model=model, temperature=temperature, max_tokens=max_tokens, n=n, stop=stop)
-    
-def chatgpt(messages, model="gpt-4", temperature=0.7, max_tokens=1000, n=1, stop=None) -> list:
-    global completion_tokens, prompt_tokens
-    outputs = []
-    while n > 0:
-        cnt = min(n, 20)
-        n -= cnt
-        res = completions_with_backoff(model=model, messages=messages, temperature=temperature, max_tokens=max_tokens, n=cnt, stop=stop)
-        outputs.extend([choice["message"]["content"] for choice in res["choices"]])
-        # log completion tokens
-        completion_tokens += res["usage"]["completion_tokens"]
-        prompt_tokens += res["usage"]["prompt_tokens"]
-    return outputs
-    
-def gpt_usage(backend="gpt-4"):
-    global completion_tokens, prompt_tokens
-    if backend == "gpt-4":
-        cost = completion_tokens / 1000 * 0.06 + prompt_tokens / 1000 * 0.03
-    elif backend == "gpt-3.5-turbo":
-        cost = (completion_tokens + prompt_tokens) / 1000 * 0.0002
-    return {"completion_tokens": completion_tokens, "prompt_tokens": prompt_tokens, "cost": cost}
-
-
-############################################-----------------------------------------origiinal implementation
-
-
-
-
-
 @staticmethod
 class HFPipelineModel(AbstractLanguageModel):
     def __init__(self, model_name, verbose=False):
@@ -291,7 +107,8 @@ class HFPipelineModel(AbstractLanguageModel):
 
     def generate_thoughts(self, state, k, max_length=100):
         state_text = ' '.join(state)
-        prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve {state_text}"
+        prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve"
+
 
         if self.verbose:
             print(f"Generating thoughts for state: {state_text}")
@@ -419,13 +236,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             text = choice.text.strip()
         return text
-
-    def generate_thoughts(self, state, k):
-        state_text = ' '.join(state)
-        
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {1} coherent thoughts to achieve the reasoning process: {state_text}"
-        prompt += self.ReAct_prompt
-        print(prompt)
+    
+    def generate_text(self, prompt, k):
         if self.use_chat_api:
             thoughts = []
             for _ in range(k):
@@ -481,8 +293,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 state_text = ' '.join(state)
                 print("We receive a state of type", type(state), "For state: ", state, "\n\n")
                 prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
-                print(f'prompt: {prompt}')
-
+                
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
@@ -498,7 +309,6 @@ class OpenAILanguageModel(AbstractLanguageModel):
             states_text = '\n'.join([' '.join(state) for state in states])
 
             prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
-            print(f'prompt: {prompt}')
 
             response = self.openai_api_call_handler(prompt, 50, 1)
 
@@ -776,25 +586,27 @@ class TreeofThoughts:
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
         for t in range(1, T + 1):
-            S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
-            Vt = self.model.evaluate_states(S0_t)
+            S0_t = set()
+            for s in S0:
+                for z in self.model.generate_thoughts(s, k, x):
+                    if (type(s) == str):
+                        S0_t.add((s, z))
+                    else:
+                        S0_t.add((*s, z))
+            Vt = self.model.evaluate_states(S0_t, x)
             St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
             S0 = set(St)
 
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
-            #store thoughts evaluations and parent nodes in a json file
-            for s in S0_t:
-                self.tree['nodes'].append(s)
-                self.tree["metrics"]["thoughts"].append(s[-1])
-                self.tree["metrics"]["evaluations"].append(Vt[s])
 
 
-        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
+        best_state = max(St, key=lambda s: Vt[s])
+
+        return best_state
 
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
-        #vote across across states
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
@@ -805,8 +617,12 @@ class TreeofThoughts:
         def dfs(s, t):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count, output
             if t > T:
-                thought = self.model.generate_thoughts(s, 1)
-                value = self.model.evaluate_states({s})[s]
+                thought = self.model.generate_thoughts(s, 1, x)
+                print(f'thoughts inside dfs {thought}')
+                
+                value = self.model.evaluate_states({s}, x)[s]
+                print(f'values inside dfs {value}')
+
                 output.append((thought, value))
                 print(f'output {output}')
 
@@ -827,8 +643,10 @@ class TreeofThoughts:
 
                 return False
 
-            for s_prime in sorted(self.model.generate_thoughts(s, k)):
-                state_value = self.model.evaluate_states({s_prime})[s_prime]
+            for s_prime in sorted(self.model.generate_thoughts(s, k, x)):
+                state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
+                logger.info(f"State: {s_prime}, Value: {state_value}")
+
                 if state_value > vth and (pruning_threshold is None or state_value >= pruning_threshold):
                     if (type(s) == str):
                         child = (s, s_prime)
@@ -843,15 +661,40 @@ class TreeofThoughts:
 
             self.save_tree_to_json(file_name)
             return False
+        
+            
+        dfs(x, 4)
+        print(f'output  {output}')
+        best_state = max(output, key=lambda x: x[1])
+        return best_state[0]
 
-        dfs(x, 1)
-        return max(output, key=lambda x: x[1]) if output else None
-    
     def save_tree_to_json(self, file_name):
         os.makedirs(os.path.dirname(file_name), exist_ok=True)
 
         with open(file_name, 'w') as json_file:
             json.dump(self.tree, json_file, indent=4)
+
+    def print_tree(self, x, node=None, depth=0):
+        if node is None:
+            node = self.tree["nodes"][x]
+
+        thought = self.tree["metrics"]["thoughts"][node]
+        evaluation = self.tree["metrics"]["evaluations"][node]
+
+        tree_info = {
+            "node": node,
+            "thought": thought,
+            "evaluation": evaluation,
+            "children": []
+        }
+
+        for child, parent in self.tree["nodes"].items():
+            if parent == node:
+                child_info = self.print_tree(child, depth + 1)
+                tree_info["children"].append(child_info)
+
+        return tree_info
+
 
 #does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
@@ -861,6 +704,7 @@ class OptimizedTreeofThoughts(TreeofThoughts):
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
                 result = self.tot_bfs(x, k, T, b)
+                print(f'resultttt in optimized tree of thoughts: {result}')
                 if result:
                     return result
         elif self.search_algorithm == 'DFS':
@@ -870,31 +714,6 @@ class OptimizedTreeofThoughts(TreeofThoughts):
                     return result
         else:
             raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
-
-class AdaptiveTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k=5, T=3, b=5, vth=0.5, timeout=10, confidence_threshold=0.9, max_iterations=40, convergence_threshold=0.01, convergence_count=5):
-        #implement adaptive search strategies
-        #for example adjust k, b, or vth based on the problems complexity or the current search state
-        return super().solve(x, k, T, b, vth, timeout, confidence_threshold, max_iterations, convergence_threshold, convergence_count)
-    
-    def tot_iddfs(self, x, k, T, vth):
-        #implement iterative deepening depth first search IDDFs here
-        #perform a series of depth limited dfs searches with increasing depth lmits
-        for depth_limit in range(1, T + 1):
-            result = self.tot_dfs(x, k, depth_limit, vth)
-            if result:
-                return result
-        return None
-    
-    def generate_thoughts(self, state, k):
-        #incorporate heuristics or domain specific knowledge into the thought generation process
-        #for example use a heuristic function to priortize certain thoughts ot generate thoughts based on domain-specific rules
-        return super().generate_thoughts(state, k)
-    
-    def evaluate_states(self, states, inital_prompt):
-        #incorporate heuristics or domain specific knowledge into the state evaluation process
-        #for example use a heuristics funtion to estimate the quality of a state evaluating it fully
-        return super().evaluate_states(states, inital_prompt)
 
 
 
@@ -910,27 +729,45 @@ if __name__ == '__main__':
 
     tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
-    input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-    k = 5 #number of thoughts to input
-    T = 3 # maximum depth of the search tree
-    b = 5 # branching factor -< number of child nodes for each branch
-    vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
-    timeout = 10 #10 seconds timeout before stop
-    confidence = 0.8 #cmodel is confident on performance
-    max_iterations = 40 #tree branh nodes 
-    convergence_threshold = 0.01 #determining when the search process has converged
-    convergence_count = 5 # number of searchers to be considered converged
-    #read documentation for more
+    # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 
-    #call the solve emthod with the input problem and other params
-    solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
-    
-    
-    #use the solution in yes
-    print(f"solution: {solution}")
-    
-    
+    parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
 
-# # Save the tree and metrics to a JSON file
-#     file_name = "logs/tree_of_thoughts_output.json"
-#     tree_of_thoughts.save_tree_to_json(file_name)
+    parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
+    parser.add_argument("--search_algorithm", type=str, choices=["BFS", "DFS"], default="BFS", help="Search algorithm to use (BFS or DFS)")
+    parser.add_argument("--k", type=int, default=3, help="Number of thoughts to generate")
+    parser.add_argument("--T", type=int, default=10, help="Step limit")
+    parser.add_argument("--b", type=int, default=5, help="Number of most promising states")
+    parser.add_argument("--vth", type=float, default=0.4, help="Value threshold for DFS")
+    parser.add_argument("--timeout", type=int, default=10, help="Timeout in seconds before stopping")
+    parser.add_argument("--confidence", type=float, default=0.8, help="Model confidence threshold")
+    parser.add_argument("--max_iterations", type=int, default=40, help="Maximum number of tree branch nodes")
+    parser.add_argument("--convergence_threshold", type=float, default=0.01, help="Convergence threshold for the search process")
+    parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
+
+    args = parser.parse_args()
+
+    #solve the problem using the tree of thoughts class
+    optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
+
+    #solve the porblem using tree of thoughts problem helper
+    best_state = optimized_tree_of_thoughts.solve(args.problem, k=args.k, T=args.T, b=args.b, vth=args.vth)
+
+
+    #generate the final silution
+    final_solution = optimized_tree_of_thoughts.model.generate_solution(best_state, args.problem)
+
+
+    #print the final solutions
+    print(f"Final solution: {final_solution}")
+
+    trees = optimized_tree_of_thoughts.print_tree(final_solution)
+
+
+    # tree_of_thoughts.print_tree(final_solution)
+
+
+    #generate solution prompt --> give me an solution is right now -> get_final_answer that takes into account the best state and provides the response
+    #python tree_of_thoughts.py --problem "Design a new transportation system for a city" --search_algorithm BFS --k 5 --T 3 --b 5 --vth 0.5 --timeout 10 --confidence 0.8 --max_iterations 40 --convergence_threshold 0.01 --convergence_count 5
+
+    
