@@ -797,6 +797,7 @@ class TreeofThoughts:
 
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+        #vote across across states
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
@@ -936,7 +937,9 @@ class TreeofThoughtsv1:
 
     def solve(self, args, task, idx, to_print=True):
         print(model)
-        x = task.get_input(idx)  # input
+        print(f'idx: {idx}')
+        print(f'idx: {task}')
+        x = task.get_input(args.problem)  # input
         print(f'x: {x}')
         ys = ['']  # current output candidates
         infos = []
@@ -1117,8 +1120,8 @@ if __name__ == '__main__':
         idx = 0 # Since we have only one input, set the index to 0
         solution, info = tree_of_thoughts.solve(args, task, idx)
         print(f'Solutions: {solution}')
-        solution = TreeofThoughtsv1.solve(args.problem)
-        print(f'Solutions: {solution}')
+        # solution = TreeofThoughtsv1.solve(args.problem)
+        # print(f'Solutions: {solution}')
     elif args.version == 2:
         model = OptimizedOpenAILanguageModel(os.getenv('OPENAI_API_KEY'), api_model="gpt4")
         #solve the problem using the tree of thoughts class
@@ -1134,12 +1137,3 @@ if __name__ == '__main__':
 
         #print the final solutions
         print(f"Final solution: {final_solution}")
-
-    # trees = optimized_tree_of_thoughts.print_tree(final_solution)
-
-
-    # tree_of_thoughts.print_tree(final_solution)
-
-
-    #generate solution prompt --> give me an solution is right now -> get_final_answer that takes into account the best state and provides the response
-    #python tree_of_thoughts.py --problem "Design a new transportation system for a city" --search_algorithm BFS --k 5 --T 3 --b 5 --vth 0.5 --timeout 10 --confidence 0.8 --max_iterations 40 --convergence_threshold 0.01 --convergence_count 5
