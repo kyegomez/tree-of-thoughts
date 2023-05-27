@@ -87,8 +87,7 @@ class TreeofThoughts:
             self.save_tree_to_json(file_name)
 
 
-
-    def tot_bfs(self, x, k, T, b):
+    def tot_bfs(self, x, k, T, b, pruning_threshold):
         S0 = {x}
         for t in range(1, T + 1):
             S0_t = set()
@@ -99,12 +98,14 @@ class TreeofThoughts:
                     else:
                         S0_t.add((*s, z))
             Vt = self.model.evaluate_states(S0_t, x)
-            St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
+
+            # Filter the candidate states based on the pruning threshold
+            pruned_S0_t = {s: v for s, v in Vt.items() if v >= pruning_threshold}
+
+            St = sorted(pruned_S0_t.keys(), key=lambda s: pruned_S0_t[s], reverse=True)[:b]
             S0 = set(St)
 
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
-
-
 
         best_state = max(St, key=lambda s: Vt[s])
 
