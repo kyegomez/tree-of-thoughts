@@ -761,7 +761,7 @@ if __name__ == '__main__':
     #print the final solutions
     print(f"Final solution: {final_solution}")
 
-    trees = optimized_tree_of_thoughts.print_tree(final_solution)
+    # trees = optimized_tree_of_thoughts.print_tree(final_solution)
 
 
     # tree_of_thoughts.print_tree(final_solution)

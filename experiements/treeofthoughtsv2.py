@@ -46,7 +46,7 @@ class TreeofThoughtsV2:
             value = get_value(task, x, y, n_evaluate_sample, cache_value=cache_value)
             local_value_cache[y] = value
         values.append(value)
-        return values
+    return values
 
 
     def get_votes(self, task, x, ys, n_evaluate_sample):
