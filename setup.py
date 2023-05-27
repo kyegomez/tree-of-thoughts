@@ -19,6 +19,7 @@ setup(
   install_requires=[
     'guidance',
     'openai',
+    'transformers'
   ],
   classifiers=[
     'Development Status :: 4 - Beta',
