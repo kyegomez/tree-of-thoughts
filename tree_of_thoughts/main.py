@@ -164,8 +164,8 @@ class HFPipelineModel(AbstractLanguageModel):
 
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
-        env_tree = os.env("OPENAI_API_KEY")
-        if api_key == "" or api_key or env_tree == None:
+        env_tree = os.getenv("OPENAI_API_KEY")
+        if api_key == "" or api_key == None:
             api_key = os.environ.get("OPENAI_API_KEY", "")
         if api_key != "":
             openai.api_key = api_key
@@ -291,14 +291,18 @@ class OpenAILanguageModel(AbstractLanguageModel):
     #     print(f"Generated thoughts: {thoughts}")
     #     return thoughts
 
-    def generate_thoughts(self, state, k):
+    def generate_thoughts(self, state, k, inital_prompt):
         if (type(state) == str):
             state_text = state
         else:
             state_text = '\n'.join(state)
         print("We receive a state of type", type(state), "For state: ", state, "\n\n")
         
-        prompt = f"Given the current state of reasoning: \n\n\n'{state_text}'\n\n\nGenerate the next best coherent thought to achieve the reasoning process and get the solution: "
+        # prompt = f"Given the current state of reasoning: \n\n\n'{state_text}'\n\n\nGenerate the next best coherent thought to achieve the reasoning process and get the solution: "
+        # prompt = f"Based on the current state of reasoning: \n\n\n'{state_text} Provide the next coherent thought that will help progress the reasoning process and reach an soluton "
+        # prompt = f"These are the thoughts you've had: \n\n\n{state_text}, provide the next coherent thought that will help advance the reasoning process and reach an solution for this problem {inital_prompt}. Think sharply, think out of the box, predict failure. Do not leave any open questions. Unleash your mind."
+        prompt = f"Considering the thoughts you've had until now:\n\n{state_text}\n\nDevise the next coherent thought that will aid in advancing the reasoning process and achieving a solution to {inital_prompt}. Assess various scenarios, think unconventionally, anticipate potential challenges, and resolve any outstanding queries. Tap into your mind's full potential and make certain no open questions remain."
+
         prompt += self.ReAct_prompt
         print(prompt)
         thoughts = self.generate_text(prompt, k)
@@ -313,7 +317,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             state_text = '\n'.join(state)
         
-        prompt = f"Given the following reasoning: \n\n\n'{state_text}'\n Give me the best solution you can think of the task : {initial_prompt}"
+        prompt = f"Considering the reasoning provided:\n\n'{state_text}'\n\nDevise the best possible solution for the task: {initial_prompt}"
         answer = self.generate_text(prompt, 1)
         # print(thoughts)
         print(f"General solution : {answer}")
@@ -621,7 +625,7 @@ class TreeofThoughts:
         for t in range(1, T + 1):
             S0_t = set()
             for s in S0:
-                for z in self.model.generate_thoughts(s, k):
+                for z in self.model.generate_thoughts(s, k, x):
                     if (type(s) == str):
                         S0_t.add((s, z))
                     else:
@@ -650,7 +654,7 @@ class TreeofThoughts:
         def dfs(s, t):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count, output
             if t > T:
-                thought = self.model.generate_thoughts(s, 1)
+                thought = self.model.generate_thoughts(s, 1, x)
                 print(f'thoughts inside dfs {thought}')
                 
                 value = self.model.evaluate_states({s}, x)[s]
@@ -676,7 +680,7 @@ class TreeofThoughts:
 
                 return False
 
-            for s_prime in sorted(self.model.generate_thoughts(s, k)):
+            for s_prime in sorted(self.model.generate_thoughts(s, k, x)):
                 state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
                 logger.info(f"State: {s_prime}, Value: {state_value}")
 
