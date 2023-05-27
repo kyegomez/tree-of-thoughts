@@ -59,3 +59,14 @@ print(f"solution: {solution}")
 # Save the tree and metrics to a JSON file
 file_name = "logs/tree_of_thoughts_output.json"
 tree_of_thoughts.save_tree_to_json(file_name)
+
+    # k = 1#number of thoughts to input
+    # T = 1 # maximum depth of the search tree
+    # b = 1 # branching factor -< number of child nodes for each branch
+    # vth = 0.9 # pruning state -> any evaluated thought below this is eliminated
+    # timeout = 10 #10 seconds timeout before stop
+    # confidence = 0.8 #cmodel is confident on performance
+    # max_iterations = 40 #tree branch nodes 
+    # convergence_threshold = 0.01 #determining when the search process has converged
+    # convergence_count = 5 # number of searchers to be considered converged
+    # # read documentation for more

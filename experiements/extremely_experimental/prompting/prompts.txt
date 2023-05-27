@@ -1,0 +1,26 @@
+Here are 4 potential prompts for each function:
+
+generate_thoughts
+"Given the current state of reasoning:\n\n'{state_text}'\n\nGenerate the next logical thought to advance the reasoning process and find a solution. Consider the following factors: {self.ReAct_prompt}"
+"Based on the current reasoning state:\n\n'{state_text}'\n\nProvide the next coherent thought that will help progress the reasoning process and reach a solution. Keep in mind: {self.ReAct_prompt}"
+"With the current state of reasoning:\n\n'{state_text}'\n\nDetermine the next appropriate thought to enhance the reasoning process and achieve a solution. Take into account: {self.ReAct_prompt}"
+"Considering the present state of reasoning:\n\n'{state_text}'\n\nFormulate the next rational thought to improve the reasoning process and obtain a solution. Remember: {self.ReAct_prompt}"
+
+generate_solution
+"Based on the following reasoning:\n\n'{state_text}'\n\nProvide the most effective solution for the task: {initial_prompt}"
+"With the given reasoning:\n\n'{state_text}'\n\nDetermine the optimal solution to address the task: {initial_prompt}"
+"Considering the reasoning provided:\n\n'{state_text}'\n\nDevise the best possible solution for the task: {initial_prompt}"
+"Taking into account the reasoning:\n\n'{state_text}'\n\nFormulate the most suitable solution for the task: {initial_prompt}"
+
+evaluate_states (value strategy)
+"Given the current state of reasoning: '{state_text}', assess its value as a float between 0 and 1, considering potential risks and challenges in achieving {initial_prompt}. Provide only a float value."
+"For the current reasoning state: '{state_text}', evaluate its worth as a float between 0 and 1, taking into account possible obstacles and difficulties in accomplishing {initial_prompt}. Respond with a float value only."
+"With the present state of reasoning: '{state_text}', estimate its value as a float ranging from 0 to 1, while considering potential setbacks and issues in reaching {initial_prompt}. Only provide a float value."
+"Considering the state of reasoning: '{state_text}', appraise its value as a float between 0 and 1, keeping in mind potential hindrances and complications in achieving {initial_prompt}. Respond solely with a float value."
+
+
+evaluate_states (vote strategy)
+"Given the following states of reasoning, assign a score between 1 and 10 for the best state, considering the probability of achieving {initial_prompt} while being very pessimistic:\n{states_text}\n\nProvide only a score."
+"Based on the provided states of reasoning, rate the most promising state with a score from 1 to 10, taking into account the likelihood of accomplishing {initial_prompt} and being very pessimistic:\n{states_text}\n\nRespond with a score only."
+"With the given reasoning states, evaluate the top state by giving it a score between 1 and 10, considering the probability of reaching {initial_prompt} while maintaining a pessimistic outlook:\n{states_text}\n\nOnly provide a score."
+"Considering the states of reasoning, assess the best state by assigning a score from 1 to 10, keeping in mind the chances of achieving {initial_prompt} and being very pessimistic:\n{states_text}\n\nRespond solely with a score."

@@ -18,8 +18,22 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 [Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
 
 ## Getting started
-Clone this repository with ```git clone https://github.com/kyegomez/tree-of-thoughts```
 
+## Method1
+Clone this repository with 
+
+```git clone https://github.com/kyegomez/tree-of-thoughts```
+
+``` 
+cd tree-of-thoughts
+cd tree_of_thoughts
+python3 treeofthoughts.py --problem "design an new transportation system for an all-new city" --search_algorithm="BFS"
+```
+Add ` OPENAI_API_KEY='API KEY'` in the .env!
+
+
+
+## Method2
 or:
 
 ```pip install tree-of-thoughts ```

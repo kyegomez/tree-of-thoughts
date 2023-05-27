@@ -1,15 +1,7 @@
 {
-    "tree": {
-        "thoughts": [],
-        "states": []
-    },
+    "nodes": [],
     "metrics": {
-        "x": [],
-        "vth": [],
-        "b": [],
-        "k": [],
-        "new_best_value": [],
-        "result": [],
-        "search_algorithm": "DFS"
+        "thoughts": [],
+        "evaluations": []
     }
 }
