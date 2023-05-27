@@ -14,12 +14,14 @@ DATA_PATH = './data'
 import logging 
 import argparse 
 from dotenv import load_dotenv
-
-load_dotenv()
+from functools import partial
+import numpy as np
+import itertools
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+DATA_PATH = './data'
 
 class AbstractLanguageModel(ABC):
     @abstractmethod
@@ -28,6 +30,20 @@ class AbstractLanguageModel(ABC):
 
     @abstractmethod
     def evaluate_states(self, states):
+        pass
+
+
+class Task:
+    def __init__(self):
+        pass
+    
+    def __len__(self) -> int:
+        pass
+
+    def get_input(self, idx:int) -> str:
+        pass
+
+    def test_output(self, idx:int, output: str):
         pass
 
 
@@ -42,6 +58,138 @@ class CustomLanguageModel(AbstractLanguageModel):
     def evaluate_states(self, states):
         #implement state evaluation logic using self.model
         pass
+
+
+###########------------------------------------------< original implementation >--------------------
+
+class TextTask(Task):
+    """
+    Input (x)   : a text instruction
+    Output (y)  : a text generation
+    Reward (r)  : # TODO
+    Input Example: 
+    Output Example: 
+    """
+
+    # standard_prompt = "Given the input text:\n\n{input}\n\nGenerate a coherent passage:"
+    # cot_prompt = "Considering the input text:\n\n{input}\n\nDevise a coherent passage:"
+    # vote_prompt = "Given the following passages\n\n {input}\n\n, vote for the most coherent one:\n\n"
+    # value_prompt = "Considering the passage:\n\n{passage}\n\nEvaluate its coherence as a float between 0 and 1:"
+
+    standard_prompt = '''
+        Write a coherent passage of 4 short paragraphs. The end sentence of each paragraph must be: {input}'''
+
+    cot_prompt = '''
+    Write a coherent passage of 4 short paragraphs. The end sentence of each paragraph must be: {input}
+
+    Make a plan then write. Your output should be of the following format:
+
+    Plan:
+    Your plan here.
+
+    Passage:
+    Your passage here.
+    '''
+
+
+    vote_prompt = '''Given an instruction and several choices, decide which choice is most promising. Analyze each choice in detail, then conclude in the last line "The best choice is {s}", where s the integer id of the choice.'''
+
+    compare_prompt = '''Briefly analyze the coherency of the following two passages. Conclude in the last line "The more coherent passage is 1", "The more coherent passage is 2", or "The two passages are similarly coherent".'''
+
+    score_prompt = '''Analyze the following passage, then at the last line conclude "Thus the coherency score is {s}", where s is an integer from 1 to 10.'''
+
+    # Other methods and
+    def __init__(self, input_text=None):
+        super().__init__()
+        self.data = [input_text] if input_text else []
+        self.steps = 2
+        self.stops = ['\nPassage:\n', None]
+
+
+
+    def __len__(self) -> int:
+        return len(self.data)
+    
+    def get_input(self, idx: int) -> str:
+        return self.data[idx]
+    
+    def test_output(self, idx: int, output: str):
+        output = output.split('Passage:\n')[-1]
+        prompt = score_prompt + output
+        score_outputs = gpt(prompt, n=5, model='gpt-4')
+        scores = []
+        for score_output in score_outputs:
+            # print(score_output)
+            pattern = r".*coherency score is (\d+).*"
+            match = re.match(pattern, score_output, re.DOTALL)
+            if match:
+                score = int(match.groups()[0])
+                scores.append(score)
+            else:
+                print(f'------------------score no match: {[score_output]}')
+        print(scores)
+        # print('------------')
+        info = {'rs': scores, 'r': sum(scores) / len(scores) if scores else 0}
+        return info
+    
+    @staticmethod
+    def standard_prompt_wrap(x: str, y:str='') -> str:
+        #standard prompt
+        return TextTask.standard_prompt.format(input=x) + y
+
+    @staticmethod
+    def cot_prompt_wrap(x: str, y:str='') -> str:
+        #prompts
+        return TextTask.cot_prompt.format(input=x) + y
+
+    @staticmethod
+    def vote_prompt_wrap(x: str, ys: list) -> str:
+        prompt = TextTask.vote_prompt
+        for i, y in enumerate(ys, 1):
+            # y = y.replace('Plan:\n', '')
+            # TODO: truncate the plan part?
+            prompt += f'Choice {i}:\n{y}\n'
+        return prompt
+    
+    @staticmethod
+    def vote_outputs_unwrap(vote_outputs: list, n_candidates: int) -> list:
+        vote_results = [0] * n_candidates
+        for vote_output in vote_outputs:
+            pattern = r".*best choice is .*(\d+).*"
+            match = re.match(pattern, vote_output, re.DOTALL)
+            if match:
+                vote = int(match.groups()[0]) - 1
+                if vote in range(n_candidates):
+                    vote_results[vote] += 1
+            else:
+                print(f'vote no match: {[vote_output]}')
+        return vote_results
+
+    @staticmethod
+    def compare_prompt_wrap(x: str, ys: list) -> str:
+        assert len(ys) == 2, 'compare prompt only supports 2 candidates'
+        ys = [y.split('Passage:\n')[-1] for y in ys]
+        prompt = TextTask.compare_prompt + f'Passage 1:\n{ys[0]}\n\nPassage 2:\n{ys[1]}\n'
+        return prompt
+    
+    @staticmethod
+    def compare_output_unwrap(compare_output: str):
+        if 'more coherent passage is 1' in compare_output:
+            return 0
+        elif 'more coherent passage is 2' in compare_output:
+            return 1
+        elif 'two passages are similarly coherent' in compare_output:
+            return 0.5
+        else:
+            print(f'-----------------compare no match: {[compare_output]}')
+            return -1
+        
+
+###########------------------------------------------< original implementation >--------------------
+
+
+
+
 
 
 
@@ -97,6 +245,48 @@ class HuggingLanguageModel(AbstractLanguageModel):
             state_values[state] = value
 
         return state_values
+
+
+############################################-----------------------------------------origiinal implementation
+import backoff 
+
+completion_tokens = prompt_tokens = 0
+
+@backoff.on_exception(backoff.expo, openai.error.OpenAIError)
+def completions_with_backoff(**kwargs):
+    return openai.ChatCompletion.create(**kwargs)
+
+def gpt(prompt, model="gpt-4", temperature=0.7, max_tokens=1000, n=1, stop=None) -> list:
+    messages = [{"role": "user", "content": prompt}]
+    return chatgpt(messages, model=model, temperature=temperature, max_tokens=max_tokens, n=n, stop=stop)
+    
+def chatgpt(messages, model="gpt-4", temperature=0.7, max_tokens=1000, n=1, stop=None) -> list:
+    global completion_tokens, prompt_tokens
+    outputs = []
+    while n > 0:
+        cnt = min(n, 20)
+        n -= cnt
+        res = completions_with_backoff(model=model, messages=messages, temperature=temperature, max_tokens=max_tokens, n=cnt, stop=stop)
+        outputs.extend([choice["message"]["content"] for choice in res["choices"]])
+        # log completion tokens
+        completion_tokens += res["usage"]["completion_tokens"]
+        prompt_tokens += res["usage"]["prompt_tokens"]
+    return outputs
+    
+def gpt_usage(backend="gpt-4"):
+    global completion_tokens, prompt_tokens
+    if backend == "gpt-4":
+        cost = completion_tokens / 1000 * 0.06 + prompt_tokens / 1000 * 0.03
+    elif backend == "gpt-3.5-turbo":
+        cost = (completion_tokens + prompt_tokens) / 1000 * 0.0002
+    return {"completion_tokens": completion_tokens, "prompt_tokens": prompt_tokens, "cost": cost}
+
+
+############################################-----------------------------------------origiinal implementation
+
+
+
+
 
 @staticmethod
 class HFPipelineModel(AbstractLanguageModel):
@@ -696,6 +886,150 @@ class TreeofThoughts:
         return tree_info
 
 
+class TreeofThoughtsv1:
+    def __init__(self, model):
+        self.model = model
+
+    
+    def get_value(self, task, x, y, n_evaluate_sample, cache_value=True):
+        value_prompt = task.value_prompt_wrap(x, y)
+        if cache_value and value_prompt in task.value_cache:
+            return task.value_cache[value_prompt]
+        value_outputs = self.model(value_prompt, n=n_evaluate_sample, stop=None)
+        value = task.value_outputs_unwrap(x, y, value_outputs)
+        if cache_value:
+            task.value_cache[value_prompt] = value
+        return value
+
+    def get_values(self, task, x, ys, n_evaluate_sample, cache_value=True):
+        values = []
+        local_value_cache = {}
+        for y in ys:  # each partial output
+            if y in local_value_cache:  # avoid duplicate candidates
+                value = 0
+            else:    
+                value = self.get_value(task, x, y, n_evaluate_sample, cache_value=cache_value)
+                local_value_cache[y] = value
+            values.append(value)
+        return values
+
+    def get_votes(task, x, ys, n_evaluate_sample):
+        vote_prompt = task.vote_prompt_wrap(x, ys)
+        vote_outputs = gpt(vote_prompt, n=n_evaluate_sample, stop=None)
+        values = task.vote_outputs_unwrap(vote_outputs, len(ys))
+        return values
+
+    def get_proposals(task, x, y): 
+        propose_prompt = task.propose_prompt_wrap(x, y)
+        proposals = model(propose_prompt, n=1, stop=None)[0].split('\n')
+        return [y + _ + '\n' for _ in proposals]
+
+    def get_samples(self, task, x, y, n_generate_sample, prompt_sample, stop):
+        if prompt_sample == 'standard':
+            prompt = task.standard_prompt_wrap(x, y)
+        elif prompt_sample == 'cot':
+            prompt = task.cot_prompt_wrap(x, y)
+        else:
+            raise ValueError(f'prompt_sample {prompt_sample} not recognized')
+        samples = self.model(prompt, n=n_generate_sample, stop=stop)
+        return [y + _ for _ in samples]
+
+    def solve(self, args, task, idx, to_print=True):
+        print(model)
+        x = task.get_input(idx)  # input
+        print(f'x: {x}')
+        ys = ['']  # current output candidates
+        infos = []
+        for step in range(task.steps):
+            # generation
+            if args.method_generate == 'sample':
+                new_ys = [self.get_samples(task, x, y, args.n_generate_sample, prompt_sample=args.prompt_sample, stop=task.stops[step]) for y in ys]
+            elif args.method_generate == 'propose':
+                new_ys = [self.get_proposals(task, x, y) for y in ys]
+            new_ys = list(itertools.chain(*new_ys))
+            ids = list(range(len(new_ys)))
+            # evaluation
+            if args.method_evaluate == 'vote':
+                values = self.get_votes(task, x, new_ys, args.n_evaluate_sample)
+            elif args.method_evaluate == 'value':
+                values = self.get_values(task, x, new_ys, args.n_evaluate_sample)
+
+            # selection
+            if args.method_select == 'sample':
+                ps = np.array(values) / sum(values)
+                select_ids = np.random.choice(ids, size=args.n_select_sample, p=ps).tolist()
+            elif args.method_select == 'greedy':
+                select_ids = sorted(ids, key=lambda x: values[x], reverse=True)[:args.n_select_sample]
+            select_new_ys = [new_ys[select_id] for select_id in select_ids]
+
+            # log
+            if to_print: 
+                sorted_new_ys, sorted_values = zip(*sorted(zip(new_ys, values), key=lambda x: x[1], reverse=True))
+                print(f'-- new_ys --: {sorted_new_ys}\n-- sol values --: {sorted_values}\n-- choices --: {select_new_ys}\n')
+            
+            infos.append({'step': step, 'x': x, 'ys': ys, 'new_ys': new_ys, 'values': values, 'select_new_ys': select_new_ys})
+            ys = select_new_ys
+        
+        if to_print: 
+            print(ys)
+        return ys, {'steps': infos}
+
+    def naive_solve(self, args, task, idx, to_print=True):
+        x = task.get_input(idx)  # input
+        ys = self.get_samples(task, x, '', args.n_generate_sample, args.prompt_sample, stop=None)
+        return ys, {}
+
+    def run(self, args):
+        task = self.get_task(args.task, args.task_file_path)
+        logs, cnt_avg, cnt_any = [], 0, 0
+        global model
+        model = partial(self.model, model=args.backend, temperature=args.temperature)
+        if args.naive_run:
+            file = f'logs/{args.task}/{args.backend}_{args.temperature}_naive_{args.prompt_sample}_sample_{args.n_generate_sample}_start{args.task_start_index}_end{args.task_end_index}.json'
+        else:
+            file = f'logs/{args.task}/{args.backend}_{args.temperature}_{args.method_generate}{args.n_generate_sample}_{args.method_evaluate}{args.n_evaluate_sample}_{args.method_select}{args.n_select_sample}_start{args.task_start_index}_end{args.task_end_index}.json'
+        os.makedirs(os.path.dirname(file), exist_ok=True)
+
+        for i in range(args.task_start_index, args.task_end_index):
+            # solve
+            if args.naive_run:
+                ys, info = self.naive_solve(args, task, i) 
+            else:
+                ys, info = self.solve(args, task, i)
+
+            # log
+            infos = [task.test_output(i, y) for y in ys]
+            info.update({'idx': i, 'ys': ys, 'infos': infos, 'usage_so_far': gpt_usage(args.backend)})
+            logs.append(info)
+            with open(file, 'w') as f:
+                json.dump(logs, f, indent=4)
+            
+            # log main metric
+            accs = [info['r'] for info in infos]
+            cnt_avg += sum(accs) / len(accs)
+            cnt_any += any(accs)
+            print(i, 'sum(accs)', sum(accs), 'cnt_avg', cnt_avg, 'cnt_any', cnt_any, '\n')
+        
+        n = args.task_end_index - args.task_start_index
+        print(cnt_avg / n, cnt_any / n)
+        print('usage_so_far', gpt_usage(args.backend))
+
+
+
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
 #does not output state after each thought --- idk why -- needs work
 class OptimizedTreeofThoughts(TreeofThoughts):
     def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
@@ -704,7 +1038,7 @@ class OptimizedTreeofThoughts(TreeofThoughts):
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
                 result = self.tot_bfs(x, k, T, b)
-                print(f'resultttt in optimized tree of thoughts: {result}')
+                print(f'result in optimized tree of thoughts: {result}')
                 if result:
                     return result
         elif self.search_algorithm == 'DFS':
@@ -718,22 +1052,16 @@ class OptimizedTreeofThoughts(TreeofThoughts):
 
 
 if __name__ == '__main__':
-    search_algorithm = "DFS"
-    strategy = "cot"
-    evaluation_strategy="vote"
     
     #create instance
-    model = OptimizedOpenAILanguageModel('', api_model="gpt-3.5-turbo")
-    
+    parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
+    parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
+    parser.add_argument("--version", type=int, choices=[1, 2], default=1, help="Version of Tree of Thoughts to use (v1 or v2)")
 
-
-    tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm)
 
     # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 
-    parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
-
-    parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
+    # parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
     parser.add_argument("--search_algorithm", type=str, choices=["BFS", "DFS"], default="BFS", help="Search algorithm to use (BFS or DFS)")
     parser.add_argument("--k", type=int, default=3, help="Number of thoughts to generate")
     parser.add_argument("--T", type=int, default=10, help="Step limit")
@@ -745,21 +1073,67 @@ if __name__ == '__main__':
     parser.add_argument("--convergence_threshold", type=float, default=0.01, help="Convergence threshold for the search process")
     parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
 
+
+    #args for v1 original paper implementation
+    parser.add_argument('--backend', type=str, choices=['gpt-4', 'gpt-3.5-turbo'], default='gpt-4')
+    parser.add_argument('--temperature', type=float, default=0.7)
+    parser.add_argument('--task', type=str, required=False, choices=['game24', 'text', 'crosswords'])
+    parser.add_argument('--task_file_path', type=str, required=False)
+    parser.add_argument('--task_start_index', type=int, default=900)
+    parser.add_argument('--task_end_index', type=int, default=1000)
+    parser.add_argument('--naive_run', action='store_true')
+    parser.add_argument('--prompt_sample', type=str, choices=['standard', 'cot'])  # only used when method_generate = sample, or naive_run
+    parser.add_argument('--method_generate', type=str, choices=['sample', 'propose'])
+    parser.add_argument('--method_evaluate', type=str, choices=['value', 'vote'])
+    parser.add_argument('--method_select', type=str, choices=['sample', 'greedy'])
+    parser.add_argument('--n_generate_sample', type=int, default=1)  # only thing needed if naive_run
+    parser.add_argument('--n_evaluate_sample', type=int, default=1)
+    parser.add_argument('--n_select_sample', type=int, default=1)
+
+
+
+
+    #args from original implementation
+
     args = parser.parse_args()
-
-    #solve the problem using the tree of thoughts class
-    optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
-
-    #solve the porblem using tree of thoughts problem helper
-    best_state = optimized_tree_of_thoughts.solve(args.problem, k=args.k, T=args.T, b=args.b, vth=args.vth)
+    print(args)
+    
 
 
-    #generate the final silution
-    final_solution = optimized_tree_of_thoughts.model.generate_solution(best_state, args.problem)
 
 
-    #print the final solutions
-    print(f"Final solution: {final_solution}")
+
+    # Initialize the Tree of Thoughts based on the provided version
+    if args.version == 1:
+        # Initialize the model
+        model = partial(gpt, model=args.backend, temperature=args.temperature)
+
+        # Initialize the task with the user's input
+        task = TextTask(args.problem)
+
+        # model = chatgpt()
+        tree_of_thoughts = TreeofThoughtsv1(model)
+        task = None  # Replace with the actual task instance
+        idx = 0 # Since we have only one input, set the index to 0
+        solution, info = tree_of_thoughts.solve(args, task, idx)
+        print(f'Solutions: {solution}')
+        solution = TreeofThoughtsv1.solve(args.problem)
+        print(f'Solutions: {solution}')
+    elif args.version == 2:
+        model = OptimizedOpenAILanguageModel(os.getenv('OPENAI_API_KEY'), api_model="gpt4")
+        #solve the problem using the tree of thoughts class
+        optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
+
+        #solve the porblem using tree of thoughts problem helper
+        best_state = optimized_tree_of_thoughts.solve(args.problem, k=args.k, T=args.T, b=args.b, vth=args.vth)
+
+
+        #generate the final silution
+        final_solution = optimized_tree_of_thoughts.model.generate_solution(best_state, args.problem)
+
+
+        #print the final solutions
+        print(f"Final solution: {final_solution}")
 
     # trees = optimized_tree_of_thoughts.print_tree(final_solution)
 
@@ -769,5 +1143,3 @@ if __name__ == '__main__':
 
     #generate solution prompt --> give me an solution is right now -> get_final_answer that takes into account the best state and provides the response
     #python tree_of_thoughts.py --problem "Design a new transportation system for a city" --search_algorithm BFS --k 5 --T 3 --b 5 --vth 0.5 --timeout 10 --confidence 0.8 --max_iterations 40 --convergence_threshold 0.01 --convergence_count 5
-
-    
