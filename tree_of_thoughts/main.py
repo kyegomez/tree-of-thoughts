@@ -253,43 +253,6 @@ class OpenAILanguageModel(AbstractLanguageModel):
             return thoughts
 
 
-    # def generate_thoughts(self, state, k):
-    #     state_text = ' '.join(state)
-        
-    #     prompt = f"Given the current state of objective: '{state_text}', generate the next coherent {k} solutions to achieve the objective: "
-    #     prompt += self.ReAct_prompt
-    #     print(prompt)
-    #     if self.use_chat_api:
-    #         new_prompt_success = False
-    #         """
-    #         # Try prompt and parse in a single shot to save tokens (but if we fail, we end up spending more tokens)
-    #         new_prompt = prompt + "Thought string should be output in a format that can be parsed into python array in format [xxx,xxx,xxx]"
-    #         response = self.openai_api_call_handler(new_prompt, 100 * k, 0.5, 1)
-    #         text = self.openai_choice2text_handler(response.choices[0])
-    #         re_parse = re.search(r'\[(.*?)\]', text)
-    #         if re_parse:
-    #             thoughts_str = re_parse.group(1)
-    #             if thoughts_str:
-    #                 thoughts = thoughts_str.split(',')
-    #                 new_prompt_success = len(thoughts) == k 
-    #                 if not new_prompt_success:
-    #                     print(f"Fall back to multi-prompt for chat-completion due to parse fail {text}")
-
-    #         """
-    #         if not new_prompt_success:
-    #             thoughts = []
-    #             for _ in range(k):
-    #                 response = self.openai_api_call_handler(prompt, 50, 0.5, k)
-    #                 text = self.openai_choice2text_handler(response.choices[0])
-    #                 thoughts += [text]
-    #                 print(f'thoughts: {thoughts}')
-            
-    #     else:
-    #         response = self.openai_api_call_handler(prompt, 50, 0.5, k)
-    #         thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
-    #     # print(thoughts)
-    #     print(f"Generated thoughts: {thoughts}")
-    #     return thoughts
 
     def generate_thoughts(self, state, k, inital_prompt):
         if (type(state) == str):
