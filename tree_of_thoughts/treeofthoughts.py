@@ -13,6 +13,9 @@ import json
 DATA_PATH = './data'
 import logging 
 import argparse 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -160,7 +163,8 @@ class HFPipelineModel(AbstractLanguageModel):
 
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
-        if api_key == "" or api_key == None:
+        env_tree = os.env("OPENAI_API_KEY")
+        if api_key == "" or api_key or env_tree == None:
             api_key = os.environ.get("OPENAI_API_KEY", "")
         if api_key != "":
             openai.api_key = api_key
@@ -610,23 +614,6 @@ class TreeofThoughts:
             self.save_tree_to_json(file_name)
 
 
-    # def tot_bfs(self, x, k, T, b):
-    #     S0 = {x}
-    #     for t in range(1, T + 1):
-    #         S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
-    #         Vt = self.model.evaluate_states(S0_t, x)
-    #         St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
-    #         S0 = set(St)
-
-    #         logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
-
-    #         for s in S0_t:
-    #             parent = s[:-1]
-    #             self.tree['nodes'][s] = parent
-    #             self.tree["metrics"]["thoughts"][s] = s[-1]
-    #             self.tree["metrics"]["evaluations"][s] = Vt[s]
-
-    #     return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
 
     def tot_bfs(self, x, k, T, b):
         S0 = {x}
@@ -645,13 +632,9 @@ class TreeofThoughts:
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
 
-            #store thoughts evaluations and parent nodes in a json file
-            # for s in S0_t:
-            #     self.tree['nodes'].append(s)
-            #     self.tree["metrics"]["thoughts"].append(s[-1])
-            #     self.tree["metrics"]["evaluations"].append(Vt[s])
+
         best_state = max(St, key=lambda s: Vt[s])
-        # solution = self.model.generate_solution(x, best_state)
+
         return best_state
 
 
@@ -713,10 +696,8 @@ class TreeofThoughts:
         
             
         dfs(x, 4)
-        # solution = self.model.generate_solution(x, )
         print(f'output  {output}')
         best_state = max(output, key=lambda x: x[1])
-        # solution = self.model.generate_solution(x, best_state[0])
         return best_state[0]
 
     def save_tree_to_json(self, file_name):
@@ -732,12 +713,19 @@ class TreeofThoughts:
         thought = self.tree["metrics"]["thoughts"][node]
         evaluation = self.tree["metrics"]["evaluations"][node]
 
-        print(f"{'  ' * depth}Node: {node}, Thought: {thought}, Evaluation: {evaluation}")
+        tree_info = {
+            "node": node,
+            "thought": thought,
+            "evaluation": evaluation,
+            "children": []
+        }
 
         for child, parent in self.tree["nodes"].items():
             if parent == node:
-                self.print_tree(child, depth + 1)
+                child_info = self.print_tree(child, depth + 1)
+                tree_info["children"].append(child_info)
 
+        return tree_info
 
 
 #does not output state after each thought --- idk why -- needs work
@@ -776,6 +764,7 @@ if __name__ == '__main__':
     # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 
     parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
+
     parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
     parser.add_argument("--search_algorithm", type=str, choices=["BFS", "DFS"], default="BFS", help="Search algorithm to use (BFS or DFS)")
     parser.add_argument("--k", type=int, default=3, help="Number of thoughts to generate")
@@ -803,6 +792,8 @@ if __name__ == '__main__':
 
     #print the final solutions
     print(f"Final solution: {final_solution}")
+
+    trees = optimized_tree_of_thoughts.print_tree(final_solution)
 
 
     # tree_of_thoughts.print_tree(final_solution)
