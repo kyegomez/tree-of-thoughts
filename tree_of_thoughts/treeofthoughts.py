@@ -9,6 +9,8 @@ import logging
 import argparse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
+
 
 
 
@@ -347,13 +349,20 @@ class TreeofThoughts:
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
-        self.tree = {
+        self.tree: Dict[str, Dict[str, float]] = {
             "nodes": {}
         }
 
-    def solve(self, initial_prompt, num_thoughts=None, max_steps=None, max_states=None, value_threshold=None, 
-              timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, 
-              convergence_count=None):
+    def solve(self, initial_prompt: str, 
+              num_thoughts: Optional[int] = None, 
+              max_steps: Optional[int] = None, 
+              max_states: Optional[int] = None, 
+              value_threshold: Optional[float] = None, 
+              timeout: Optional[float] = None, 
+              confidence_threshold: Optional[float] = None, 
+              max_iterations: Optional[int] = None, 
+              convergence_threshold: Optional[float] = None, 
+              convergence_count: Optional[int] = None) -> str:
         start_time = time.time()
         self.file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
@@ -386,39 +395,111 @@ class TreeofThoughts:
             logger.info("Saving the current tree and metrics.")
             self.save_tree_to_json(self.file_name)
 
+    # def tot_bfs(self, 
+    #             initial_prompt: str, 
+    #             num_thoughts: Optional[int] = None, 
+    #             max_steps: Optional[int] = None,
+    #             max_states: Optional[int] = None,
+    #             pruning_threshold: Optional[int] = None):
+        
+        # current_states = {initial_prompt}
+        # for step in range(1, max_steps + 1):
+        #     generated_states = set()
+        #     for state in current_states:
+        #         thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
+        #         evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
+        #         for thought, value in evaluated_thoughts.items():
+        #             if value >= pruning_threshold:
+        #                 if (type(state) == str):
+        #                     generated_states.add((state, thought))
+        #                 else:
+        #                     generated_states.add((*state, thought))
+        #     state_values = self.model.evaluate_states(generated_states, initial_prompt)
+
+        #     for state, value in state_values.items():
+        #         if not (type(state) == str):
+        #             state = " | ".join(state)
+        #         self.tree["nodes"][state] = value
+
+        #     self.save_tree_to_json(self.file_name)
+
+        #     pruned_generated_states = {state: value for state, value in state_values.items() if value >= pruning_threshold}
+
+        #     selected_states = sorted(pruned_generated_states.keys(), key=lambda state: pruned_generated_states[state], reverse=True)[:max_states]
+        #     current_states = set(selected_states)
+
+        # best_state = max(selected_states, key=lambda state: state_values[state])
+        # print(f'best_state: {best_state}')
+
+        # return best_state
+        # current_states = [initial_prompt]
+        # state_values = {}
+        # for step in range(1, max_steps + 1):
+        #     selected_states = []
+        #     for state in current_states:
+        #         thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
+        #         evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
+        #         for thought, value in evaluated_thoughts.items():
+        #             if value >= pruning_threshold:
+        #                 flattened_state = (state, thought)
+        #                 if not (type(state) == str):
+        #                     flattened_state = (*state, thought)
+        #                 selected_states.append(flattened_state)
+        #                 state_values[flattened_state] = value
+        #                 self.logNewState(flattened_state, value)
+        #     if(len(selected_states) >1):
+        #         current_states = selected_states[:max_states]
+
+        
+                
+        # if (len(current_states) == 1):
+        #     return initial_prompt
+        # print(current_states, state_values)
+        # best_state = max(current_states, key=lambda state: state_values[state])
+        # print(f'best_state: {best_state}')
+
+        # return best_state
+
+    def logNewState(self, state, evaluation):
+        if not (type(state) == str):
+            state = " | ".join(state)
+        self.tree["nodes"][state] = evaluation
+        self.save_tree_to_json(self.file_name)    
+        
     def tot_bfs(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold):
-        current_states = {initial_prompt}
+        current_states = [initial_prompt]
+        state_values = {}
         for step in range(1, max_steps + 1):
-            generated_states = set()
+            selected_states = []
             for state in current_states:
                 thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
                 evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
                 for thought, value in evaluated_thoughts.items():
                     if value >= pruning_threshold:
-                        if (type(state) == str):
-                            generated_states.add((state, thought))
-                        else:
-                            generated_states.add((*state, thought))
-            state_values = self.model.evaluate_states(generated_states, initial_prompt)
-
-            for state, value in state_values.items():
-                if not (type(state) == str):
-                    state = " | ".join(state)
-                self.tree["nodes"][state] = value
-
-            self.save_tree_to_json(self.file_name)
-
-            pruned_generated_states = {state: value for state, value in state_values.items() if value >= pruning_threshold}
-
-            selected_states = sorted(pruned_generated_states.keys(), key=lambda state: pruned_generated_states[state], reverse=True)[:max_states]
-            current_states = set(selected_states)
-
-        best_state = max(selected_states, key=lambda state: state_values[state])
+                        flattened_state = (state, thought)
+                        if not (type(state) == str):
+                            flattened_state = (*state, thought)
+                        selected_states.append(flattened_state)
+                        state_values[flattened_state] = value
+                        self.logNewState(flattened_state, value)
+            if(len(selected_states) >1):
+                current_states = selected_states[:max_states]
+                
+        if (len(current_states) == 1):
+            return initial_prompt
+        print(current_states, state_values)
+        best_state = max(current_states, key=lambda state: state_values[state])
         print(f'best_state: {best_state}')
 
         return best_state
 
-    def tot_dfs(self, initial_prompt, num_thoughts, max_steps, value_threshold, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def tot_dfs(self, 
+                initial_prompt: str, 
+                num_thoughts: any,
+                max_steps: int,
+                value_threshold, 
+                pruning_threshold=0.5, 
+                confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
@@ -475,7 +556,9 @@ class TreeofThoughts:
         with open(file_name, 'w') as json_file:
             json.dump(self.tree, json_file, indent=4)
 
-    def print_tree(self, node, depth=0):
+    def print_tree(self, 
+                   node: str, 
+                   depth=0):
         thought = self.tree["metrics"]["thoughts"].get(node, "")
         evaluation = self.tree["metrics"]["evaluations"].get(node, "")
 
