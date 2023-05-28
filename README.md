@@ -16,13 +16,13 @@ Share this repository by clicking on the following buttons 😊
 This implementation of Tree of Thoughts is brought to you by Agora, Agora advances Humanity with open source SOTA Multi-Modality AI research!
 
 
+[Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
+
+
 # Basic Prompts:
 No complex implementations, just pass in one of these prompts to your model: head over to `prompts.txt`
 
 'Three experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...'
-
-
-[Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
 
 ## Getting started
 Set Openai key in your environment file `.env.` as `OPENAI_API_KEY='SK'`
