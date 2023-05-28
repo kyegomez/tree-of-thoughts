@@ -1,27 +1,21 @@
+import os
 from tree_of_thoughts.openaiModels import OpenAILanguageModel, OptimizedOpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughts, OptimizedTreeofThoughts
 
-use_v2 = True
-api_key=""
-api_base= "" # leave it blank if you simply use default openai api url
+
+
+api_key = "enter in your api key"
 api_model= "gpt-3.5-turbo"
 
 
-model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, api_model=api_model)
+model = OptimizedOpenAILanguageModel(api_key=api_key, api_model=api_model)
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
-
-
 
 # value or vote
 evaluation_strategy = "value"
 
-if not use_v2:
-    #create an instance of the tree of thoughts class v1
-    tree_of_thoughts = TreeofThoughts(model, search_algorithm)
-else:
-    #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts
-    tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
+tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 k = 5

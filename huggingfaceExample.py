@@ -1,31 +1,10 @@
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
-# from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# model_name="gpt2"
-# model_tokenizer="gpt2tokenizer"
-# model = HuggingLanguageModel(model_name, model_tokenizer)
-
-
-# class HuggingLanguageModel:
-#     def __init__(self, model_name):
-#         self.model = AutoModelForCausalLM.from_pretrained(model_name)
-#         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-#     def generate_text(self, prompt, max_length=50):
-#         inputs = self.tokenizer(prompt, return_tensors="pt")
-#         outputs = self.model.generate(inputs["input_ids"], max_length=max_length)
-#         generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-#         return generated_text
-
-# Initialize the HuggingLanguageModel with the GPT-2 model
-model_name = "gpt2"
+model_name = "input your model"
 model = HuggingLanguageModel(model_name, 
                              model_Tokenizer="gpt2", 
                              verbose=True)
                              
-
-
-
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
 

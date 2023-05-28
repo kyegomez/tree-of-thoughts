@@ -50,22 +50,8 @@ from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageM
 
 use_v2 = False
 
-api_key=""
 
-api_base= "" # leave it blank if you simply use default openai api url
-
-if not use_v2:
-    #v1
-    model = OpenAILanguageModel(api_key=api_key, api_base=api_base # api_model="gpt4" # for higher performance base model is not smart
-    ) 
-else:
-    #v2 parallel execution, caching, adaptive temperature
-    model = OptimizedOpenAILanguageModel(api_key=api_key, api_base=api_base, # api_model="gpt4" # for higher performance base model is not smart
-    )
-
-#huggingface
-# model_name="gpt2"
-# model = HuggingLanguageModel(model_name)
+model = OptimizedOpenAILanguageModel(api_key=api_key) # api_model="gpt4" # for higher performance base model is not smart
 
 
 #choose search algorithm('BFS' or 'DFS')
@@ -77,20 +63,12 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-# if not use_v2:
-#     #create an instance of the tree of thoughts class v1
-
 
 tree_of_thoughts = TreeofThoughts(model, search_algorithm)
 
 
-# else:
-#     #or v2 -> dynamic beam width -< adjust the beam width [b] dynamically based on the search depth quality of the generated thoughts # does not work now use regular tree of thoughts
-#     tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
-
-input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for super intelligent responses you'll have to be more explicit in your prompt and select a better model
+input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for superior intelligent responses you'll have to be more explicit in your prompt and select a better model
     
-
 
 input_problem = "What are the best reasoning methods to advance Large Language Models"
 k = 5 #number of thoughts to generate
@@ -107,12 +85,6 @@ convergence_count = 5 # number of searchers to be considered converged
 #call the solve emthod with the input problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
 
-    
-
-
-# # Save the tree and metrics to a JSON file
-# file_name = "logs/tree_of_thoughts_output.json"
-# tree_of_thoughts.save_tree_to_json(file_name)
 
 ```
 
@@ -205,7 +177,8 @@ class TreeofThoughts:
 To use Tree of Thoughts with OpenAI's API, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using OpenAI's API. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
 
 ### Hugging Face Transformers
-To run huggingface transformers
+To run huggingface transformers with Tree of Thoughts
+
 ``` 
 git clone https://github.com/kyegomez/tree-of-thoughts
 cd tree-of-thoughts
@@ -213,7 +186,7 @@ python3 huggingfaceExample.py
 ```
 
 ```python
-from tree_of_thoughts import HuggingLanguageModel
+from tree_of_thoughts.tree_of_thoughts import HuggingLanguageModel
 
 model_name="gpt2"
 model_tokenizer="your tokenizer"
@@ -286,16 +259,6 @@ Generate suite of evaluations used in the paper testing AI agents with other rea
 
 Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
 
-Make TreeofThoughts class completely customizable with a config yml file with params like
-chatbot:
-    type: "openai"
-    max_context_length: 8000
-    include_chat_history_in_query: false
-openai:
-    model: <model_name>
-    api_key: <your_open_ai_api_key>
-
-
 Script that generates an dataset based on a topic input, -> set of questions are asked, then multiple trees of thoughts are run concurrently to generate the decision making rich dataset
 
 
@@ -337,7 +300,7 @@ The next big advancement for the Tree of Thoughts algorithm is to extend it to m
 
 Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
 
-# Here's the documentation for the inputs of the optimized Tree of Thoughts model:
+# Documentation:
 
 ## x (str): 
 The initial problem statement or prompt for which the Tree of Thoughts algorithm will generate a solution.

@@ -49,33 +49,34 @@ class TreeofThoughts:
         self.model = model
         self.search_algorithm = search_algorithm
         self.tree = {
-            "nodes": {},
-            "metrics": {
-                "thoughts": {},
-                "evaluations": {}
-            }
+            "nodes": {}
         }
 
     def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
-        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
+        self.file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
+            best_thoughts = ""
             if self.search_algorithm == 'BFS':
                 while timeout is None or time.time() - start_time < timeout:
-                    result = self.tot_bfs(x, k, T, b, pruning_threshold=0.5)
+                    result = self.tot_bfs(x, k, T, b, vth)
                     if result:
-                        self.save_tree_to_json(file_name)
+                        self.save_tree_to_json(self.file_name )
                         # printed_tree = self.print_tree(result)
                         # logger.info(f"Tree structure and metrics:\n{printed_tree}")
-                        return result
+                        best_thoughts = result
             elif self.search_algorithm == 'DFS':
                 while timeout is None or time.time() - start_time < timeout:
                     result = self.tot_dfs(x, k, T, vth)
                     if result:
-                        self.save_tree_to_json(file_name)
+                        self.save_tree_to_json(self.file_name)
                         # printed_tree=self.print_tree(result)
                         # logger.info(f"Tree structure and metrics:\n{printed_tree}")
-                        return result
+                        best_thoughts = result
+            if(best_thoughts):
+                solution = self.model.generate_solution(x, best_thoughts)
+                if solution:
+                    return solution
             else:
                 raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
         except KeyboardInterrupt:
@@ -84,30 +85,38 @@ class TreeofThoughts:
             logger.error(f"Error: {e}")
         finally:
             logger.info("Saving the current tree and metrics.")
-            self.save_tree_to_json(file_name)
-
+            self.save_tree_to_json(self.file_name)
 
     def tot_bfs(self, x, k, T, b, pruning_threshold):
         S0 = {x}
         for t in range(1, T + 1):
             S0_t = set()
             for s in S0:
-                for z in self.model.generate_thoughts(state=s, k=k):
+                for z in self.model.generate_thoughts(s, k, x):
                     if (type(s) == str):
                         S0_t.add((s, z))
                     else:
                         S0_t.add((*s, z))
-            Vt = self.model.evaluate_states(states=S0_t, initial_prompt=x)
+            Vt = self.model.evaluate_states(S0_t, x)
 
+            for s, v in Vt.items():
+                if not (type(s) == str):
+                    s = " | ".join(s)
+                self.tree["nodes"][s] = v
+            print("Saving tree")
+            self.save_tree_to_json(self.file_name)
             # Filter the candidate states based on the pruning threshold
             pruned_S0_t = {s: v for s, v in Vt.items() if v >= pruning_threshold}
 
             St = sorted(pruned_S0_t.keys(), key=lambda s: pruned_S0_t[s], reverse=True)[:b]
             S0 = set(St)
-
+            
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
         best_state = max(St, key=lambda s: Vt[s])
+
+        return best_state
+
 
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
@@ -192,7 +201,6 @@ class TreeofThoughts:
                 print(f'tree info: {tree_info}')
 
         return tree_info
-
 
 
 
