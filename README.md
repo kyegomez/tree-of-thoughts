@@ -18,6 +18,8 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 [Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
 
 ## Getting started
+Set Openai key in your environment file `.env.` as `OPENAI_API_KEY='SK'`
+
 
 ## Method1
 Clone this repository with 
