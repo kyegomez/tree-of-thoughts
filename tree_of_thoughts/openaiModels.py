@@ -1,7 +1,7 @@
 import os
 import openai
 import time
-from .abstractLanguageModel import AbstractLanguageModel
+from  tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
 import concurrent.futures
 
 class OpenAILanguageModel(AbstractLanguageModel):
