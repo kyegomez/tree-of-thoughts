@@ -1,21 +1,21 @@
 import os
-from tree_of_thoughts.openaiModels import OpenAILanguageModel, OptimizedOpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import TreeofThoughts, OptimizedTreeofThoughts
+from tree_of_thoughts.openaiModels import OpenAILanguageModel
+from tree_of_thoughts.treeofthoughts import TreeofThoughts
 
 
 
-api_key = "enter in your api key"
 api_model= "gpt-3.5-turbo"
 
 
-model = OptimizedOpenAILanguageModel(api_key=api_key, api_model=api_model)
+model = OpenAILanguageModel(api_key='', api_model=api_model)
+
 #choose search algorithm('BFS' or 'DFS')
-search_algorithm = "BFS"
+search_algorithm = "DFS"
 
 # value or vote
 evaluation_strategy = "value"
 
-tree_of_thoughts= OptimizedTreeofThoughts(model, search_algorithm)
+tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 k = 5
