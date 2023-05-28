@@ -131,7 +131,10 @@ class OpenAILanguageModel(AbstractLanguageModel):
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
-                state_text = ' '.join(state)
+                if (type(state) == str):
+                    state_text = state
+                else:
+                    state_text = '\n'.join(state)
                 print("We receive a state of type", type(state), "For state: ", state, "\n\n")
                 prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
                 

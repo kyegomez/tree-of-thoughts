@@ -18,7 +18,7 @@ evaluation_strategy = "value"
 tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-k = 1
+k = 2
 T = 3
 b = 5
 vth = 0.5
@@ -29,9 +29,15 @@ convergence_threshold = 0.01
 convergence_count = 5
 
 #call the solve emthod with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
-    
-                  
+
+solution = tree_of_thoughts.solve(input_problem, num_thoughts=k,
+    max_steps=T,
+    max_states=b,
+    value_threshold=vth,
+    confidence_threshold=convergence_threshold,
+    max_iterations=max_iterations,
+    convergence_threshold=convergence_threshold,
+    convergence_count=convergence_count)
     
 #use the solution in your production environment
 print(f"solution: {solution}")
