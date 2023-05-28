@@ -199,25 +199,6 @@ class TreeofThoughts:
 
 
 #does not output state after each thought --- idk why -- needs work
-class OptimizedTreeofThoughts(TreeofThoughts):
-    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
-        start_time = time.time()
-        print(f'Start time {start_time}')
-        if self.search_algorithm == 'BFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_bfs(x, k, T, b, vth)
-                print(f'result in optimized tree of thoughts: {result}')
-                if result:
-                    return result
-        elif self.search_algorithm == 'DFS':
-            while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_dfs(x, k, T, vth, confidence_threshold=confidence_threshold, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
-                if result:
-                    return result
-        else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
-
-
 
 if __name__ == '__main__':
     
@@ -266,9 +247,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     
-    model = OptimizedOpenAILanguageModel('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')
+    model = OptimizedOpenAILanguageModel('sk-')
     #solve the problem using the tree of thoughts class
-    optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
+    optimized_tree_of_thoughts = TreeofThoughts(model, search_algorithm=args.search_algorithm)
 
     #solve the porblem using tree of thoughts problem helper
     best_state = optimized_tree_of_thoughts.solve(args.problem, k=args.k, T=args.T, b=args.b, vth=args.vth)
