@@ -56,13 +56,13 @@ class TreeofThoughts:
             }
         }
 
-    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, prunning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
             if self.search_algorithm == 'BFS':
                 while timeout is None or time.time() - start_time < timeout:
-                    result = self.tot_bfs(x, k, T, b, prunning_threshold)
+                    result = self.tot_bfs(x, k, T, b, vth)
                     if result:
                         self.save_tree_to_json(file_name)
                         # printed_tree = self.print_tree(result)
@@ -112,7 +112,7 @@ class TreeofThoughts:
         return best_state
 
 
-    def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def tot_dfs(self, x, k, T, vth, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         #vote across across states
         output = []
         iteration_count = 0
@@ -154,7 +154,7 @@ class TreeofThoughts:
                 state_value = self.model.evaluate_states({s_prime}, x)[s_prime]
                 logger.info(f"State: {s_prime}, Value: {state_value}")
 
-                if state_value > vth and (pruning_threshold is None or state_value >= pruning_threshold):
+                if state_value > vth and (vth is None or state_value >= vth):
                     if (type(s) == str):
                         child = (s, s_prime)
                     else:
@@ -205,7 +205,7 @@ class OptimizedTreeofThoughts(TreeofThoughts):
         print(f'Start time {start_time}')
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_bfs(x, k, T, b)
+                result = self.tot_bfs(x, k, T, b, vth)
                 print(f'result in optimized tree of thoughts: {result}')
                 if result:
                     return result
