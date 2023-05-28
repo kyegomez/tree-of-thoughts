@@ -53,7 +53,7 @@ from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageM
 use_v2 = False
 
 
-model = OptimizedOpenAILanguageModel(api_key=api_key) # api_model="gpt4" # for higher performance base model is not smart
+model = OptimizedOpenAILanguageModel(api_key='') # api_model="gpt4" # for higher performance base model is not smart
 
 
 #choose search algorithm('BFS' or 'DFS')
