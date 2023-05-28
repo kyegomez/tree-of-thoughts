@@ -1,12 +1,12 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModel
 from transformers import pipeline
 from .abstractLanguageModel import AbstractLanguageModel
 
 
 class HuggingLanguageModel(AbstractLanguageModel):
     def __init__(self, model_name, model_tokenizer=None, verbose=False):
-        self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer or model_name)
+        self.model = AutoModel.from_pretrained(model_name, trust_remote_code=True).to('cpu', dtype=float)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_tokenizer or model_name, trust_remote_code=True)
         self.verbose = verbose
 
     def generate_thoughts(self, state, k, max_length=100):

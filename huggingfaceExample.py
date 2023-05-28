@@ -1,4 +1,5 @@
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
+from tree_of_thoughts.treeofthoughts import TreeofThoughts, OptimizedTreeofThoughts
+from tree_of_thoughts.huggingModels import HuggingLanguageModel
 # from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # model_name="gpt2"
@@ -18,9 +19,10 @@ from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAIL
 #         return generated_text
 
 # Initialize the HuggingLanguageModel with the GPT-2 model
-model_name = "gpt2"
+model_name = r"C:\Users\David\.cache\huggingface\modules\transformers_modules\chatglm6b"
+tokenizer_name = r"C:\Users\David\.cache\huggingface\modules\transformers_modules\chatglm6b"
 model = HuggingLanguageModel(model_name, 
-                             model_Tokenizer="gpt2", 
+                             model_tokenizer=tokenizer_name,
                              verbose=True)
                              
 
@@ -34,7 +36,6 @@ strategy="cot"
 
 # value or vote
 evaluation_strategy = "value"
-
 
 gpt2_model = HuggingLanguageModel(model_name)
 
@@ -50,9 +51,12 @@ confidence = 0.8 #cmodel is confident on performance
 max_iterations = 40 #tree branh nodes 
 convergence_threshold = 0.01
 convergence_count = 5
+pruning_threshold = 0.3
 
 #call the solve emthod with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
+solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout,
+                                  confidence_threshold=confidence, max_iterations=max_iterations,
+                                  convergence_threshold=convergence_threshold, convergence_count=convergence_count)
     
 #use the solution in your production environment
 print(f"solution: {solution}")

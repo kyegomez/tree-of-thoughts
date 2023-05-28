@@ -56,13 +56,14 @@ class TreeofThoughts:
             }
         }
 
-    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, prunning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, pruning_threshold=0.5, confidence_threshold=None,
+              max_iterations=None, convergence_threshold=None, convergence_count=None):
         start_time = time.time()
         file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
             if self.search_algorithm == 'BFS':
                 while timeout is None or time.time() - start_time < timeout:
-                    result = self.tot_bfs(x, k, T, b, prunning_threshold)
+                    result = self.tot_bfs(x, k, T, b, pruning_threshold)
                     if result:
                         self.save_tree_to_json(file_name)
                         # printed_tree = self.print_tree(result)
