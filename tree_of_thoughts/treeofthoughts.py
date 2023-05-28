@@ -356,7 +356,7 @@ class TreeofThoughts:
               timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, 
               convergence_count=None):
         start_time = time.time()
-        self.file_name = f"logs/tree_of_thoughts_output_{initial_prompt}_{self.search_algorithm}.json"
+        self.file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
             best_thoughts = ""
             if self.search_algorithm == 'BFS':
@@ -424,7 +424,7 @@ class TreeofThoughts:
         iteration_count = 0
         consecutive_convergence_count = 0
         prev_best_value = None
-        file_name = f"logs/tree_of_thoughts_output_{self.inital_prompt}_{self.search_algorithm}.json"
+        file_name = f"logs/tree_of_thoughts_output_{str(self.inital_prompt)}_{self.search_algorithm}.json"
 
         def dfs(state, step):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count, output
