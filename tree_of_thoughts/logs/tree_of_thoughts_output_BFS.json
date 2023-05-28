@@ -1,9 +1,0 @@
-{
-    "nodes": {
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is crucial in obtaining the correct answer.\nThoughts: I need to carefully consider the order in which I perform the arithmetic operations. Maybe I can use parentheses to group certain numbers and operations together. I also need to": 0.7,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is crucial in obtaining the correct answer.\nThoughts: To ensure the correct order of operations, I should use parentheses. I could try using two pairs of parentheses to group the numbers in different ways and see which one": 0.75,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: There are multiple ways to arrange 4 numbers and use basic arithmetic operations to obtain 24.\nThoughts: I should try different combinations of numbers and operations to see which ones work. It might be helpful to start with the simpler operations": 0.8,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order in which the numbers are used in the arithmetic operations matters.\n\nThoughts: To obtain 24, we can start with a larger number and use smaller numbers to manipulate it. For example, if we use 8 as the": 0.001,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: There are multiple ways to arrange 4 numbers and use basic arithmetic operations to obtain 24.\n\nThoughts: I should start by trying different combinations of numbers and operations. I can also try using parentheses to group certain operations together. It": 0.75
-    }
-}

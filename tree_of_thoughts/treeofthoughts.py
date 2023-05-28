@@ -10,7 +10,6 @@ import argparse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-DATA_PATH = './data'
 
 
 # class TreeofThoughts:
@@ -424,7 +423,7 @@ class TreeofThoughts:
         iteration_count = 0
         consecutive_convergence_count = 0
         prev_best_value = None
-        file_name = f"logs/tree_of_thoughts_output_{str(self.inital_prompt)}_{self.search_algorithm}.json"
+        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
 
         def dfs(state, step):
             nonlocal consecutive_convergence_count, prev_best_value, iteration_count, output
