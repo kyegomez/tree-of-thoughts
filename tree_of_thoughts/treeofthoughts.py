@@ -62,16 +62,12 @@ class TreeofThoughts:
                     result = self.tot_bfs(x, k, T, b, vth)
                     if result:
                         self.save_tree_to_json(self.file_name )
-                        # printed_tree = self.print_tree(result)
-                        # logger.info(f"Tree structure and metrics:\n{printed_tree}")
                         best_thoughts = result
             elif self.search_algorithm == 'DFS':
                 while timeout is None or time.time() - start_time < timeout:
                     result = self.tot_dfs(x, k, T, vth)
                     if result:
                         self.save_tree_to_json(self.file_name)
-                        # printed_tree=self.print_tree(result)
-                        # logger.info(f"Tree structure and metrics:\n{printed_tree}")
                         best_thoughts = result
             if(best_thoughts):
                 solution = self.model.generate_solution(x, best_thoughts)
@@ -105,7 +101,6 @@ class TreeofThoughts:
                 self.tree["nodes"][s] = v
             print("Saving tree")
             self.save_tree_to_json(self.file_name)
-            # Filter the candidate states based on the pruning threshold
             pruned_S0_t = {s: v for s, v in Vt.items() if v >= pruning_threshold}
 
             St = sorted(pruned_S0_t.keys(), key=lambda s: pruned_S0_t[s], reverse=True)[:b]
@@ -125,7 +120,7 @@ class TreeofThoughts:
         iteration_count = 0
         consecutive_convergence_count = 0
         prev_best_value = None
-        file_name = f"logs/tree_of_thoughts_output_{self.x}.json"
+        file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
 
 
         def dfs(s, t):
@@ -166,9 +161,6 @@ class TreeofThoughts:
                         child = (s, s_prime)
                     else:
                         child = (*s, s_prime)
-                    # self.tree['nodes'][child] = s
-                    # self.tree["metrics"]["thoughts"][child] = s_prime
-                    # self.tree["metrics"]["evaluations"][child] = state_value
 
                     if dfs(child, t + 1):
                         return True
@@ -248,33 +240,14 @@ if __name__ == '__main__':
     parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
 
 
-    #args for v1 original paper implementation
-    parser.add_argument('--backend', type=str, choices=['gpt-4', 'gpt-3.5-turbo'], default='gpt-4')
-    parser.add_argument('--temperature', type=float, default=0.7)
-    parser.add_argument('--task', type=str, required=False, choices=['game24', 'text', 'crosswords'])
-    parser.add_argument('--task_file_path', type=str, required=False)
-    parser.add_argument('--task_start_index', type=int, default=900)
-    parser.add_argument('--task_end_index', type=int, default=1000)
-    parser.add_argument('--naive_run', action='store_true')
-    parser.add_argument('--prompt_sample', type=str, choices=['standard', 'cot'])  # only used when method_generate = sample, or naive_run
-    parser.add_argument('--method_generate', type=str, choices=['sample', 'propose'])
-    parser.add_argument('--method_evaluate', type=str, choices=['value', 'vote'])
-    parser.add_argument('--method_select', type=str, choices=['sample', 'greedy'])
-    parser.add_argument('--n_generate_sample', type=int, default=1)  # only thing needed if naive_run
-    parser.add_argument('--n_evaluate_sample', type=int, default=1)
-    parser.add_argument('--n_select_sample', type=int, default=1)
-
-
-
-
     #args from original implementation
 
     args = parser.parse_args()
     print(args)
     
-    model = OptimizedOpenAILanguageModel('')
+    model = OptimizedOpenAILanguageModel()
     #solve the problem using the tree of thoughts class
-    optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
+    optimized_tree_of_thoughts = TreeofThoughts(model, search_algorithm=args.search_algorithm)
 
     #solve the porblem using tree of thoughts problem helper
     best_state = optimized_tree_of_thoughts.solve(args.problem, k=args.k, T=args.T, b=args.b, vth=args.vth)
