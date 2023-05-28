@@ -92,12 +92,12 @@ class TreeofThoughts:
         for t in range(1, T + 1):
             S0_t = set()
             for s in S0:
-                for z in self.model.generate_thoughts(s, k, x):
+                for z in self.model.generate_thoughts(state=s, k=k):
                     if (type(s) == str):
                         S0_t.add((s, z))
                     else:
                         S0_t.add((*s, z))
-            Vt = self.model.evaluate_states(S0_t, x)
+            Vt = self.model.evaluate_states(states=S0_t, initial_prompt=x)
 
             # Filter the candidate states based on the pruning threshold
             pruned_S0_t = {s: v for s, v in Vt.items() if v >= pruning_threshold}
