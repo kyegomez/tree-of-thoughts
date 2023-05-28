@@ -1,6 +1,0 @@
-{
-    "nodes": {
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is important in obtaining the correct solution.\nThoughts: Maybe I should try different combinations of the four numbers using different orders of operations. I could also try grouping the numbers differently to see if that helps me reach ": 0.75,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is important in obtaining the correct solution.\nThoughts: Maybe I should try different combinations of the four numbers using different orders of operations. I could also try grouping the numbers differently to see if that helps me reach  | Observation: The numbers used could be negative or decimals.\nThoughts: I should try using negative numbers or decimals to see if that helps me reach 24. I should also consider the possibility of using parentheses to group the numbers differently. Additionally,": 0.2
-    }
-}
