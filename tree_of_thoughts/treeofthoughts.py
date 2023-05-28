@@ -62,7 +62,7 @@ class TreeofThoughts:
         try:
             if self.search_algorithm == 'BFS':
                 while timeout is None or time.time() - start_time < timeout:
-                    result = self.tot_bfs(x, k, T, b)
+                    result = self.tot_bfs(x, k, T, b, pruning_threshold=0.5)
                     if result:
                         self.save_tree_to_json(file_name)
                         # printed_tree = self.print_tree(result)
@@ -92,12 +92,12 @@ class TreeofThoughts:
         for t in range(1, T + 1):
             S0_t = set()
             for s in S0:
-                for z in self.model.generate_thoughts(s, k, x):
+                for z in self.model.generate_thoughts(state=s, k=k):
                     if (type(s) == str):
                         S0_t.add((s, z))
                     else:
                         S0_t.add((*s, z))
-            Vt = self.model.evaluate_states(S0_t, x)
+            Vt = self.model.evaluate_states(states=S0_t, initial_prompt=x)
 
             # Filter the candidate states based on the pruning threshold
             pruned_S0_t = {s: v for s, v in Vt.items() if v >= pruning_threshold}
@@ -108,8 +108,6 @@ class TreeofThoughts:
             logger.info(f'Step: {t}, S0_t: {S0_t}, Vt: {Vt}, St: {St}, S0: {S0}')
 
         best_state = max(St, key=lambda s: Vt[s])
-
-        return best_state
 
 
     def tot_dfs(self, x, k, T, vth, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
@@ -170,7 +168,7 @@ class TreeofThoughts:
             return False
         
             
-        dfs(x, 4)
+        dfs(x, 1)
         print(f'output  {output}')
         best_state = max(output, key=lambda x: x[1])
         return best_state[0]
@@ -205,7 +203,7 @@ class OptimizedTreeofThoughts(TreeofThoughts):
         print(f'Start time {start_time}')
         if self.search_algorithm == 'BFS':
             while timeout is None or time.time() - start_time < timeout:
-                result = self.tot_bfs(x, k, T, b)
+                result = self.tot_bfs(x, k, T, b, pruning_threshold=0.5)
                 print(f'result in optimized tree of thoughts: {result}')
                 if result:
                     return result
@@ -266,7 +264,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     
-    model = OptimizedOpenAILanguageModel('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')
+    model = OptimizedOpenAILanguageModel('')
     #solve the problem using the tree of thoughts class
     optimized_tree_of_thoughts = OptimizedTreeofThoughts(model, search_algorithm=args.search_algorithm)
 
