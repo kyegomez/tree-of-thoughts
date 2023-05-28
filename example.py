@@ -10,7 +10,7 @@ api_model= "gpt-3.5-turbo"
 model = OpenAILanguageModel(api_key='', api_model=api_model)
 
 #choose search algorithm('BFS' or 'DFS')
-search_algorithm = "DFS"
+search_algorithm = "BFS"
 
 # value or vote
 evaluation_strategy = "value"
@@ -18,7 +18,7 @@ evaluation_strategy = "value"
 tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-k = 5
+k = 1
 T = 3
 b = 5
 vth = 0.5
@@ -37,9 +37,9 @@ solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confiden
 print(f"solution: {solution}")
 
 
-# Save the tree and metrics to a JSON file
-file_name = "logs/tree_of_thoughts_output.json"
-tree_of_thoughts.save_tree_to_json(file_name)
+# # Save the tree and metrics to a JSON file
+# file_name = "logs/tree_of_thoughts_output.json"
+# tree_of_thoughts.save_tree_to_json(file_name)
 
     # k = 1#number of thoughts to input
     # T = 1 # maximum depth of the search tree

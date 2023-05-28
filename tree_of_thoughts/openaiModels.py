@@ -108,7 +108,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         prompt = f"Considering the thoughts you've had until now:\n\n{state_text}\n\nDevise the next coherent thought that will aid in advancing the reasoning process and achieving a solution to {inital_prompt}. Assess various scenarios, think unconventionally, anticipate potential challenges, and resolve any outstanding queries. Tap into your mind's full potential and make certain no open questions remain."
 
         prompt += self.ReAct_prompt
-        print(prompt)
+        # print(prompt)
         thoughts = self.generate_text(prompt, k)
         # print(thoughts)
         print(f"Generated thoughts: {thoughts}")
@@ -138,7 +138,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
                     value_text = self.openai_choice2text_handler(response.choices[0])
-                    print(f'state: {value_text}')
+                    # print(f'state: {value_text}')
                     value = float(value_text)
                     print(f"value: {value}")
                 except ValueError:
