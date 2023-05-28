@@ -48,7 +48,10 @@ Navigate to the repository folder: ```cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, CustomLanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
+import os
+from tree_of_thoughts.openaiModels import OpenAILanguageModel
+from tree_of_thoughts.treeofthoughts import TreeofThoughts
+from tree_of_thoughts.huggingModel import HuggingLanguageModel
 
 use_v2 = False
 
