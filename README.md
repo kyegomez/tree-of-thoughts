@@ -43,7 +43,6 @@ Add ` OPENAI_API_KEY='API KEY'` in the .env!
 
 
 ## Method2
-or:
 
 ```pip install tree-of-thoughts ```
 
@@ -55,10 +54,7 @@ Navigate to the repository folder: ```cd tree-of-thoughts```
 Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
-import os
-from tree_of_thoughts.openaiModels import OpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import TreeofThoughts
-from tree_of_thoughts.huggingModel import HuggingLanguageModel
+from tree_of_thoughts import TreeofThoughts, OptimizedOpenAILanguageModel
 
 use_v2 = False
 
@@ -94,7 +90,7 @@ convergence_threshold = 0.01 #determining when the search process has converged
 convergence_count = 5 # number of searchers to be considered converged
 #read documentation for more
 
-#call the solve emthod with the input problem and other params
+#call the solve method with the input problem and other params
 solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
 
 
@@ -198,7 +194,7 @@ python3 huggingfaceExample.py
 ```
 
 ```python
-from tree_of_thoughts.tree_of_thoughts import HuggingLanguageModel
+from tree_of_thoughts import HuggingLanguageModel
 
 model_name="gpt2"
 model_tokenizer="your tokenizer"
