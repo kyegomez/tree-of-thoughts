@@ -41,17 +41,13 @@ python3 treeofthoughts.py --problem "design an new transportation system for an 
 ```
 Add ` OPENAI_API_KEY='API KEY'` in the .env!
 
-
+And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
 
 ## Method2
 or:
 
 ```pip install tree-of-thoughts ```
 
-
-Navigate to the repository folder: ```cd tree-of-thoughts```
-
-```pip install openai```
 
 Create a Python script (e.g., example.py) and import the necessary classes:
 
