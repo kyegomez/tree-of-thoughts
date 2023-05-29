@@ -71,31 +71,30 @@ class TreeofThoughts:
     def tot_bfs(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold):
         current_states = [initial_prompt]
         state_values = {}
-        for step in range(1, max_steps + 1):
-            selected_states = []
-            for state in current_states:
-                thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
-                evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
-                for thought, value in evaluated_thoughts.items():
-                    if value >= pruning_threshold:
-                        flattened_state = (state, thought)
-                        if not (type(state) == str):
-                            flattened_state = (*state, thought)
-                        selected_states.append(flattened_state)
-                        state_values[flattened_state] = value
-                        self.logNewState(flattened_state, value)
-            if(len(selected_states) >1):
-                current_states = selected_states[:max_states]
-                
-        if (len(current_states) == 1):
-            return initial_prompt
-        
-        if current_states:
-            print(current_states, state_values)
-            best_state = max(current_states, key=lambda state: state_values[state])
-            print(f'best_state: {best_state}')
+        try:
+            for step in range(1, max_steps + 1):
+                selected_states = []
+                for state in current_states:
+                    thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
+                    evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
+                    for thought, value in evaluated_thoughts.items():
+                        if value >= pruning_threshold:
+                            flattened_state = (state, thought) if isinstance(state, str) else (*state, thought)
+                            selected_states.append(flattened_state)
+                            state_values[flattened_state] = value
+                            self.logNewState(flattened_state, value)
+                if len(selected_states) > 1:
+                    current_states = selected_states[:max_states]
 
-        return best_state
+            if len(current_states) == 1:
+                return initial_prompt
+
+            if current_states:
+                best_state = max(current_states, key=lambda state: state_values[state])
+                return best_state
+        except Exception as e:
+            logger.error(f"Error in tot_bfs: {e}")
+            return None
 
     def tot_dfs(self,
                 inital_prompt: str,
