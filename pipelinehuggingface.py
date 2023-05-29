@@ -6,7 +6,7 @@ model_name="gpt2"
 gpt2_pipeline_model = HFPipelineModel(model_name)
 
 tree_of_thoughts = OptimizedTreeofThoughts(gpt2_pipeline_model, search_algorithm="DFS")
-
+#
 
 
 

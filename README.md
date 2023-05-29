@@ -60,8 +60,6 @@ from tree_of_thoughts.openaiModels import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughts
 from tree_of_thoughts.huggingModel import HuggingLanguageModel
 
-use_v2 = False
-
 
 model = OptimizedOpenAILanguageModel(api_key='') # api_model="gpt4" # for higher performance base model is not smart
 

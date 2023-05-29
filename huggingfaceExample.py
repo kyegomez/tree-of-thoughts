@@ -1,6 +1,6 @@
 from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAILanguageModel, TreeofThoughts, OptimizedOpenAILanguageModel, OptimizedTreeofThoughts, HuggingLanguageModel
 
-model_name = "input your model"
+model_name="gpt"
 model = HuggingLanguageModel(model_name, 
                              model_Tokenizer="gpt2", 
                              verbose=True)

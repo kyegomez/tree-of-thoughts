@@ -100,11 +100,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
             state_text = state
         else:
             state_text = '\n'.join(state)
-        print("We receive a state of type", type(state), "For state: ", state, "\n\n")
-        
-        # prompt = f"Given the current state of reasoning: \n\n\n'{state_text}'\n\n\nGenerate the next best coherent thought to achieve the reasoning process and get the solution: "
-        # prompt = f"Based on the current state of reasoning: \n\n\n'{state_text} Provide the next coherent thought that will help progress the reasoning process and reach an soluton "
-        # prompt = f"These are the thoughts you've had: \n\n\n{state_text}, provide the next coherent thought that will help advance the reasoning process and reach an solution for this problem {inital_prompt}. Think sharply, think out of the box, predict failure. Do not leave any open questions. Unleash your mind."
+        print("New state genering thought", state, "\n\n")
         prompt = f"Considering the thoughts you've had until now:\n\n{state_text}\n\nDevise the next coherent thought that will aid in advancing the reasoning process and achieving a solution to {inital_prompt}. Assess various scenarios, think unconventionally, anticipate potential challenges, and resolve any outstanding queries. Tap into your mind's full potential and make certain no open questions remain."
 
         prompt += self.ReAct_prompt
@@ -128,6 +124,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
         return answer
 
     def evaluate_states(self, states, inital_prompt):
+
+
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:

@@ -9,20 +9,29 @@ import logging
 import argparse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
+
 
 
 class TreeofThoughts:
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
-        self.tree = {
+        self.tree: Dict[str, Dict[str, float]] = {
             "nodes": {}
         }
 
-
-    def solve(self, initial_prompt, num_thoughts=3, max_steps=3, max_states=5, value_threshold=0.5, 
-              confidence_threshold=0.8, max_iterations=40, convergence_threshold=0.01, 
-              convergence_count=5):
+    def solve(self, initial_prompt: str, 
+              num_thoughts: Optional[int] = None, 
+              max_steps: Optional[int] = None, 
+              max_states: Optional[int] = None, 
+              value_threshold: Optional[float] = None, 
+              timeout: Optional[float] = None, 
+              confidence_threshold: Optional[float] = None, 
+              max_iterations: Optional[int] = None, 
+              convergence_threshold: Optional[float] = None, 
+              convergence_count: Optional[int] = None) -> str:
+        start_time = time.time()
         self.file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
             best_thoughts = ""
@@ -85,7 +94,13 @@ class TreeofThoughts:
 
         return best_state
 
-    def tot_dfs(self, initial_prompt, num_thoughts, max_steps, value_threshold, pruning_threshold=0.5, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
+    def tot_dfs(self, 
+                initial_prompt: str, 
+                num_thoughts: any,
+                max_steps: int,
+                value_threshold, 
+                pruning_threshold=0.5, 
+                confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None):
         output = []
         iteration_count = 0
         consecutive_convergence_count = 0
@@ -142,7 +157,9 @@ class TreeofThoughts:
         with open(file_name, 'w') as json_file:
             json.dump(self.tree, json_file, indent=4)
 
-    def print_tree(self, node, depth=0):
+    def print_tree(self, 
+                   node: str, 
+                   depth=0):
         thought = self.tree["metrics"]["thoughts"].get(node, "")
         evaluation = self.tree["metrics"]["evaluations"].get(node, "")
 

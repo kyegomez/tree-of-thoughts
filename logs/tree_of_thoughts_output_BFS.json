@@ -1,3 +1,7 @@
 {
-    "nodes": {}
+    "nodes": {
+        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is critical in obtaining the correct solution.\nThoughts: I should try different combinations of the four numbers using different orders of operations. I can start with using parentheses to group numbers and operations together. I should also consider": 0.8,
+        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The four numbers given could be any combination of integers or decimals.\nThoughts: I should start by trying to use the basic arithmetic operations to manipulate the numbers in different ways. I can also try using fractions or negative numbers to see if": 0.8,
+        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is critical in obtaining the correct solution.\nThoughts: I should try different combinations of the four numbers using different orders of operations. I can start with using parentheses to group numbers and operations together. I should also consider | Observation: The use of exponents can also be considered in obtaining 24.\nThoughts: I can try using exponents with the four numbers to see if it helps me obtain 24 in any way. I should also consider using negative numbers": 0.6
+    }
 }
