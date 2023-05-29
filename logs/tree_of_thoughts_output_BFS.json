@@ -1,7 +1,3 @@
 {
-    "nodes": {
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The four numbers chosen must have a combination that results in a multiplication of 24.\n\nThoughts: One way to achieve this could be to choose two numbers that multiply to 24 and then use the other two numbers to manipulate them using": 0.6,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation 1: The order of operations matters when using basic arithmetic operations.\nObservation 2: Using fractions or decimals can also be a viable option to obtain 24.\n\nThoughts 1: To ensure the correct order of operations, I": 0.6,
-        "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 | Observation: The order of operations is crucial in obtaining the correct result.\nThoughts: I need to carefully consider the order in which I perform the arithmetic operations. Maybe I can start by finding two numbers that can be combined using multiplication or division to": 0.85
-    }
+    "nodes": {}
 }
