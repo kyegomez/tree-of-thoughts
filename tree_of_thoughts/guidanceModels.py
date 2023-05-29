@@ -3,8 +3,8 @@ from tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
 import time
 import os
 import openai
-from dotenv import load_dotenv
-load_dotenv()
+
+
 class GuidanceLanguageModel(AbstractLanguageModel):
     def __init__(self, model, strategy="cot", evaluation_strategy="value", enable_ReAct_prompting=False):
         # gpt4 = guidance.llms.OpenAI("gpt-4")
