@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
   name = 'tree-of-thoughts',
   packages = find_packages(exclude=[]),
-  version = '0.2.6',
+  version = '0.2.7',
   license='MIT',
   description = 'Tree of Thoughts - Pytorch',
   author = 'Kye Gomez',
@@ -19,7 +19,9 @@ setup(
   install_requires=[
     'guidance',
     'openai',
-    'transformers'
+    'transformers',
+    'dotenv',
+    ''
   ],
   classifiers=[
     'Development Status :: 4 - Beta',
