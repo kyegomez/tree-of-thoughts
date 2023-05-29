@@ -17,43 +17,22 @@ evaluation_strategy = "value"
 
 tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 
-input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-k = 2
-T = 3
-b = 5
-vth = 0.5
-timeout = 10
-confidence = 0.8 #cmodel is confident on performance
-max_iterations = 40 #tree branh nodes 
-convergence_threshold = 0.01
-convergence_count = 5
+input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation"
+
+num_thoughts = 2
+max_steps= 3
+max_states = 5
+value_threshold= 0.5
 
 #call the solve emthod with the input problem and other params
 
-solution = tree_of_thoughts.solve(input_problem, num_thoughts=k,
-    max_steps=T,
-    max_states=b,
-    value_threshold=vth,
-    confidence_threshold=convergence_threshold,
-    max_iterations=max_iterations,
-    convergence_threshold=convergence_threshold,
-    convergence_count=convergence_count)
+solution = tree_of_thoughts.solve(input_problem, 
+    num_thoughts=num_thoughts,
+    max_steps=max_states,
+    max_states=5,
+    value_threshold=value_threshold,
+    )
     
 #use the solution in your production environment
 print(f"solution: {solution}")
 
-
-# # Save the tree and metrics to a JSON file
-# file_name = "logs/tree_of_thoughts_output.json"
-# tree_of_thoughts.save_tree_to_json(file_name)
-
-    # k = 1#number of thoughts to input
-    # T = 1 # maximum depth of the search tree
-    # b = 1 # branching factor -< number of child nodes for each branch
-    # vth = 0.9 # pruning state -> any evaluated thought below this is eliminated
-    # timeout = 10 #10 seconds timeout before stop
-    # confidence = 0.8 #cmodel is confident on performance
-    # max_iterations = 40 #tree branch nodes 
-    # convergence_threshold = 0.01 #determining when the search process has converged
-    # convergence_count = 5 # number of searchers to be considered converged
-    # # read documentation for more

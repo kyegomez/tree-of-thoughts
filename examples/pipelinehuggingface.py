@@ -5,7 +5,7 @@ from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, GuidanceOpenAIL
 model_name="gpt2"
 gpt2_pipeline_model = HFPipelineModel(model_name)
 
-tree_of_thoughts = OptimizedTreeofThoughts(gpt2_pipeline_model, search_algorithm="DFS")
+tree_of_thoughts = TreeofThoughts(gpt2_pipeline_model, search_algorithm="DFS")
 #
 
 
@@ -21,19 +21,24 @@ evaluation_strategy = "value"
 
 
 
+#input your own objective if you will
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
-k = 5
-T = 3
-b = 5
-vth = 0.5
-timeout = 10
-confidence = 0.8 #cmodel is confident on performance
-max_iterations = 40 #tree branh nodes 
-convergence_threshold = 0.01
-convergence_count = 5
 
-    
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence_threshold=confidence, max_iterations=max_iterations, convergence_threshold=convergence_threshold, convergence_count=convergence_count)
+#play around for increase in performance
+num_thoughts = 2
+max_steps= 3
+max_states = 5
+value_threshold= 0.5
+
+#call the solve emthod with the input problem and other params
+
+solution = tree_of_thoughts.solve(input_problem, 
+    num_thoughts=num_thoughts,
+    max_steps=max_states,
+    max_states=5,
+    value_threshold=value_threshold,
+    )
     
 #use the solution in your production environment
 print(f"solution: {solution}")
+

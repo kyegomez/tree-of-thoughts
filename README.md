@@ -74,28 +74,26 @@ strategy="cot"
 # value or vote
 evaluation_strategy = "value"
 
-
+#initialize the class
 tree_of_thoughts = TreeofThoughts(model, search_algorithm)
 
-
+#enter an problem if you want!
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24" #note for superior intelligent responses you'll have to be more explicit in your prompt and select a better model
     
 
-input_problem = "What are the best reasoning methods to advance Large Language Models"
-k = 5 #number of thoughts to generate
-T = 3 # maximum depth of the search tree
-b = 5 # branching factor -< number of child nodes for each branch
-vth = 0.5 # pruning state -> any evaluated thought below this is eliminated
-timeout = 10 #10 seconds timeout before stop
-confidence = 0.8 #cmodel is confident on performance
-max_iterations = 40 #tree branh nodes 
-convergence_threshold = 0.01 #determining when the search process has converged
-convergence_count = 5 # number of searchers to be considered converged
-#read documentation for more
+num_thoughts = 2
+max_steps= 3
+max_states = 5
+value_threshold= 0.5
 
 #call the solve emthod with the input problem and other params
-solution = tree_of_thoughts.solve(input_problem, k, T, b, vth, timeout, confidence, max_iterations, convergence_threshold, convergence_count)
 
+solution = tree_of_thoughts.solve(input_problem, 
+    num_thoughts=num_thoughts,
+    max_steps=max_states,
+    max_states=5,
+    value_threshold=value_threshold,
+    )
 
 ```
 
@@ -313,40 +311,24 @@ Join us on this exciting journey to advance the Tree of Thoughts algorithm to mu
 
 # Documentation:
 
-## x (str): 
+## input_problem (str): 
 The initial problem statement or prompt for which the Tree of Thoughts algorithm will generate a solution.
 
-## k (int, default=5): 
+## num_thoughts (int, default=5): 
 The number of thoughts to generate at each state. 
 A higher value of k will result in more thoughts being generated, potentially leading to a more diverse set of solutions. However, increasing k may also increase the computational complexity and time required to find a solution.
 
-## T (int, default=3): 
+## max_steps (int, default=3): 
 The maximum depth of the search tree. 
 A higher value of T allows the algorithm to explore deeper states, potentially leading to better solutions. However, increasing T may also increase the computational complexity and time required to find a solution.
 
-## b (int, default=5): 
+## max_states (int, default=5): 
 The branching factor of the search tree, which determines the maximum number of child nodes for each parent node.
 A higher value of b allows the algorithm to explore more states, potentially leading to better solutions. However, increasing b may also increase the computational complexity and time required to find a solution.
 
-## vth (float, default=0.5): 
+## value_threshold (float, default=0.5): 
 The value threshold for pruning states. 
 States with a value below this threshold will be discarded, reducing the search space. A higher value of vth will result in a more aggressive pruning strategy, potentially speeding up the search process. However, setting vth too high may cause the algorithm to discard promising states, leading to suboptimal solutions.
-
-## timeout (int, default=10): 
-The maximum time (in seconds) allowed for the search process. If the search process exceeds this time limit, the algorithm will return the best solution found so far.
-
-## confidence_threshold (float, default=0.8): 
-The confidence threshold for determining when a solution is satisfactory. If the algorithm finds a solution with a confidence value above this threshold, it will return the solution immediately.
-
-## max_iterations (int, default=40): 
-The maximum number of iterations allowed for the search process. If the search process exceeds this number of iterations, the algorithm will return the best solution found so far.
-
-## convergence_threshold (float, default=0.01): 
-The convergence threshold for determining when the search process has converged. If the difference in confidence values between consecutive iterations is below this threshold for a specified number of iterations (convergence_count), the algorithm will return the best solution found so far.
-
-## convergence_count (int, default=5): 
-The number of consecutive iterations required for the search process to be considered converged. If the difference in confidence values between consecutive iterations is below the convergence_threshold for this number of iterations, the algorithm will return the best solution found so far.
-
 
 # Acknowledgements
 
