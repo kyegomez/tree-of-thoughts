@@ -26,6 +26,7 @@ class TreeofThoughts:
               max_steps: Optional[int] = None, 
               max_states: Optional[int] = None, 
               value_threshold: Optional[float] = None, 
+              pruning_threshold: Optional[float] = 0.5,
               timeout: Optional[float] = None, 
               confidence_threshold: Optional[float] = None, 
               max_iterations: Optional[int] = None, 
@@ -36,7 +37,7 @@ class TreeofThoughts:
         try:
             best_thoughts = ""
             if self.search_algorithm == 'BFS':
-                result = self.tot_bfs(initial_prompt, num_thoughts, max_steps, max_states, value_threshold)
+                result = self.tot_bfs(initial_prompt, num_thoughts, max_steps, max_states, value_threshold, pruning_threshold)
                 if result:
                     self.save_tree_to_json(self.file_name)
                     best_thoughts = result
@@ -218,7 +219,7 @@ if __name__ == '__main__':
     parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
 
 
-    #args from original implementation
+
 
     args = parser.parse_args()
     print(args)

@@ -1,3 +1,4 @@
 transformers
 openai
 guidance
+dotenv

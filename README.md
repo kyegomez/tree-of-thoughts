@@ -35,6 +35,7 @@ Clone this repository with
 
 ``` 
 cd tree-of-thoughts
+python3 -m pip install -r requirements.txt
 cd tree_of_thoughts
 python3 treeofthoughts.py --problem "design an new transportation system for an all-new city" --search_algorithm="BFS"
 ```
