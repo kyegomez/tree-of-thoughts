@@ -37,7 +37,7 @@ class TreeofThoughts:
         try:
             best_thoughts = ""
             if self.search_algorithm == 'BFS':
-                result = self.tot_bfs(initial_prompt, num_thoughts, max_steps, max_states, value_threshold, pruning_threshold)
+                result = self.tot_bfs(initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)
                 if result:
                     self.save_tree_to_json(self.file_name)
                     best_thoughts = result
