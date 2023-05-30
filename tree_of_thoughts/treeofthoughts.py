@@ -27,11 +27,7 @@ class TreeofThoughts:
               max_states: Optional[int] = None, 
               value_threshold: Optional[float] = None, 
               pruning_threshold: Optional[float] = 0.5,
-              timeout: Optional[float] = None, 
-              confidence_threshold: Optional[float] = None, 
-              max_iterations: Optional[int] = None, 
-              convergence_threshold: Optional[float] = None, 
-              convergence_count: Optional[int] = None) -> str:
+            ):
         start_time = time.time()
         self.file_name = f"logs/tree_of_thoughts_output_{self.search_algorithm}.json"
         try:
@@ -95,7 +91,7 @@ class TreeofThoughts:
             return None
 
     def tot_dfs(self,
-                inital_prompt: str,
+                initial_prompt: str,
                 num_thoughts: str,
                 max_steps: int,
                 value_threshold,
@@ -106,13 +102,13 @@ class TreeofThoughts:
         def dfs(state, step):
             nonlocal output
             if step > max_steps:
-                thought = self.model.generate_thoughts(state, 1, inital_prompt)
-                value = self.model.evaluate_states({state}, inital_prompt)[state]
+                thought = self.model.generate_thoughts(state, 1, initial_prompt)
+                value = self.model.evaluate_states({state}, initial_prompt)[state]
                 output.append((thought, value))
                 return 
             
-            for next_state in sorted(self.model.generated_thoughts(state, num_thoughts, inital_prompt)):
-                state_value = self.model.evaluate_states({next_state}, inital_prompt)[next_state]
+            for next_state in sorted(self.model.generated_thoughts(state, num_thoughts, initial_prompt)):
+                state_value = self.model.evaluate_states({next_state}, initial_prompt)[next_state]
                 logger.ingo(f"state: {next_state}, value: {state_value}")
 
 
@@ -127,7 +123,7 @@ class TreeofThoughts:
             self.save_tree_to_json(file_name)
         
         try:
-            dfs(inital_prompt, 1)
+            dfs(initial_prompt, 1)
             best_state = max(output, key=lambda x: x[1])
             return best_state[0]
         except Exception as e:

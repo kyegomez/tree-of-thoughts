@@ -41,6 +41,8 @@ python3 treeofthoughts.py --problem "design an new transportation system for an 
 ```
 Add ` OPENAI_API_KEY='API KEY'` in the .env!
 
+!!!! For much improved performance provide custom few prompt shots in the generate thoughts and generate states! !!!!!
+
 And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
 
 ## Method2
