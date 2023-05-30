@@ -53,12 +53,12 @@ Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
 import os
-from tree_of_thoughts.openaiModels import OpenAILanguageModel
+from tree_of_thoughts.openaiModels import OptimizedOpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughts
-from tree_of_thoughts.huggingModel import HuggingLanguageModel
 
 
-model = OptimizedOpenAILanguageModel(api_key='') # api_model="gpt4" # for higher performance base model is not smart
+api_key = os.getenv("OPENAI_API_KEY")
+model = OptimizedOpenAILanguageModel(api_key=api_key) # api_model="gpt4" # for higher performance base model is not smart
 
 
 #choose search algorithm('BFS' or 'DFS')
