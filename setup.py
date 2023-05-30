@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
   name = 'tree-of-thoughts',
   packages = find_packages(exclude=[]),
-  version = '0.2.8',
+  version = '0.2.9',
   license='MIT',
   description = 'Tree of Thoughts - Pytorch',
   author = 'Kye Gomez',
