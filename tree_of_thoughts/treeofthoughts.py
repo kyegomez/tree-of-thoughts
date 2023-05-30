@@ -42,9 +42,7 @@ class TreeofThoughts:
                     self.save_tree_to_json(self.file_name)
                     best_thoughts = result
             elif self.search_algorithm == 'DFS':
-                result = self.tot_dfs(initial_prompt, num_thoughts, max_steps, value_threshold, 
-                                          confidence_threshold=confidence_threshold, max_iterations=max_iterations, convergence_threshold=convergence_threshold, 
-                                          convergence_count=convergence_count)
+                result = self.tot_dfs(initial_prompt, num_thoughts, max_steps, value_threshold, pruning_threshold)
                 if result:
                     self.save_tree_to_json(self.file_name)
                     best_thoughts = result
