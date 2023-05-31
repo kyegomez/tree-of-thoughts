@@ -1,7 +1,5 @@
 # Tree of Thoughts 🌳🌲🌴🌿🍃
 
-![tree of thoughts banner](tree-of-thoughts.jpeg)
-
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
 
 Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!

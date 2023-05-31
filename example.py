@@ -7,7 +7,7 @@ from tree_of_thoughts.treeofthoughts import TreeofThoughts
 api_model= "gpt-3.5-turbo"
 
 
-model = OpenAILanguageModel(api_key='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', api_model=api_model)
+model = OpenAILanguageModel(api_key='enter your openai api key here', api_model=api_model)
 
 #choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
