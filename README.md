@@ -55,8 +55,8 @@ Create a Python script (e.g., example.py) and import the necessary classes:
 
 ``` python
 import os
-from tree_of_thoughts.openaiModels import OptimizedOpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import TreeofThoughts
+from tree_of_thoughts import OptimizedOpenAILanguageModel
+from tree_of_thoughts import TreeofThoughts
 
 
 api_key = os.getenv("OPENAI_API_KEY")
@@ -193,7 +193,7 @@ python3 huggingfaceExample.py
 ```
 
 ```python
-from tree_of_thoughts.tree_of_thoughts import HuggingLanguageModel
+from tree_of_thoughts import HuggingLanguageModel
 
 model_name="gpt2"
 model_tokenizer="your tokenizer"
