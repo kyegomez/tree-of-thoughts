@@ -82,14 +82,14 @@ class OpenAILanguageModel(AbstractLanguageModel):
         if self.use_chat_api:
             thoughts = []
             for _ in range(k):
-                response = self.openai_api_call_handler(prompt, 50, 0.5, k)
+                response = self.openai_api_call_handler(prompt, 1000, 0.5, k)
                 text = self.openai_choice2text_handler(response.choices[0])
                 thoughts += [text]
                 print(f'thoughts: {thoughts}')
             return thoughts
             
         else:
-            response = self.openai_api_call_handler(prompt, 50, 0.5, k)
+            response = self.openai_api_call_handler(prompt, 1000, 0.5, k)
             thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
             return thoughts
 
