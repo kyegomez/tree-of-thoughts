@@ -25,7 +25,11 @@ No complex implementations, just pass in one of these prompts to your model: hea
 'Three experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...'
 
 ## Getting started
-Set Openai key in your environment file `.env.` as `OPENAI_API_KEY='SK'`
+Set Openai key in an environment file,
+
+first create an file called: `.env` 
+
+Then get your openai key and input it inside the '' as `OPENAI_API_KEY='SK-YOUR KEY'`
 
 
 ## Method1
@@ -219,11 +223,11 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return thoughts
 
-    def evaluate_states(self, states, inital_prompt):
+    def evaluate_states(self, states, initial_prompt):
         state_values = {}
         for state in states:
             state_text = ' '.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
 
             inputs = self.tokenizer(prompt, return_tensors="pt")
             outputs = self.model.generate(**inputs, num_return_sequences=1)
@@ -258,54 +262,25 @@ For Instagram, while it doesn't directly support sharing of web links, you can s
 
 We greatly appreciate any help in spreading the word about our project. Thank you for your support!
 
+# Roadmap:
 
-## Roadmap
+* Resilient Prompting: Teach model how to think rather than what to think.
 
-now:
-Generate suite of evaluations used in the paper testing AI agents with other reasoning methods like COT and self consistency and run them in parallel to conduct evaluation experiments.
+* Add pruning treshold management for precise bad state cutoff
 
-Implement a more sophisticated prompt engineering strategy to guide the model's reasoning process more effectively.
+* Evaluating each thought as soon as thought generated then evaluating an chain of thoughts or the state of thoughts by averaging out the values of each thought evaluation.
 
-Script that generates an dataset based on a topic input, -> set of questions are asked, then multiple trees of thoughts are run concurrently to generate the decision making rich dataset
+* Add Traversal method, which "will incapsulate the run of either dfs or bfs under the hood so that the issue of different args is solved from @ivanzhovannik
 
+* Add Delay between generate solutions and generate values
 
-Introduce a reinforcement learning, distillment, and finetuning scripts to finely tune the model based on feedback from the Tree of Thoughts algorithm.
+* Dynamic and adaptive parameters, like max steps, num_thoughts, max_states and value threshold that shift depending on the complexity of the user objective.
 
-Integrate heuristics that autonomously determine the search algorithm based on indicators
+* Add Rejected reasoning metadata (thought, state, reasoning_on_state) into  generate solutions
 
-Integrate heuristics that autonomously determine the strategy cos or propose
+* any other ideas? Please pr request this algorithm is very infant and it's potential is limitless
 
-Integrate heuristics that autonomously set the input params:
-
-k = 
-T = 
-b = 
-vth = 
-
-
-# multi modal 
-multi-modality tree of thoughts
-
-multi-modality forest of thoughts
-
-multi-modality world of thoughts
-
-
-
-### Multi-Modality Tree of Thoughts 🌐🌳
-
-The next big advancement for the Tree of Thoughts algorithm is to extend it to multi-modality, enabling it to handle not only text but also images, audio, and other data types. This will bring us closer to multi-modal superintelligence.
-
-#### Actionable Steps
-
-1. Research and identify suitable multi-modal pre-trained models that can handle various data types (e.g., text, images, audio).
-2. Adapt the thought decomposition, thought generator, and state evaluator functions to handle multi-modal data.
-3. Develop a method for combining different modalities in the search tree, allowing the algorithm to reason across different data types.
-4. Implement and test the multi-modal Tree of Thoughts algorithm with various problems and datasets.
-5. Optimize the algorithm for performance and resource usage, ensuring it scales well with large multi-modal datasets.
-6. Publish the results and gather feedback from the community to further improve the multi-modal Tree of Thoughts algorithm.
-
-Join us on this exciting journey to advance the Tree of Thoughts algorithm to multi-modality superintelligence! 🚀
+* Chain of Thought Hub Evaluation tests!
 
 # Documentation:
 

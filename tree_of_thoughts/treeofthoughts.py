@@ -1,4 +1,4 @@
-
+#thought -> evaluated value (0.4, This solution is invalid because x) -> thought prompt + this solution is invalid because + better eval
 
 import os
 import time
@@ -10,15 +10,16 @@ import argparse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
-
+import re
 
 
 class TreeofThoughts:
     def __init__(self, model, search_algorithm):
         self.model = model
         self.search_algorithm = search_algorithm
-        self.tree: Dict[str, Dict[str, float]] = {
-            "nodes": {}
+        self.tree: Dict[str, Dict[str, Union[float, Dict[str, Any]]]] = {
+            "nodes": {},
+            "rejected_paths": {}
         }
 
     def solve(self, initial_prompt: str, 
@@ -61,6 +62,33 @@ class TreeofThoughts:
             state = " | ".join(state)
         self.tree["nodes"][state] = evaluation
         self.save_tree_to_json(self.file_name)    
+    
+    #reject condition conditioning
+    def reject_condition(self, current_path, rejected_path, reason, value_threshold):
+        if reason["value"] < value_threshold:
+            return True
+        return False
+    
+    def parse_evaluation(self, evaluation):
+        parsed_evaluation = re.findall(r'`(\d+\.\d+)`', evaluation)
+        return parsed_evaluation
+    
+
+
+
+    #takes rejected state value reason -> injects into the the generate solutions prompt.
+    def update_current_branch(self, current_path, rejected_path_info):
+        parsed_evaluation = self.parse_evaluation(rejected_path_info["evaluation"])
+        updated_solution= f"{current_path} {parsed_evaluation}"
+        return updated_solution
+
+    #rejected states passing into next thoughts
+    def integrate_rejected_paths(self, current_path):
+        for rejected_path, reason in self.tree['rejected_paths'].items():
+            if self.reject_condition(current_path, rejected_path, reason):
+                updated_solution = self.update_current_branch(current_path, reason)
+                current_path = updated_solution
+
         
     def tot_bfs(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold):
         current_states = [initial_prompt]
@@ -69,7 +97,10 @@ class TreeofThoughts:
             for step in range(1, max_steps + 1):
                 selected_states = []
                 for state in current_states:
+                    # self.integrate_rejected_paths(state)
+                    #for thought in thoughts:
                     thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
+                                                            # rejected_solutions=state)
                     evaluated_thoughts = self.model.evaluate_states({thought: 0 for thought in thoughts}, initial_prompt)
                     for thought, value in evaluated_thoughts.items():
                         if value >= pruning_threshold:
@@ -77,6 +108,11 @@ class TreeofThoughts:
                             selected_states.append(flattened_state)
                             state_values[flattened_state] = value
                             self.logNewState(flattened_state, value)
+                        #Rejected loop pruning loop
+                        # else:
+                        #     reason_for_rejection = {"value": value, "evaluation": evaluation}
+                        #     self.tree["rejected_paths"][flattened_state] = reason_for_rejection
+
                 if len(selected_states) > 1:
                     current_states = selected_states[:max_states]
 

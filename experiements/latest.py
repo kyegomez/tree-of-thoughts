@@ -66,11 +66,11 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return thoughts
 
-    def evaluate_states(self, states, inital_prompt, max_length=10):
+    def evaluate_states(self, states, initial_prompt, max_length=10):
         state_values = {}
         for state in states:
             state_text = '\n'.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
 
             if self.verbose:
                 print(f"Evaluating state: {state_text}")
@@ -274,13 +274,13 @@ class OpenAILanguageModel(AbstractLanguageModel):
         print(f"General solution : {answer}")
         return answer
 
-    def evaluate_states(self, states, inital_prompt):
+    def evaluate_states(self, states, initial_prompt):
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
                 print("We receive a state of type", type(state), "For state: ", state, "\n\n")
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {initial_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
                 
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
@@ -296,7 +296,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
 
-            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {initial_prompt} and become very pessimistic very NOTHING ELSE"
 
             response = self.openai_api_call_handler(prompt, 50, 1)
 
@@ -328,9 +328,9 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
             print(f"Parallel generated thoughts: {thoughts}")
         return thoughts
 
-    def parallel_evaluate_states(self, states, inital_prompt):
+    def parallel_evaluate_states(self, states, initial_prompt):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            state_values = list(executor.map(self.evaluate_states, states, inital_prompt))
+            state_values = list(executor.map(self.evaluate_states, states, initial_prompt))
             print(f"Parallel evaluated state values: {state_values}")
         return state_values
     

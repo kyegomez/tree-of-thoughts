@@ -32,7 +32,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
         state_values = {}
         for state in states:
             state_text = ' '.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
 
             if self.verbose:
                 print(f"Evaluating state: {state_text}")

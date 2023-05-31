@@ -70,11 +70,11 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
         return thoughts
 
-    def evaluate_states(self, states, inital_prompt, max_length=10):
+    def evaluate_states(self, states, initial_prompt, max_length=10):
         state_values = {}
         for state in states:
             state_text = ' '.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {inital_prompt}"
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
 
             if self.verbose:
                 print(f"Evaluating state: {state_text}")
@@ -254,7 +254,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
 
 
-    def generate_thoughts(self, state, k, inital_prompt):
+    def generate_thoughts(self, state, k, initial_prompt):
         if (type(state) == str):
             state_text = state
         else:
@@ -263,8 +263,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
         
         # prompt = f"Given the current state of reasoning: \n\n\n'{state_text}'\n\n\nGenerate the next best coherent thought to achieve the reasoning process and get the solution: "
         # prompt = f"Based on the current state of reasoning: \n\n\n'{state_text} Provide the next coherent thought that will help progress the reasoning process and reach an soluton "
-        # prompt = f"These are the thoughts you've had: \n\n\n{state_text}, provide the next coherent thought that will help advance the reasoning process and reach an solution for this problem {inital_prompt}. Think sharply, think out of the box, predict failure. Do not leave any open questions. Unleash your mind."
-        prompt = f"Considering the thoughts you've had until now:\n\n{state_text}\n\nDevise the next coherent thought that will aid in advancing the reasoning process and achieving a solution to {inital_prompt}. Assess various scenarios, think unconventionally, anticipate potential challenges, and resolve any outstanding queries. Tap into your mind's full potential and make certain no open questions remain."
+        # prompt = f"These are the thoughts you've had: \n\n\n{state_text}, provide the next coherent thought that will help advance the reasoning process and reach an solution for this problem {initial_prompt}. Think sharply, think out of the box, predict failure. Do not leave any open questions. Unleash your mind."
+        prompt = f"Considering the thoughts you've had until now:\n\n{state_text}\n\nDevise the next coherent thought that will aid in advancing the reasoning process and achieving a solution to {initial_prompt}. Assess various scenarios, think unconventionally, anticipate potential challenges, and resolve any outstanding queries. Tap into your mind's full potential and make certain no open questions remain."
 
         prompt += self.ReAct_prompt
         print(prompt)
@@ -286,13 +286,13 @@ class OpenAILanguageModel(AbstractLanguageModel):
         print(f"General solution : {answer}")
         return answer
 
-    def evaluate_states(self, states, inital_prompt):
+    def evaluate_states(self, states, initial_prompt):
         if self.evaluation_strategy == 'value':
             state_values = {}
             for state in states:
                 state_text = ' '.join(state)
                 print("We receive a state of type", type(state), "For state: ", state, "\n\n")
-                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {inital_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
+                prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {initial_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
                 
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
@@ -308,7 +308,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         elif self.evaluation_strategy == 'vote':
             states_text = '\n'.join([' '.join(state) for state in states])
 
-            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {inital_prompt} and become very pessimistic very NOTHING ELSE"
+            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {initial_prompt} and become very pessimistic very NOTHING ELSE"
 
             response = self.openai_api_call_handler(prompt, 50, 1)
 
@@ -341,9 +341,9 @@ class OptimizedOpenAILanguageModel(OpenAILanguageModel):
             print(f"Parallel generated thoughts: {thoughts}")
         return thoughts
 
-    def parallel_evaluate_states(self, states, inital_prompt):
+    def parallel_evaluate_states(self, states, initial_prompt):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            state_values = list(executor.map(self.evaluate_states, states, inital_prompt))
+            state_values = list(executor.map(self.evaluate_states, states, initial_prompt))
             print(f"Parallel evaluated state values: {state_values}")
         return state_values
     
