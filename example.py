@@ -20,8 +20,8 @@ tree_of_thoughts= TreeofThoughts(model, search_algorithm)
 input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation"
 
 num_thoughts = 1
-max_steps= 1
-max_states = 1
+max_steps= 3
+max_states = 3
 value_threshold= 0.5
 
 #call the solve emthod with the input problem and other params

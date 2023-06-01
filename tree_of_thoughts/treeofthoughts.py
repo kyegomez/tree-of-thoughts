@@ -19,7 +19,7 @@ class TreeofThoughts:
         self.search_algorithm = search_algorithm
         self.tree: Dict[str, Dict[str, Union[float, Dict[str, Any]]]] = {
             "nodes": {},
-            "rejected_paths": {}
+            # "rejected_paths": {}
         }
 
     def solve(self, initial_prompt: str, 
