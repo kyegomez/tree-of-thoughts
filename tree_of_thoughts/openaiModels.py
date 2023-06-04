@@ -3,6 +3,11 @@ import openai
 import time
 from  tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
 import concurrent.futures
+import logging 
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
 
 class OpenAILanguageModel(AbstractLanguageModel):
     def __init__(self, api_key, strategy="cot", evaluation_strategy="value", api_base="", api_model="", enable_ReAct_prompting=True):
@@ -82,14 +87,14 @@ class OpenAILanguageModel(AbstractLanguageModel):
         if self.use_chat_api:
             thoughts = []
             for _ in range(k):
-                response = self.openai_api_call_handler(prompt, 1000, 0.5, k)
+                response = self.openai_api_call_handler(prompt, 400, 0.5, k)
                 text = self.openai_choice2text_handler(response.choices[0])
                 thoughts += [text]
-                print(f'thoughts: {thoughts}')
+                # print(f'thoughts: {thoughts}')
             return thoughts
             
         else:
-            response = self.openai_api_call_handler(prompt, 1000, 0.5, k)
+            response = self.openai_api_call_handler(prompt, 300, 0.5, k)
             thoughts = [self.openai_choice2text_handler(choice) for choice in response.choices]
             return thoughts
 
@@ -113,29 +118,36 @@ class OpenAILanguageModel(AbstractLanguageModel):
         # print(prompt)
         thoughts = self.generate_text(prompt, k)
         # print(thoughts)
-        print(f"Generated thoughts: {thoughts}")
+        # print(f"Generated thoughts: {thoughts}")
         return thoughts
 
         
     def generate_solution(self, initial_prompt, state, rejected_solutions=None):
-        if (type(state) == str):
-            state_text = state
-        else:
-            state_text = '\n'.join(state)
-        
-        prompt = f"""You're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
-        Considering the reasoning provided:\n\n
-        ###'{state_text}'\n\n###
-        Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
-        ###{rejected_solutions}###, 
-        complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
-        answer = self.generate_text(prompt, 1)
-        # print(thoughts)
-        print(f"General Solution : {answer}")
-        return answer
+        try:
+                
+            if isinstance(state, list):
+                state_text = '\n'.join(state)
+            else:
+                state_text = state
+            
+            prompt = f"""You're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
+            Considering the reasoning provided:\n\n
+            ###'{state_text}'\n\n###
+            Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
+            ###{rejected_solutions}###, 
+            complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
+            answer = self.generate_text(prompt, 1)
+            print(f'Answerrrrrr {answer}')
+            # print(thoughts)
+            # print(f"General Solution : {answer}")
+            return answer
+        except Exception as e:
+            logger.error(f"Error in generate_solutions: {e}")
+            return None
 
     def evaluate_states(self, states, initial_prompt):
-
+        if not states:
+            return {}
 
         if self.evaluation_strategy == 'value':
             state_values = {}
@@ -146,12 +158,13 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     state_text = '\n'.join(state)
                 print("We receive a state of type", type(state), "For state: ", state, "\n\n")
                 # prompt = f"Given the current state of reasoning: '{state_text}', evaluate its value as a float between 0 and 1, become very pessimistic think of potential adverse risks on the probability of this state of reasoning achieveing {initial_prompt} and DO NOT RESPOND WITH ANYTHING ELSE: OTHER THAN AN FLOAT"
-                prompt = f""" To achieve the following goal: '{initial_prompt}', value the context of the past solutions and more importantly the latest generated solution you had AS A FLOAT BETWEEN 0 AND 1\n
+                prompt = f""" To achieve the following goal: '{initial_prompt}', pessimistically value the context of the past solutions and more importantly the latest generated solution you had AS A FLOAT BETWEEN 0 AND 1\n
                     Past solutions:\n\n
                     {state_text}\n       
                     If the solutions is not directly concretely making fast progress in achieving the goal, give it a lower score.
-                    Evaluation AS A FLOAT BETWEEN 0 and 1:\n, and then inside backticks provide an simple and direct bulletpoint list as to why you evaluated this thought the way you did. Provide simple yet intuitive feedback.
+                    Evaluate all solutions AS A FLOAT BETWEEN 0 and 1:\n,  DO NOT RETURN ANYTHING ELSE
                 """
+                # and then inside backticks provide an simple and direct bulletpoint list as to why you evaluated this thought the way you did. Provide simple yet intuitive feedback.
                 
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:

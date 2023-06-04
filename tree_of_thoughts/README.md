@@ -114,3 +114,56 @@ Call the solve method with the required parameters to perform the search and obt
 (Optional) Use the save_tree_to_json method to save the tree structure and metrics to a JSON file.
 (Optional) Use the print_tree method to visualize the tree structure.
 Here's an example of how to use the TreeofThoughts class:
+
+
+
+# V2 with Monte Carlo, A* Search Algorithm, BFS, Best First Search
+### Class: TreeofThoughts
+This class represents the base class for the Tree of Thoughts search algorithm. It contains the following methods:
+
+- `__init__(self, model)`: Initializes the TreeofThoughts object with the given model.
+- `save_tree_to_json(self, file_name)`: Saves the tree to a JSON file with the given file name.
+- `logNewState(self, state, evaluation)`: Logs a new state and its evaluation to the tree.
+- `adjust_pruning_threshold_precentile(self, evaluated_thoughts, percentile)`: Adjusts the pruning threshold based on the percentile of evaluated thoughts.
+- `adjust_pruning_threshold_moving_average(self, evaluated_thoughts, window_size)`: Adjusts the pruning threshold based on the moving average of evaluated thoughts.
+
+### Class: TreeofThoughtsBFS
+This class represents the Breadth-First Search (BFS) variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:
+
+- `solve(self, initial_prompt, num_thoughts, max_steps, max_states, value_threshold, pruning_threshold=0.5)`: Solves the problem using BFS with the given parameters.
+
+### Class: TreeofThoughtsDFS
+This class represents the Depth-First Search (DFS) variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:
+
+- `solve(self, initial_prompt, num_thoughts, max_steps, value_threshold, pruning_threshold=0.5)`: Solves the problem using DFS with the given parameters.
+
+### Class: TreeofThoughtsBEST
+This class represents the Best-First Search variant of the Tree of Thoughts search algorithm. It contains the following methods:
+
+- `__init__(self, model)`: Initializes the TreeofThoughtsBEST object with the given model.
+- `save_tree_to_json(self, file_name)`: Saves the tree to a JSON file with the given file name.
+- `log_new_state(self, state, evaluation)`: Logs a new state and its evaluation to the tree.
+- `solve(self, initial_prompt, num_thoughts, max_steps, pruning_threshold)`: Solves the problem using Best-First Search with the given parameters.
+
+### Class: TreeofThoughtsASearch
+This class represents the A* Search variant of the Tree of Thoughts search algorithm. It contains the following methods:
+
+- `__init__(self, model)`: Initializes the TreeofThoughtsASearch object with the given model.
+- `solve(self, initial_prompt, num_thoughts=5, max_steps=30, pruning_threshold=0.4)`: Solves the problem using A* Search with the given parameters.
+- `is_goal(self, state, score)`: Determines if the given state is a goal state based on its score.
+- `reconstruct_path(self, came_from, current_state, initial_prompt)`: Reconstructs the path from the initial state to the current state using the came_from dictionary.
+
+### Class: MonteCarloTreeofThoughts
+This class represents the Monte Carlo Tree Search variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following methods:
+
+- `__init__(self, model, objective="balance")`: Initializes the MonteCarloTreeofThoughts object with the given model and objective.
+- `optimize_params(self, num_thoughts, max_steps, max_states)`: Optimizes the search parameters based on the objective.
+- `solve(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)`: Solves the problem using
+
+ Monte Carlo Tree Search with the given parameters.
+- `monte_carlo_search(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)`: Performs the Monte Carlo Tree Search with the given parameters.
+
+### Class: OptimizedTreeofThoughts
+This class represents an optimized version of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:
+
+- `solve(self, x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None)`: Solves the problem using an optimized search algorithm with the given parameters.
