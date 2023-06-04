@@ -6,6 +6,19 @@
 
 Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
+## 🔥 All-New Search Algorithms
+
+* MonteCarlo
+
+* A* Search 
+
+* Best First Search
+
+#### Coming soon!
+* Iterative Depth Search 
+
+* Any search algorithms you like?? Open an issue 😊 
+
 
 Share this repository by clicking on the following buttons 😊 
 
@@ -44,7 +57,7 @@ cd tree_of_thoughts
 ```
 Then go to `montecarlo_example.py` and fill in your api key! 
 
-# !!!! For much improved performance provide custom few prompt shots in the generate thoughts and generate states! !!!!!
+# 🔥 For much improved performance provide custom few prompt shots in the generate thoughts and generate states 🔥 
 
 And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
 
