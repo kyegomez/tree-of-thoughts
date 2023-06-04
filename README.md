@@ -45,7 +45,7 @@ python3 treeofthoughts.py --problem "Design the architecture for an modern city 
 ```
 Add ` OPENAI_API_KEY='API KEY'` in the .env!
 
-!!!! For much improved performance provide custom few prompt shots in the generate thoughts and generate states! !!!!!
+# !!!! For much improved performance provide custom few prompt shots in the generate thoughts and generate states! !!!!!
 
 And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
 
