@@ -41,9 +41,8 @@ Clone this repository with
 cd tree-of-thoughts
 python3 -m pip install -r requirements.txt
 cd tree_of_thoughts
-python3 treeofthoughts.py --problem "Design the architecture for an modern city optimized for happiness" --search_algorithm="BFS"
 ```
-Add ` OPENAI_API_KEY='API KEY'` in the .env!
+Then go to `montecarlo_example.py` and fill in your api key! 
 
 # !!!! For much improved performance provide custom few prompt shots in the generate thoughts and generate states! !!!!!
 
@@ -154,47 +153,6 @@ Run the example script
 4. Choose a search algorithm (BFS or DFS) based on the tree structure.
 5. Implement the chosen search algorithm.
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
-
-## Tree of Thoughts Class
-``` python
-class TreeofThoughts:
-    
-    def __init__(self, model, search_algorithm):
-        self.model = model
-        self.search_algorithm = search_algorithm
-
-    def solve(self, x, k, T, b, vth):
-        if self.search_algorithm == 'BFS':
-            return self.tot_bfs(x, k, T, b)
-        elif self.search_algorithm == 'DFS':
-            return self.tot_dfs(x, k, T, vth)
-        else:
-            raise ValueError("Invalid search algorithm. Choose 'BFS' or 'DFS'.")
-
-    def tot_bfs(self, x, k, T, b):
-        S0 = {x}
-        for t in range(1, T + 1):
-            S0_t = {(*s, z) for s in S0 for z in self.model.generate_thoughts(s, k)}
-            Vt = self.model.evaluate_states(S0_t)
-            St = sorted(S0_t, key=lambda s: Vt[s], reverse=True)[:b]
-            S0 = set(St)
-        return self.model.generate_thoughts(max(St, key=lambda s: Vt[s]), 1)
-
-    def tot_dfs(self, x, k, T, vth):
-        output = []
-
-        def dfs(s, t):
-            if t > T:
-                output.append(self.model.generate_thoughts(s, 1))
-                return
-            for s_prime in sorted(self.model.generate_thoughts(s, k)):
-                if self.model.evaluate_states({s_prime})[s_prime] > vth:
-                    dfs((*s, s_prime), t + 1)
-
-        dfs(x, 1)
-        return output
-    
-```
 
 
 ## Usage Examples

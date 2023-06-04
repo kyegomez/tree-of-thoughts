@@ -566,27 +566,27 @@ class OptimizedTreeofThoughts(TreeofThoughts):
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     
-    #create instance
-    parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
-    parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
-    parser.add_argument("--version", type=int, choices=[1, 2], default=1, help="Version of Tree of Thoughts to use (v1 or v2)")
+#     #create instance
+#     parser = argparse.ArgumentParser(description="Tree of Thoughts Solver")
+#     parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
+#     parser.add_argument("--version", type=int, choices=[1, 2], default=1, help="Version of Tree of Thoughts to use (v1 or v2)")
 
 
-    # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
+#     # input_problem = "use 4 numbers and basic arithmetic operations (+-*/) to obtain 24"
 
-    # parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
-    parser.add_argument("--search_algorithm", type=str, choices=["BFS", "DFS"], default="BFS", help="Search algorithm to use (BFS or DFS)")
-    parser.add_argument("--k", type=int, default=3, help="Number of thoughts to generate")
-    parser.add_argument("--T", type=int, default=10, help="Step limit")
-    parser.add_argument("--b", type=int, default=5, help="Number of most promising states")
-    parser.add_argument("--vth", type=float, default=0.4, help="Value threshold for DFS")
-    parser.add_argument("--timeout", type=int, default=10, help="Timeout in seconds before stopping")
-    parser.add_argument("--confidence", type=float, default=0.8, help="Model confidence threshold")
-    parser.add_argument("--max_iterations", type=int, default=40, help="Maximum number of tree branch nodes")
-    parser.add_argument("--convergence_threshold", type=float, default=0.01, help="Convergence threshold for the search process")
-    parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
+#     # parser.add_argument("--problem", type=str, required=True, help="Initial problem statement")
+#     parser.add_argument("--search_algorithm", type=str, choices=["BFS", "DFS"], default="BFS", help="Search algorithm to use (BFS or DFS)")
+#     parser.add_argument("--k", type=int, default=3, help="Number of thoughts to generate")
+#     parser.add_argument("--T", type=int, default=10, help="Step limit")
+#     parser.add_argument("--b", type=int, default=5, help="Number of most promising states")
+#     parser.add_argument("--vth", type=float, default=0.4, help="Value threshold for DFS")
+#     parser.add_argument("--timeout", type=int, default=10, help="Timeout in seconds before stopping")
+#     parser.add_argument("--confidence", type=float, default=0.8, help="Model confidence threshold")
+#     parser.add_argument("--max_iterations", type=int, default=40, help="Maximum number of tree branch nodes")
+#     parser.add_argument("--convergence_threshold", type=float, default=0.01, help="Convergence threshold for the search process")
+#     parser.add_argument("--convergence_count", type=int, default=5, help="Number of searches to be considered converged")
 
 
 
