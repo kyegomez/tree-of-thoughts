@@ -428,6 +428,7 @@ class TreeofThoughtsASearch:
 
         path = self.reconstruct_path(came_from, current_state)
         solution = self.model.generate_solution(initial_prompt, path)
+        print(f"Path: {path} solution: {solution}")
         return solution if solution else path
 
 
