@@ -270,6 +270,7 @@ class TreeofThoughtsBFS(TreeofThoughts):
                 highest_rated_solution = max(state_values.items(), key=lambda x: x[1])
                 highest_rated_state = highest_rated_solution[0]  
                 solution = self.model.generate_solution(initial_prompt, highest_rated_state)
+                print(f"Highest_rated solution: {highest_rated_solution} highest_rated_solution: {highest_rated_solution} Solution: {solution}")
 
                 return solution if solution else highest_rated_state
 
@@ -363,6 +364,7 @@ class TreeofThoughtsBEST:
         
         best_state = max(visited_states, key=self.model.evaluate_states)
         solution = self.model.generate_solution(initial_prompt, best_state)
+        print(f"Highest_rated solution: {best_state}  Solution: {solution}")
         return solution if solution else best_state
 
 #A* search algorithm
