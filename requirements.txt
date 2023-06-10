@@ -1,3 +1,12 @@
 transformers
 openai
 guidance
+langchain==0.0.196
+asyncio
+nest_asyncio
+
+# faiss
+bs4
+playwright
+duckduckgo_search
+faiss

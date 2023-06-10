@@ -41,19 +41,20 @@ No complex implementations, just pass in one of these prompts to your model: hea
 'Three experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...'
 
 ## Getting started
-Set Openai key in an environment file,
-
-first create an file called: `.env` 
-
-Then get your openai key and input it inside the '' as `OPENAI_API_KEY='SK-YOUR KEY'`
-
 
 ## Method1
 Clone this repository with 
 
 ```git clone https://github.com/kyegomez/tree-of-thoughts```
 
+Set Openai key in an environment file,
+
+first create an file called: `.env` 
+
+Then get your openai key and input it inside the '' as `OPENAI_API_KEY='SK-YOUR KEY'`
+
 ``` 
+
 cd tree-of-thoughts
 python3 -m pip install -r requirements.txt
 cd tree_of_thoughts
