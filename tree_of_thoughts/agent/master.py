@@ -10,7 +10,7 @@ import asyncio
 import nest_asyncio
 
 
-llm = ChatOpenAI(model_name="gpt-4", temperature=1.0, openai_api_key='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')
+llm = ChatOpenAI(model_name="gpt-4", temperature=1.0, openai_api_key='')
 
 # Tools
 import os
@@ -40,10 +40,10 @@ from langchain.tools.human.tool import HumanInputRun
 
 
 
-embeddings_model = OpenAIEmbeddings()
-embedding_size = 1536
-index = faiss.IndexFlatL2(embedding_size)
-vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
+# embeddings_model = OpenAIEmbeddings()
+# embedding_size = 1536
+# index = faiss.IndexFlatL2(embedding_size)
+# vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
 
 
 

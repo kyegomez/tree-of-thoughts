@@ -6,7 +6,7 @@ from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
 api_model= "gpt-3.5-turbo"
 
 
-model = OpenAILanguageModel(api_key='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', api_model=api_model)
+model = OpenAILanguageModel(api_key='', api_model=api_model)
 
 
 # Initialize the MonteCarloTreeofThoughts class with the model
