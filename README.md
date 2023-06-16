@@ -8,9 +8,12 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 
 # Tree of Thoughts 🌳🌲🌴🌿🍃
 
-![tree of thoughts banner](tree-of-thoughts.png)
-
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
+
+**Disclaimer: this is not the official implementation for the paper, so do not expect to replicate paper results using this repo. Instead, refer to the official implementation at https://github.com/ysymyth/tree-of-thought-llm to replicate paper results.**
+
+
+![tree of thoughts banner](tree-of-thoughts.png)
 
 Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
