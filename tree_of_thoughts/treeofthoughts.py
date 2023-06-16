@@ -15,7 +15,7 @@ import concurrent.futures
 from queue import PriorityQueue
 
 from tree_of_thoughts.text_generation_web_ui import build_text_generation_web_ui_client_llm, ui_default_parameters
-from abstractLanguageModel import AbstractLanguageModel
+from tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
 
 
 
