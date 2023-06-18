@@ -63,7 +63,7 @@ Then go to `montecarlo_example.py` and fill in your api key!
 
 # 🔥 For much improved performance provide custom few prompt shots in the generate thoughts and generate states 🔥 
 
-And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
+And in the `examples` folder we have other examples for huggingface transformers + huggingface pipelines
 
 ## Method2
 or:
