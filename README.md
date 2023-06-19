@@ -12,7 +12,7 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
 
-Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
+Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is a plug-and-play version, connect your own models and enjoy superintelligence!
 
 ## 🔥 All-New Search Algorithms
 
