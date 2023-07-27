@@ -45,7 +45,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 stop=None,
                 temperature=0.5,
             )
-            thought = [choice.text.strip() for choice in response.choices]
+            [choice.text.strip() for choice in response.choices]
 
         elif self.strategy == 'propose':
             prompt = "f{state_text} [Propose {k} thoughts]"

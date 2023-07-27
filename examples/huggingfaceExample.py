@@ -1,4 +1,4 @@
-from tree_of_thoughts.treeofthoughts import OpenAILanguageModel, TreeofThoughts, HuggingLanguageModel, TreeofThoughts
+from tree_of_thoughts.treeofthoughts import TreeofThoughts, HuggingLanguageModel, TreeofThoughts
 
 model_name="gpt"
 

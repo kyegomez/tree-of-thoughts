@@ -50,7 +50,7 @@ class Game24Task(Task):
         try:
             # print(sympy.simplify(expression))
             return {'r': int(sympy.simplify(expression) == 24)}
-        except Exception as e:
+        except Exception:
             # print(e)
             return {'r': 0}
             

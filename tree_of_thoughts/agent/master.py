@@ -7,7 +7,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents.agent_toolkits.pandas.base import create_pandas_dataframe_agent
 from langchain.docstore.document import Document
 import asyncio
-import nest_asyncio
 
 
 llm = ChatOpenAI(model_name="gpt-4", temperature=1.0, openai_api_key="")
@@ -33,7 +32,6 @@ import faiss
 from langchain.vectorstores import FAISS
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.tools.human.tool import HumanInputRun
 
 
 

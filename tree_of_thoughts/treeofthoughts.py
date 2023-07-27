@@ -5,11 +5,9 @@ import time
 import json
 DATA_PATH = './data'
 import logging 
-import argparse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 from typing import Any, Dict, Union
-import re
 import numpy as np
 import concurrent.futures
 from queue import PriorityQueue
@@ -311,7 +309,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
               pruning_threshold: float,
             #   sleep_time: float,
               ):
-        self.file_name = f"logs/tree_of_thoughts_output_montecarlo.json"
+        self.file_name = "logs/tree_of_thoughts_output_montecarlo.json"
         return self.monte_carlo_search(
             initial_prompt,
             num_thoughts,
@@ -341,7 +339,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
 
             for state in current_states:
                 if state in transposition_table:
-                    state_value = transposition_table[state]
+                    transposition_table[state]
                 else:
                     time.sleep(1)
                     thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)

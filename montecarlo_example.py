@@ -1,4 +1,3 @@
-import os
 from tree_of_thoughts.openaiModels import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
 
