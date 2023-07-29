@@ -1,5 +1,5 @@
 import guidance
-from tree_of_thoughts.abstract_language_model import AbstractLanguageModel
+from tree_of_thoughts.models.abstract_language_model import AbstractLanguageModel
 import time
 import os
 import openai

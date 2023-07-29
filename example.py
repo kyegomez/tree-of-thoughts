@@ -1,5 +1,5 @@
 import os
-from tree_of_thoughts.openai_models import OpenAILanguageModel
+from tree_of_thoughts.models.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
 
 
