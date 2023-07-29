@@ -1,11 +1,12 @@
+import os
 from tree_of_thoughts.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
 
 
 api_model= "gpt-3.5-turbo"
 
-
-model = OpenAILanguageModel(api_key='', api_model=api_model)
+api_key = os.getenv("OPENAI_API_KEY")
+model = OpenAILanguageModel(api_key=api_key, api_model=api_model)
 
 
 # Initialize the MonteCarloTreeofThoughts class with the model
