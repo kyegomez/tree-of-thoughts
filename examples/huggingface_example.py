@@ -1,15 +1,17 @@
-from tree_of_thoughts.treeofthoughts import TreeofThoughts, HuggingLanguageModel, TreeofThoughts
+from tree_of_thoughts.treeofthoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloTreeofThoughts
 
 model_name="gpt"
 
 model = HuggingLanguageModel(model_name, 
-                             model_Tokenizer="gpt2", 
+                             model_Tokenizer=model_name, 
                              verbose=True)
                              
 
-#init class
-tree_of_thoughts= TreeofThoughts(model)
+# Initialize the MonteCarloTreeofThoughts class with the model
+tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
+# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# craft an 1 shot chain of thought prompt for your task below
 
 initial_prompt =  """
 
