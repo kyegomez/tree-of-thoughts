@@ -1,6 +1,6 @@
 # Tree of Thoughts 🌳🌲🌴🌿🍃
 
-![Discord](https://img.shields.io/discord/999382051935506503)!
+![Discord](https://img.shields.io/discord/999382051935506503)
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
 [![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
 [![Facebook](https://img.shields.io/badge/Share-Facebook-blue?style=social&logo=facebook)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
@@ -9,87 +9,81 @@
 [![Pinterest](https://img.shields.io/badge/Share-Pinterest-red?style=social&logo=pinterest)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&media=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts%2Fraw%2Fmain%2Ftree-of-thoughts.jpeg&description=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)
 [![WhatsApp](https://img.shields.io/badge/Share-WhatsApp-green?style=social&logo=whatsapp)](https://api.whatsapp.com/send?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21%20https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
 
-
-![tree of thoughts banner](tree-of-thoughts.png)
+![Tree of Thoughts Banner](tree-of-thoughts.png)
 
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
 
-Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
+## Introduction
+
+Tree of Thoughts (ToT) is a powerful and flexible algorithm that significantly advances model reasoning by up to 70%. This plug-and-play version allows you to connect your own models and experience superintelligence!
 
 ## 🔥 Updates
 
-* Langchain TOT
-
-* MonteCarlo
-
-* A* Search 
-
-* Best First Search
+- Langchain TOT
+- MonteCarlo
+- A* Search
+- Best First Search
 
 #### Coming soon!
-* Iterative Depth Search 
 
-* Any search algorithms you like?? Open an issue 😊 
+- Iterative Depth Search
+- Any search algorithms you like? Open an issue 😊
 
-# Basic Prompts:
-No complex implementations, just pass in one of these prompts to your model: head over to `prompts.txt`
+## Basic Prompts
 
-'Three experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...'
+No complex implementations, just pass in one of these prompts to your model. Head over to `prompts.txt`.
 
-## Getting started
+"Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is..."
 
-## Method1
-Clone this repository with 
+## Getting Started
 
-```git clone https://github.com/kyegomez/tree-of-thoughts```
+### Method 1
 
-Set Openai key in an environment file,
+Clone this repository:
 
-first create an file called: `.env` 
-
-Then get your openai key and input it inside the '' as `OPENAI_API_KEY='SK-YOUR KEY'`
-
-``` 
-
+```bash
+git clone https://github.com/kyegomez/tree-of-thoughts
 cd tree-of-thoughts
 python3 -m pip install -r requirements.txt
 cd tree_of_thoughts
 ```
-Then go to `montecarlo_example.py` and fill in your api key! 
 
-# 🔥 For much improved performance provide custom few prompt shots in the generate thoughts and generate states 🔥 
+Set OpenAI key in an environment file:
 
-And in the `examples` folder we have other examples for huggingface transformers + hugginggface pipelines
+1. Create a file called `.env`.
+2. Get your OpenAI key and input it inside the `.env` file as `OPENAI_API_KEY='SK-YOUR KEY'`.
 
-## Method2
-or:
+Then go to `montecarlo_example.py` and fill in your API key!
 
-```pip install tree-of-thoughts ```
+#### For much improved performance, provide custom prompt shots in the generate thoughts and generate states.
 
+In the `examples` folder, we have other examples for Hugging Face Transformers + Hugging Face Pipelines.
+
+### Method 2
+
+Alternatively, you can use pip to install Tree of Thoughts:
+
+```bash
+pip install tree-of-thoughts
+```
 
 Create a Python script (e.g., example.py) and import the necessary classes:
 
-``` python
+```python
 import os
 from tree_of_thoughts import OpenAILanguageModel
 from tree_of_thoughts import MonteCarloTreeofThoughts
 
-
-api_model= "gpt-3.5-turbo"
-
-
+api_model = "gpt-3.5-turbo"
 model = OpenAILanguageModel(api_key='api key', api_model=api_model)
-
 
 # Initialize the MonteCarloTreeofThoughts class with the model
 tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
-# craft an 1 shot chain of thought prompt for your task below
+# To reproduce the same results from the Tree of Thoughts paper, or even better,
+# craft a one-shot chain of thought prompt for your task below:
 
 initial_prompt =  """
-
-
 Input: 2 8 8 14
 Possible next steps:
 2 + 8 = 10 (left: 8 10 14)
@@ -101,18 +95,14 @@ Possible next steps:
 14 /  2 = 7 (left: 7 8 8)
 14 - 2 = 12 (left: 8 8 12)
 Input: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation
+
+
 Possible next steps:
-
-
-
 """
 num_thoughts = 1
 max_steps = 3
 max_states = 4
 pruning_threshold = 0.5
-
-
-
 
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
@@ -120,35 +110,31 @@ solution = tree_of_thoughts.solve(
     max_steps=max_steps, 
     max_states=max_states, 
     pruning_threshold=pruning_threshold,
-    # sleep_time=sleep_time
 )
 
 print(f"Solution: {solution}")
-
 ```
 
-Or Integrate your own custom language model:
+Or integrate your own custom language model:
 
 ```python
-
 class CustomLanguageModel(AbstractLanguageModel):
     def __init__(self, model):
         self.model = model
 
     def generate_thoughts(self, state, k):
-        #implement the thought generation logic using self.model
+        # implement the thought generation logic using self.model
         pass
 
     def evaluate_states(self, states):
-        #implement state evaluation logic using self.model
+        # implement state evaluation logic using self.model
         pass
-
 ```
 
-
-Run the example script
+Run the example script.
 
 ## 🌟 Features:
+
 - General problem-solving framework for language models
 - Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
 - Easy integration with popular language models like OpenAI and Hugging Face
@@ -167,7 +153,6 @@ Run the example script
 5. Implement the chosen search algorithm.
 6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
 
-
 ## Usage Examples
 
 ### OpenAI API
@@ -175,9 +160,10 @@ Run the example script
 To use Tree of Thoughts with OpenAI's API, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using OpenAI's API. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
 
 ### Hugging Face Transformers
-To run huggingface transformers with Tree of Thoughts
 
-``` 
+To run Hugging Face Transformers with Tree of Thoughts:
+
+```bash
 git clone https://github.com/kyegomez/tree-of-thoughts
 cd tree-of-thoughts
 python3 huggingfaceExample.py
@@ -186,13 +172,11 @@ python3 huggingfaceExample.py
 ```python
 from tree_of_thoughts import HuggingLanguageModel
 
-model_name="gpt2"
-model_tokenizer="your tokenizer"
+model_name = "gpt2"
+model_tokenizer = "your tokenizer"
 
 huggingface_model = HuggingLanguageModel(model_name, model_tokenizer)
 ```
-
-
 
 ```python
 class HuggingLanguageModel(AbstractLanguageModel):
@@ -214,7 +198,7 @@ class HuggingLanguageModel(AbstractLanguageModel):
         state_values = {}
         for state in states:
             state_text = ' '.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
+            prompt = f"Given the current state of reasoning: '{state_text}', pessimistically evaluate its value as a float between 0 and 1 based on its potential to achieve {initial_prompt}"
 
             inputs = self.tokenizer(prompt, return_tensors="pt")
             outputs = self.model.generate(**inputs, num_return_sequences=1)
@@ -232,9 +216,9 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
 ```
 
+## Contributing
 
-# Contributing
-This algorithm is still infant yet it's potential remains unimaginable, let's advance the reasoning of AI's together under this banner.
+This algorithm is still in its infancy, but its potential remains unimaginable. Let's advance the reasoning of AI together under this banner.
 
 # Share With Your Network
 
@@ -243,31 +227,25 @@ You can easily share this repository by clicking on the following buttons:
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
 [![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
 
-For Instagram, while it doesn't directly support sharing of web links, you can share the screenshot of our project and the link in your caption or bio. You can download the project screenshot by clicking the image below:
+For Instagram, while it doesn't directly support sharing web links, you can share the screenshot of our project and the link in your caption or bio. You can download the project screenshot by clicking the image below:
 
 [![Tree of Thoughts](https://github.com/kyegomez/tree-of-thoughts/raw/main/tree-of-thoughts.jpeg)](https://github.com/kyegomez/tree-of-thoughts/raw/main/tree-of-thoughts.jpeg)
 
 We greatly appreciate any help in spreading the word about our project. Thank you for your support!
 
-# Roadmap:
+# Roadmap
 
-* Resilient Prompting: Teach model how to think rather than what to think.
+- Resilient Prompting: Teach model how to think rather than what to think.
+- Add pruning threshold management for precise bad state cutoff.
+- Evaluating each thought as soon as it's generated, then evaluating a chain of thoughts or the state of thoughts by averaging out the values of each thought evaluation.
+- Add Traversal method, which will encapsulate the run of either DFS or BFS under the hood so that the issue of different args is solved (from @ivanzhovannik).
+- Add Delay between generating solutions and generating values.
+- Dynamic and adaptive parameters like max steps, num_thoughts, max_states, and value threshold that shift depending on the complexity of the user objective.
+- Add Rejected reasoning metadata (thought, state, reasoning_on_state) into generate solutions.
+- And more! Feel free to suggest any other ideas. This algorithm is very young, and its potential is limitless.
+- Chain of Thought Hub Evaluation tests!
 
-* Add pruning treshold management for precise bad state cutoff
-
-* Evaluating each thought as soon as thought generated then evaluating an chain of thoughts or the state of thoughts by averaging out the values of each thought evaluation.
-
-* Add Traversal method, which "will incapsulate the run of either dfs or bfs under the hood so that the issue of different args is solved from @ivanzhovannik
-
-* Add Delay between generate solutions and generate values
-
-* Dynamic and adaptive parameters, like max steps, num_thoughts, max_states and value threshold that shift depending on the complexity of the user objective.
-
-* Add Rejected reasoning metadata (thought, state, reasoning_on_state) into  generate solutions
-
-* any other ideas? Please pr request this algorithm is very infant and it's potential is limitless
-
-* Chain of Thought Hub Evaluation tests!
+----
 
 # Documentation:
 # Search Algorithms in Tree of Thoughts 
