@@ -1,12 +1,12 @@
-# Agora
-This implementation of Tree of Thoughts is brought to you by Agora, Agora advances Humanity with open source SOTA Multi-Modality AI research!
-
-
-![Agora banner](agora-banner.png)
-
-[Join our Discord and contribute to this project](https://discord.gg/qUtxnK2NMf)
-
 # Tree of Thoughts 🌳🌲🌴🌿🍃
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
+[![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
+[![Facebook](https://img.shields.io/badge/Share-Facebook-blue?style=social&logo=facebook)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
+[![Reddit](https://img.shields.io/badge/Share-Reddit-orange?style=social&logo=reddit)](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&title=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)
+[![Hacker News](https://img.shields.io/badge/Share-Hacker%20News-orange?style=social&logo=y-combinator)](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&t=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)
+[![Pinterest](https://img.shields.io/badge/Share-Pinterest-red?style=social&logo=pinterest)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&media=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts%2Fraw%2Fmain%2Ftree-of-thoughts.jpeg&description=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)
+[![WhatsApp](https://img.shields.io/badge/Share-WhatsApp-green?style=social&logo=whatsapp)](https://api.whatsapp.com/send?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21%20https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
+
 
 ![tree of thoughts banner](tree-of-thoughts.png)
 
@@ -14,7 +14,9 @@ This implementation of Tree of Thoughts is brought to you by Agora, Agora advanc
 
 Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advances model reasoning by a whopping 70%. This is an plug in and play verision, connect your own models and enjoy superintelligence!
 
-## 🔥 All-New Search Algorithms
+## 🔥 Updates
+
+* Langchain TOT
 
 * MonteCarlo
 
@@ -26,14 +28,6 @@ Tree of Thoughts (ToT) is an all-new powerful and flexible algorithm that advanc
 * Iterative Depth Search 
 
 * Any search algorithms you like?? Open an issue 😊 
-
-
-Help cultivate this repository to democratize superintelligence! Share this repository by clicking on the following buttons 😊 
-
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
-[![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)
-
-
 
 # Basic Prompts:
 No complex implementations, just pass in one of these prompts to your model: head over to `prompts.txt`
@@ -357,6 +351,71 @@ A higher value of b allows the algorithm to explore more states, potentially lea
 ## value_threshold (float, default=0.5): 
 The value threshold for pruning states. 
 States with a value below this threshold will be discarded, reducing the search space. A higher value of vth will result in a more aggressive pruning strategy, potentially speeding up the search process. However, setting vth too high may cause the algorithm to discard promising states, leading to suboptimal solutions.
+
+
+## LangchainTOT class
+
+`LangchainTOT` is the main class you'll interact with. It acts as a wrapper for the Large Language Model and allows you to set a problem description, add thoughts, and check the validity of these thoughts using a specified checker.
+
+### Initialization
+
+You initialize a `LangchainTOT` object with an optional problem description and a checker class:
+
+```python
+problem_description = """
+3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1
+- This is a 4x4 Sudoku puzzle.
+- The * represents a cell to be filled.
+- The | character separates rows.
+- At each step, replace one or more * with digits 1-4.
+- There must be no duplicate digits in any row, column or 2x2 subgrid.
+- Keep the known digits from previous valid thoughts in place.
+- Each thought can be a partial or the final solution.
+""".strip()
+
+langchain_tot = LangchainTOT(problem_description=problem_description, checker_class=lambda: my_checker)
+```
+
+If you want to change the problem description or checker class later, you can use the `set_problem_description` and `set_checker_class` methods.
+
+### Adding thoughts
+
+Once you have your `LangchainTOT` object, you can add thoughts to it. A thought is a string representing a possible solution or step towards a solution. You can add thoughts using the `add_thought` method:
+
+```python
+langchain_tot.add_thought("3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1")
+```
+
+### Checking thoughts
+
+Once you've added one or more thoughts, you can check their validity using the `check_thoughts` method:
+
+```python
+print(langchain_tot.check_thoughts())
+```
+
+This method will return a `ThoughtValidity` value representing whether the latest thought is a final valid solution (`VALID_FINAL`), an intermediate valid step (`VALID_INTERMEDIATE`), or invalid (`INVALID`).
+
+## MyChecker class
+
+`MyChecker` is a class for creating custom checkers. It inherits from `ToTChecker` and must implement the `evaluate` method.
+
+### Initialization
+
+You initialize a `MyChecker` object with a validation function:
+
+```python
+my_checker = MyChecker(validate_fn=lambda p, t: validate_sudoku(p, t, sudoku_solution))
+```
+
+## Custom validation function
+
+The validation function is a callable that takes a problem description and a tuple of thoughts and returns a `ThoughtValidity` value. It defines how to check the validity of thoughts for a specific problem.
+
+In this code, we're using the `validate_sudoku` function as our validation function. This function takes a problem description, a tuple of thoughts, and a solution string, and returns the validity of the last thought based on whether it matches the solution and whether it's a possible step towards the solution.
+
+The `validate_sudoku` function is specific to 4x4 Sudoku puzzles and you'll need to create your own validation function for different types of problems.
+
 
 # Acknowledgements
 

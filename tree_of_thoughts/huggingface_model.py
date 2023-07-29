@@ -1,6 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import pipeline
-from tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
+from tree_of_thoughts.abstract_language_model import AbstractLanguageModel
 
 
 class HuggingLanguageModel(AbstractLanguageModel):

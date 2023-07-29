@@ -1,7 +1,7 @@
 import os
 import openai
 import time
-from  tree_of_thoughts.abstractLanguageModel import AbstractLanguageModel
+from  tree_of_thoughts.abstract_language_model import AbstractLanguageModel
 import concurrent.futures
 import logging 
 

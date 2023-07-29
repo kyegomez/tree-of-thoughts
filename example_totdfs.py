@@ -1,4 +1,4 @@
-from tree_of_thoughts.openaiModels import OpenAILanguageModel
+from tree_of_thoughts.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughtsDFS
 #
 

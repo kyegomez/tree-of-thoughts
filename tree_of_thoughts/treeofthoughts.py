@@ -1,20 +1,28 @@
 #thought -> evaluated value (0.4, This solution is invalid because x) -> thought prompt + this solution is invalid because + better eval
 
+import json
 import os
 import time
-import json
+
 DATA_PATH = './data'
-import logging 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-from typing import Any, Dict, Union
-import numpy as np
+import logging
+
+
 import concurrent.futures
 from queue import PriorityQueue
+from typing import Any, Dict, Union
 
-from tree_of_thoughts.text_generation_web_ui import build_text_generation_web_ui_client_llm, ui_default_parameters
+import numpy as np
 from abstractLanguageModel import AbstractLanguageModel
 
+from tree_of_thoughts.text_generation_web_ui import (
+    build_text_generation_web_ui_client_llm,
+    ui_default_parameters,
+)
+
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class TreeofThoughts:
