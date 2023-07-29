@@ -3,7 +3,7 @@ from tree_of_thoughts.treeofthoughts import TreeofThoughts, HuggingLanguageModel
 model_name="gpt"
 
 model = HuggingLanguageModel(model_name, 
-                             model_Tokenizer=model_name, 
+                             model_tokenizer=model_name, 
                              verbose=True)
                              
 
