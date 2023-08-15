@@ -1,3 +1,5 @@
+[Join Agora](https://discord.gg/qUtxnK2NMf) the community of engineers changing the world with their creations.
+
 ![Tree of Thoughts Banner](treeofthoughts.png)
 
 ![Discord](https://img.shields.io/discord/999382051935506503)
