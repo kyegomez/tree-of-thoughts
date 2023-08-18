@@ -13,6 +13,7 @@
 
 
 [Paper link](https://arxiv.org/pdf/2305.10601.pdf)
+[Author's implementation](https://github.com/princeton-nlp/tree-of-thought-llm)
 
 ## Introduction
 
