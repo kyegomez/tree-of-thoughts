@@ -73,8 +73,7 @@ Create a Python script (e.g., example.py) and import the necessary classes:
 
 ```python
 import os
-from tree_of_thoughts import OpenAILanguageModel
-from tree_of_thoughts import MonteCarloTreeofThoughts
+from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
 
 api_model = "gpt-3.5-turbo"
 model = OpenAILanguageModel(api_key='api key', api_model=api_model)
