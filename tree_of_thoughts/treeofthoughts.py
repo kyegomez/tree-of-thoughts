@@ -13,7 +13,7 @@ from queue import PriorityQueue
 from typing import Any, Dict, Union
 
 import numpy as np
-from abstractLanguageModel import AbstractLanguageModel
+from tree_of_thoughts.models.abstract_language_model import AbstractLanguageModel
 
 from tree_of_thoughts.text_generation_web_ui import (
     build_text_generation_web_ui_client_llm,
