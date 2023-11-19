@@ -1,18 +1,18 @@
 from tree_of_thoughts.models.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughtsASearch
+
 #
 
 
-api_model= "gpt-4"
+api_model = "gpt-4"
 
 
-model = OpenAILanguageModel(api_key='api key', api_model=api_model)
+model = OpenAILanguageModel(api_key="api key", api_model=api_model)
 
 
+tree_of_thoughts = TreeofThoughtsASearch(model)  # search_algorithm)
 
-tree_of_thoughts= TreeofThoughtsASearch(model) #search_algorithm)
-
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# Note to reproduce the same results from the tree of thoughts paper if not better,
 # craft an 1 shot chain of thought prompt for your task below
 input_problem = """
 

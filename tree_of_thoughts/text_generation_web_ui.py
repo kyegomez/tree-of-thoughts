@@ -8,11 +8,11 @@ from dataclasses import dataclass
 def _default_extractor(json_response: Dict[str, Any], stop_parameter_name) -> str:
     """
     This function extracts the response from the JSON object using the default parameter name.
-    
+
     Parameters:
         json_response (dict): The JSON response to be extracted.
         stop_parameter_name (str): The name of the parameter that stops the extraction process.
-        
+
     Returns:
         str: The extracted response.
     """
@@ -106,14 +106,14 @@ def build_text_generation_web_ui_client_llm(
     prompt_url="http://0.0.0.0:5000/api/v1/generate", parameters=None
 ):
     """
-    This function builds a text generation web UI client using LLM (Largue Language Machine) API. 
-    It takes a URL for the LLM server and optional parameters as inputs. 
+    This function builds a text generation web UI client using LLM (Largue Language Machine) API.
+    It takes a URL for the LLM server and optional parameters as inputs.
     If parameters are not provided, default ones will be used. The function returns an HTTP client that can generate text based on user input.
-    
+
     Parameters:
     prompt_url (str): URL of the LLM server.
     parameters (Optional[dict]): Optional parameters to pass to the LLM API.
-    
+
     Returns:
     An HTTP client object that can generate text based on user input.
     """

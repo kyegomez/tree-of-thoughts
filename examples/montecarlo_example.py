@@ -2,19 +2,19 @@ from tree_of_thoughts.models.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
 
 
-api_model= "gpt-3.5-turbo"
+api_model = "gpt-3.5-turbo"
 
 
-model = OpenAILanguageModel(api_key='api key', api_model=api_model)
+model = OpenAILanguageModel(api_key="api key", api_model=api_model)
 
 
 # Initialize the MonteCarloTreeofThoughts class with the model
 tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# Note to reproduce the same results from the tree of thoughts paper if not better,
 # craft an 1 shot chain of thought prompt for your task below
 
-initial_prompt =  """
+initial_prompt = """
 
 
 Input: 2 8 8 14
@@ -39,13 +39,11 @@ max_states = 4
 pruning_threshold = 0.5
 
 
-
-
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
-    num_thoughts=num_thoughts, 
-    max_steps=max_steps, 
-    max_states=max_states, 
+    num_thoughts=num_thoughts,
+    max_steps=max_steps,
+    max_states=max_states,
     pruning_threshold=pruning_threshold,
     # sleep_time=sleep_time
 )

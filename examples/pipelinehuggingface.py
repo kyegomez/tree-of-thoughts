@@ -1,16 +1,14 @@
 from tree_of_thoughts.treeofthoughts import HFPipelineModel, MonteCarloTreeofThoughts
 
 
-model_name="gpt2"
+model_name = "gpt2"
 gpt2_pipeline_model = HFPipelineModel(model_name)
 
 tree_of_thoughts = MonteCarloTreeofThoughts(gpt2_pipeline_model)
 #
 
 
-
-
-initial_prompt =  """
+initial_prompt = """
 
 
 Input: 2 8 8 14
@@ -35,13 +33,11 @@ max_states = 4
 pruning_threshold = 0.5
 
 
-
-
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
-    num_thoughts=num_thoughts, 
-    max_steps=max_steps, 
-    max_states=max_states, 
+    num_thoughts=num_thoughts,
+    max_steps=max_steps,
+    max_states=max_states,
     pruning_threshold=pruning_threshold,
     # sleep_time=sleep_time
 )

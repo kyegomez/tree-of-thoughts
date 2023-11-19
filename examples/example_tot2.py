@@ -1,18 +1,18 @@
 from tree_of_thoughts.models.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughts2
+
 #
 
 
-api_model= "gpt-3.5-turbo"
+api_model = "gpt-3.5-turbo"
 
 
-model = OpenAILanguageModel(api_key='api key', api_model=api_model)
+model = OpenAILanguageModel(api_key="api key", api_model=api_model)
 
 
+tree_of_thoughts = TreeofThoughts2(model)  # search_algorithm)
 
-tree_of_thoughts= TreeofThoughts2(model) #search_algorithm)
-
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# Note to reproduce the same results from the tree of thoughts paper if not better,
 # craft an 1 shot chain of thought prompt for your task below
 input_problem = """
 
@@ -39,7 +39,8 @@ num_thoughts = 1
 max_steps = 2
 pruning_threshold = 0.5
 
-solution = tree_of_thoughts.solve(input_problem, num_thoughts, max_steps, pruning_threshold)
+solution = tree_of_thoughts.solve(
+    input_problem, num_thoughts, max_steps, pruning_threshold
+)
 
 print(f"solution: {solution}")
-

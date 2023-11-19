@@ -1,10 +1,20 @@
 import requests
 import os
 
+
 class Anthropic:
     """Anthropic large language models."""
 
-    def __init__(self, model="claude-2", max_tokens_to_sample=256, temperature=None, top_k=None, top_p=None, streaming=False, default_request_timeout=None):
+    def __init__(
+        self,
+        model="claude-2",
+        max_tokens_to_sample=256,
+        temperature=None,
+        top_k=None,
+        top_p=None,
+        streaming=False,
+        default_request_timeout=None,
+    ):
         self.model = model
         self.max_tokens_to_sample = max_tokens_to_sample
         self.temperature = temperature
@@ -12,7 +22,9 @@ class Anthropic:
         self.top_p = top_p
         self.streaming = streaming
         self.default_request_timeout = default_request_timeout or 600
-        self.anthropic_api_url = os.getenv("ANTHROPIC_API_URL", "https://api.anthropic.com")
+        self.anthropic_api_url = os.getenv(
+            "ANTHROPIC_API_URL", "https://api.anthropic.com"
+        )
         self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
 
     def _default_params(self):
@@ -34,13 +46,11 @@ class Anthropic:
         stop = stop or []
         params = self._default_params()
         headers = {"Authorization": f"Bearer {self.anthropic_api_key}"}
-        data = {
-            "prompt": prompt,
-            "stop_sequences": stop,
-            **params
-        }
-        response = requests.post(f"{self.anthropic_api_url}/completions", headers=headers, json=data, timeout=self.default_request_timeout)
+        data = {"prompt": prompt, "stop_sequences": stop, **params}
+        response = requests.post(
+            f"{self.anthropic_api_url}/completions",
+            headers=headers,
+            json=data,
+            timeout=self.default_request_timeout,
+        )
         return response.json().get("completion")
-
-
-

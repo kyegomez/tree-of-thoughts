@@ -1,22 +1,23 @@
 from tree_of_thoughts.models.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import TreeofThoughtsDFS
+
 #
 
 
-api_model= "gpt-3.5-turbo"
+api_model = "gpt-3.5-turbo"
 
 
-model = OpenAILanguageModel(api_key='api key', api_model=api_model)
+model = OpenAILanguageModel(api_key="api key", api_model=api_model)
 
-#choose search algorithm('BFS' or 'DFS')
+# choose search algorithm('BFS' or 'DFS')
 search_algorithm = "BFS"
 
 # value or vote
 evaluation_strategy = "value"
 
-tree_of_thoughts= TreeofThoughtsDFS(model) #search_algorithm)
+tree_of_thoughts = TreeofThoughtsDFS(model)  # search_algorithm)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# Note to reproduce the same results from the tree of thoughts paper if not better,
 # craft an 1 shot chain of thought prompt for your task below
 input_problem = """
 
@@ -38,19 +39,19 @@ Possible next steps:
 """
 
 num_thoughts = 1
-max_steps= 3
+max_steps = 3
 max_states = 3
-value_threshold= 0.5
+value_threshold = 0.5
 
-#call the solve emthod with the input problem and other params
+# call the solve emthod with the input problem and other params
 
-solution = tree_of_thoughts.solve(input_problem, 
+solution = tree_of_thoughts.solve(
+    input_problem,
     # num_thoughts=num_thoughts,
     max_steps=max_states,
     # max_states=max_states,
     value_threshold=value_threshold,
 )
-    
-#use the solution in your production environment
-print(f"solution: {solution}")
 
+# use the solution in your production environment
+print(f"solution: {solution}")

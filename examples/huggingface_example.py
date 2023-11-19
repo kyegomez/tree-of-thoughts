@@ -1,19 +1,21 @@
-from tree_of_thoughts.treeofthoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloTreeofThoughts
+from tree_of_thoughts.treeofthoughts import (
+    TreeofThoughts,
+    HuggingLanguageModel,
+    MonteCarloTreeofThoughts,
+)
 
-model_name="gpt"
+model_name = "gpt"
 
-model = HuggingLanguageModel(model_name, 
-                             model_tokenizer=model_name, 
-                             verbose=True)
-                             
+model = HuggingLanguageModel(model_name, model_tokenizer=model_name, verbose=True)
+
 
 # Initialize the MonteCarloTreeofThoughts class with the model
 tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# Note to reproduce the same results from the tree of thoughts paper if not better,
 # craft an 1 shot chain of thought prompt for your task below
 
-initial_prompt =  """
+initial_prompt = """
 
 
 Input: 2 8 8 14
@@ -38,13 +40,11 @@ max_states = 4
 pruning_threshold = 0.5
 
 
-
-
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
-    num_thoughts=num_thoughts, 
-    max_steps=max_steps, 
-    max_states=max_states, 
+    num_thoughts=num_thoughts,
+    max_steps=max_steps,
+    max_states=max_states,
     pruning_threshold=pruning_threshold,
     # sleep_time=sleep_time
 )

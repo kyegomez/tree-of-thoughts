@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class AbstractLanguageModel(ABC):
     @abstractmethod
     def generate_thoughts(self, state, k):
@@ -8,4 +9,3 @@ class AbstractLanguageModel(ABC):
     @abstractmethod
     def evaluate_states(self, states):
         pass
-
