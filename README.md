@@ -37,40 +37,13 @@ No complex implementations, just pass in one of these prompts to your model. Hea
 
 "Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is..."
 
-## Getting Started
-
-### Method 1
-
-Clone this repository:
-
-```bash
-git clone https://github.com/kyegomez/tree-of-thoughts
-cd tree-of-thoughts
-python3 -m pip install -r requirements.txt
-cd tree_of_thoughts
-```
-
-Set OpenAI key in an environment file:
-
-1. Create a file called `.env`.
-2. Get your OpenAI key and input it inside the `.env` file as `OPENAI_API_KEY='SK-YOUR KEY'`.
-
-Then go to `montecarlo_example.py` and fill in your API key!
-
-#### For much improved performance, provide custom prompt shots in the generate thoughts and generate states.
-
-In the `examples` folder, we have other examples for Hugging Face Transformers + Hugging Face Pipelines.
-
-### Method 2
-
-Alternatively, you can use pip to install Tree of Thoughts:
+## Install
 
 ```bash
 pip install tree-of-thoughts
 ```
 
-Create a Python script (e.g., example.py) and import the necessary classes:
-
+## Usage
 ```python
 import os
 from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
@@ -163,12 +136,6 @@ To use Tree of Thoughts with OpenAI's API, create a custom model class that inhe
 ### Hugging Face Transformers
 
 To run Hugging Face Transformers with Tree of Thoughts:
-
-```bash
-git clone https://github.com/kyegomez/tree-of-thoughts
-cd tree-of-thoughts
-python3 huggingfaceExample.py
-```
 
 ```python
 from tree_of_thoughts import HuggingLanguageModel
@@ -333,69 +300,6 @@ A higher value of b allows the algorithm to explore more states, potentially lea
 The value threshold for pruning states. 
 States with a value below this threshold will be discarded, reducing the search space. A higher value of vth will result in a more aggressive pruning strategy, potentially speeding up the search process. However, setting vth too high may cause the algorithm to discard promising states, leading to suboptimal solutions.
 
-
-## LangchainTOT class
-
-`LangchainTOT` is the main class you'll interact with. It acts as a wrapper for the Large Language Model and allows you to set a problem description, add thoughts, and check the validity of these thoughts using a specified checker.
-
-### Initialization
-
-You initialize a `LangchainTOT` object with an optional problem description and a checker class:
-
-```python
-problem_description = """
-3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1
-- This is a 4x4 Sudoku puzzle.
-- The * represents a cell to be filled.
-- The | character separates rows.
-- At each step, replace one or more * with digits 1-4.
-- There must be no duplicate digits in any row, column or 2x2 subgrid.
-- Keep the known digits from previous valid thoughts in place.
-- Each thought can be a partial or the final solution.
-""".strip()
-
-langchain_tot = LangchainTOT(problem_description=problem_description, checker_class=lambda: my_checker)
-```
-
-If you want to change the problem description or checker class later, you can use the `set_problem_description` and `set_checker_class` methods.
-
-### Adding thoughts
-
-Once you have your `LangchainTOT` object, you can add thoughts to it. A thought is a string representing a possible solution or step towards a solution. You can add thoughts using the `add_thought` method:
-
-```python
-langchain_tot.add_thought("3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1")
-```
-
-### Checking thoughts
-
-Once you've added one or more thoughts, you can check their validity using the `check_thoughts` method:
-
-```python
-print(langchain_tot.check_thoughts())
-```
-
-This method will return a `ThoughtValidity` value representing whether the latest thought is a final valid solution (`VALID_FINAL`), an intermediate valid step (`VALID_INTERMEDIATE`), or invalid (`INVALID`).
-
-## MyChecker class
-
-`MyChecker` is a class for creating custom checkers. It inherits from `ToTChecker` and must implement the `evaluate` method.
-
-### Initialization
-
-You initialize a `MyChecker` object with a validation function:
-
-```python
-my_checker = MyChecker(validate_fn=lambda p, t: validate_sudoku(p, t, sudoku_solution))
-```
-
-## Custom validation function
-
-The validation function is a callable that takes a problem description and a tuple of thoughts and returns a `ThoughtValidity` value. It defines how to check the validity of thoughts for a specific problem.
-
-In this code, we're using the `validate_sudoku` function as our validation function. This function takes a problem description, a tuple of thoughts, and a solution string, and returns the validity of the last thought based on whether it matches the solution and whether it's a possible step towards the solution.
-
-The `validate_sudoku` function is specific to 4x4 Sudoku puzzles and you'll need to create your own validation function for different types of problems.
 
 
 # Acknowledgements

@@ -1,8 +1,8 @@
-from typing import List, Mapping, Union, Any, Callable
-from typing import Dict
-import requests
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Mapping, Union
+
+import requests
 
 
 def _default_extractor(json_response: Dict[str, Any], stop_parameter_name) -> str:

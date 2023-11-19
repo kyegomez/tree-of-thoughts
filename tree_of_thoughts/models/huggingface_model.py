@@ -1,5 +1,5 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers import pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+
 from tree_of_thoughts.models.abstract_language_model import AbstractLanguageModel
 
 
