@@ -19,23 +19,6 @@
 
 Tree of Thoughts (ToT) is a powerful and flexible algorithm that significantly advances model reasoning by up to 70%. This plug-and-play version allows you to connect your own models and experience superintelligence!
 
-## 🔥 Updates
-
-- Langchain TOT
-- MonteCarlo
-- A* Search
-- Best First Search
-
-#### Coming soon!
-
-- Iterative Depth Search
-- Any search algorithms you like? Open an issue 😊
-
-## Basic Prompts
-
-No complex implementations, just pass in one of these prompts to your model. Head over to `prompts.txt`.
-
-"Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is..."
 
 ## Install
 
@@ -89,51 +72,8 @@ solution = tree_of_thoughts.solve(
 print(f"Solution: {solution}")
 ```
 
-Or integrate your own custom language model:
 
-```python
-class CustomLanguageModel(AbstractLanguageModel):
-    def __init__(self, model):
-        self.model = model
-
-    def generate_thoughts(self, state, k):
-        # implement the thought generation logic using self.model
-        pass
-
-    def evaluate_states(self, states):
-        # implement state evaluation logic using self.model
-        pass
-```
-
-Run the example script.
-
-## 🌟 Features:
-
-- General problem-solving framework for language models
-- Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
-- Easy integration with popular language models like OpenAI and Hugging Face
-- Extensible and adaptable to different problem properties and resource constraints
-
-## Algorithmic Pseudocode
-
-1. Define the thought decomposition based on the problem properties.
-2. Create a thought generator function G(pθ, s, k) with two strategies:
-   a. Sample i.i.d. thoughts from a CoT prompt.
-   b. Propose thoughts sequentially using a "propose prompt".
-3. Create a state evaluator function V(pθ, S) with two strategies:
-   a. Value each state independently.
-   b. Vote across states.
-4. Choose a search algorithm (BFS or DFS) based on the tree structure.
-5. Implement the chosen search algorithm.
-6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
-
-## Usage Examples
-
-### OpenAI API
-
-To use Tree of Thoughts with OpenAI's API, create a custom model class that inherits from `AbstractLanguageModel` and implements the required methods using OpenAI's API. Then, create an instance of the `TreeOfThoughts` class with the custom model and the desired search algorithm ('BFS' or 'DFS').
-
-### Hugging Face Transformers
+### ToT with HF LLM
 
 To run Hugging Face Transformers with Tree of Thoughts:
 
@@ -184,9 +124,52 @@ class HuggingLanguageModel(AbstractLanguageModel):
 
 ```
 
-## Contributing
 
-This algorithm is still in its infancy, but its potential remains unimaginable. Let's advance the reasoning of AI together under this banner.
+### Basic Prompts
+- Copy and paste this into your model!
+```
+"Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The task is:
+```
+
+
+Or integrate your own custom language model:
+
+```python
+class CustomLanguageModel(AbstractLanguageModel):
+    def __init__(self, model):
+        self.model = model
+
+    def generate_thoughts(self, state, k):
+        # implement the thought generation logic using self.model
+        pass
+
+    def evaluate_states(self, states):
+        # implement state evaluation logic using self.model
+        pass
+```
+
+Run the example script.
+
+## 🌟 Features:
+
+- General problem-solving framework for language models
+- Supports both breadth-first search (BFS) and depth-first search (DFS) algorithms
+- Easy integration with popular language models like OpenAI and Hugging Face
+- Extensible and adaptable to different problem properties and resource constraints
+
+## Algorithmic Pseudocode
+
+1. Define the thought decomposition based on the problem properties.
+2. Create a thought generator function G(pθ, s, k) with two strategies:
+   a. Sample i.i.d. thoughts from a CoT prompt.
+   b. Propose thoughts sequentially using a "propose prompt".
+3. Create a state evaluator function V(pθ, S) with two strategies:
+   a. Value each state independently.
+   b. Vote across states.
+4. Choose a search algorithm (BFS or DFS) based on the tree structure.
+5. Implement the chosen search algorithm.
+6. Execute the chosen search algorithm with the input problem, thought generator, state evaluator, and other required parameters.
+
 
 # Share With Your Network
 
