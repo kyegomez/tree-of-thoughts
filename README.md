@@ -76,57 +76,64 @@ print(f"Solution: {solution}")
 ### ToT with HF LLM
 
 To run Hugging Face Transformers with Tree of Thoughts:
-
 ```python
-from tree_of_thoughts import HuggingLanguageModel
+from tree_of_thoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloTreeofThoughts
 
-model_name = "gpt2"
-model_tokenizer = "your tokenizer"
+model_name="01-ai/Yi-34B"
 
-huggingface_model = HuggingLanguageModel(model_name, model_tokenizer)
+model = HuggingLanguageModel(model_name, 
+                             model_tokenizer=model_name, 
+                             verbose=True)
+                             
+
+# Initialize the MonteCarloTreeofThoughts class with the model
+tree_of_thoughts = MonteCarloTreeofThoughts(model)
+
+# Note to reproduce the same results from the tree of thoughts paper if not better, 
+# craft an 1 shot chain of thought prompt for your task below
+
+initial_prompt =  """
+
+
+Input: 2 8 8 14
+Possible next steps:
+2 + 8 = 10 (left: 8 10 14)
+8 / 2 = 4 (left: 4 8 14)
+14 + 2 = 16 (left: 8 8 16)
+2 * 8 = 16 (left: 8 14 16)
+8 - 2 = 6 (left: 6 8 14)
+14 - 8 = 6 (left: 2 6 8)
+14 /  2 = 7 (left: 7 8 8)
+14 - 2 = 12 (left: 8 8 12)
+Input: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation
+Possible next steps:
+
+
+
+"""
+num_thoughts = 1
+max_steps = 3
+max_states = 4
+pruning_threshold = 0.5
+
+
+
+
+solution = tree_of_thoughts.solve(
+    initial_prompt=initial_prompt,
+    num_thoughts=num_thoughts, 
+    max_steps=max_steps, 
+    max_states=max_states, 
+    pruning_threshold=pruning_threshold,
+    # sleep_time=sleep_time
+)
+
+print(f"Solution: {solution}")
 ```
-
-```python
-class HuggingLanguageModel(AbstractLanguageModel):
-    def __init__(self, model_name):
-        self.model = AutoModelForCausalLM.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    def generate_thoughts(self, state, k):
-        state_text = ' '.join(state)
-        prompt = f"Given the current state of reasoning: '{state_text}', generate {k} coherent thoughts to achieve the reasoning process:"
-
-        inputs = self.tokenizer(prompt, return_tensors="pt")
-        outputs = self.model.generate(**inputs, num_return_sequences=k)
-        thoughts = [self.tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
-
-        return thoughts
-
-    def evaluate_states(self, states, initial_prompt):
-        state_values = {}
-        for state in states:
-            state_text = ' '.join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimistically evaluate its value as a float between 0 and 1 based on its potential to achieve {initial_prompt}"
-
-            inputs = self.tokenizer(prompt, return_tensors="pt")
-            outputs = self.model.generate(**inputs, num_return_sequences=1)
-            value_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-            try:
-                value = float(value_text)
-            except ValueError:
-                value = 0  # Assign a default value if the conversion fails
-
-            state_values[state] = value
-
-        return state_values
-
-
-```
-
 
 ### Basic Prompts
-- Copy and paste this into your model!
+- Copy and paste this into your llm!
+
 ```
 "Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The task is:
 ```
