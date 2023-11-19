@@ -3,3 +3,4 @@ tree_of_thoughts/__pycache__
 build/
 *.logs
 *.egg-info
+dist
