@@ -147,4 +147,4 @@ Thanks to: Shunyu Yao Princeton University, Dian Yu Google DeepMind, Jeffrey Zha
 And, thanks to Phil Wang or Lucidrains for inspiring me to devote myself to open source AI Research
 
 # License
-MIT
+Apache
