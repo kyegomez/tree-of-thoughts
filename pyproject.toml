@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "tree-of-thoughts"
+version = "0.3.7"
+description = "Tree of Thoughts - Pytorch"
+authors = ["Kye Gomez <kye@apac.ai>"]
+license = "MIT"
+readme = "README.md"  # Assuming you have a README.md file
+homepage = "https://github.com/kyegomez/tree-of-thoughts"
+keywords = ["artificial intelligence", "deep learning", "optimizers", "Prompt Engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+guidance = "*"
+openai = "*"
+transformers = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
