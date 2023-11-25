@@ -1,5 +1,5 @@
 import logging
-from tree_of_thoughts.abstract_language_model import AbstractLanguageModel
+from tree_of_thoughts.base import AbstractLanguageModel
 from swarms.models import OpenAIChat
 
 # Logging
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class OpenAILanguageModel(AbstractLanguageModel):
     """
-    
+
     OpenAI Language Model
 
 
@@ -28,8 +28,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
     >>> model = OpenAILanguageModel(api_key=api_key)
     >>> model.generate_thoughts(state, k)
     >>> model.evaluate_states(states, initial_prompt)
-     
+
     """
+
     def __init__(
         self,
         api_key,
@@ -37,7 +38,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
         evaluation_strategy="value",
         enable_ReAct_prompting=True,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self.api_key = api_key
         self.use_chat_api = True
@@ -48,7 +49,10 @@ class OpenAILanguageModel(AbstractLanguageModel):
         # reference : https://www.promptingguide.ai/techniques/react
         self.ReAct_prompt = ""
         if enable_ReAct_prompting:
-            self.ReAct_prompt = "Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx'."
+            self.ReAct_prompt = (
+                "Write down your observations in format 'Observation:xxxx',"
+                " then write down your thoughts in format 'Thoughts:xxxx'."
+            )
 
         self.model = OpenAIChat(openai_api_key=api_key, *args, **kwargs)
 
@@ -62,7 +66,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 # print(f'thoughts: {thoughts}')
             return thoughts
 
-    def generate_thoughts(self, state, k, initial_prompt, rejected_solutions=None):
+    def generate_thoughts(
+        self, state, k, initial_prompt, rejected_solutions=None
+    ):
         """
         Generate thoughts from state using OpenAI API
 
@@ -75,8 +81,8 @@ class OpenAILanguageModel(AbstractLanguageModel):
         Returns:
             list: List of thoughts
 
-        
-        
+
+
         """
         if type(state) == str:
             state_text = state
@@ -143,7 +149,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
                 response = self.openai_api_call_handler(prompt, 10, 1)
                 try:
-                    value_text = self.openai_choice2text_handler(response.choices[0])
+                    value_text = self.openai_choice2text_handler(
+                        response.choices[0]
+                    )
                     # print(f'state: {value_text}')
                     value = float(value_text)
                     print(f"Evaluated Thought Value: {value}")
@@ -154,10 +162,18 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
         elif self.evaluation_strategy == "vote":
             states_text = "\n".join([" ".join(state) for state in states])
-            prompt = f"Given the following states of reasoning, vote for the best state utilizing an scalar value 1-10:\n{states_text}\n\nVote, on the probability of this state of reasoning achieveing {initial_prompt} and become very pessimistic very NOTHING ELSE"
+            prompt = (
+                "Given the following states of reasoning, vote for the best"
+                " state utilizing an scalar value"
+                f" 1-10:\n{states_text}\n\nVote, on the probability of this"
+                f" state of reasoning achieveing {initial_prompt} and become"
+                " very pessimistic very NOTHING ELSE"
+            )
             response = self.openai_api_call_handler(prompt, 50, 1)
             print(f"state response: {response}")
-            best_state_text = self.openai_choice2text_handler(response.choices[0])
+            best_state_text = self.openai_choice2text_handler(
+                response.choices[0]
+            )
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
             print(f"best_state: {best_state}")
@@ -165,4 +181,6 @@ class OpenAILanguageModel(AbstractLanguageModel):
             return {state: 1 if state == best_state else 0 for state in states}
 
         else:
-            raise ValueError("Invalid evaluation strategy. Choose 'value' or 'vote'.")
+            raise ValueError(
+                "Invalid evaluation strategy. Choose 'value' or 'vote'."
+            )

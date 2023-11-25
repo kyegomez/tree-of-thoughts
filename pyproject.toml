@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tree-of-thoughts"
-version = "0.3.8"
+version = "0.3.9"
 description = "Tree of Thoughts - Pytorch"
 authors = ["Kye Gomez <kye@apac.ai>"]
 license = "MIT"
@@ -17,8 +17,6 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-guidance = "*"
-openai = "*"
 transformers = "*"
 swarms = "*"
 
@@ -27,3 +25,30 @@ swarms = "*"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.0.249"
+types-toml = "^0.10.8.1"
+types-redis = "^4.3.21.6"
+types-pytz = "^2023.3.0.0"
+black = "^23.1.0"
+types-chardet = "^5.0.4.6"
+mypy-protobuf = "^3.0.0"
+
+
+[tool.autopep8]
+max_line_length = 80
+ignore = "E501,W6"  # or ["E501", "W6"]
+in-place = true
+recursive = true
+aggressive = 3
+
+[tool.ruff]
+line-length = 80
+
+[tool.black]
+line-length = 80
+target-version = ['py38']
+preview = true
+

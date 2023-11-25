@@ -41,13 +41,17 @@ class TreeofThoughts:
         else:
             self.tree["nodes"][state] = {"thoughts": [evaluation]}
 
-    def adjust_pruning_threshold_precentile(self, evaluated_thoughts, percentile):
+    def adjust_pruning_threshold_precentile(
+        self, evaluated_thoughts, percentile
+    ):
         values = np.array(list(evaluated_thoughts.values()))
         if values.size == 0:
             return 0
         return max(np.percentile(values, percentile), 0.1)
 
-    def adjust_pruning_threshold_moving_average(self, evaluated_thoughts, window_size):
+    def adjust_pruning_threshold_moving_average(
+        self, evaluated_thoughts, window_size
+    ):
         values = list(evaluated_thoughts.values())
         if len(values) < window_size:
             return np.mean(values) if values else 0
@@ -82,7 +86,9 @@ class TreeofThoughtsBFS(TreeofThoughts):
                         )
                         futures = [
                             executor.submit(
-                                self.model.evaluate_states, {thought: 0}, initial_prompt
+                                self.model.evaluate_states,
+                                {thought: 0},
+                                initial_prompt,
                             )
                             for thought in thoughts
                         ]
@@ -134,13 +140,17 @@ class TreeofThoughtsBFS(TreeofThoughts):
 
             #     return solution if solution is not None else highest_rated_state  # Return highest rated state if solution is None
             if state_values:
-                highest_rated_solution = max(state_values.items(), key=lambda x: x[1])
+                highest_rated_solution = max(
+                    state_values.items(), key=lambda x: x[1]
+                )
                 highest_rated_state = highest_rated_solution[0]
                 solution = self.model.generate_solution(
                     initial_prompt, highest_rated_state
                 )
                 print(
-                    f"Highest_rated solution: {highest_rated_solution} highest_rated_solution: {highest_rated_solution} Solution: {solution}"
+                    "Highest_rated solution:"
+                    f" {highest_rated_solution} highest_rated_solution:"
+                    f" {highest_rated_solution} Solution: {solution}"
                 )
 
                 return solution if solution else highest_rated_state
@@ -171,7 +181,9 @@ class TreeofThoughtsDFS(TreeofThoughts):
             nonlocal output
             if step > max_steps:
                 thought = self.model.generate_thoughts(state, 1, initial_prompt)
-                value = self.model.evaluate_states({state}, initial_prompt)[state]
+                value = self.model.evaluate_states({state}, initial_prompt)[
+                    state
+                ]
                 output.append((thought, value))
                 return
 
@@ -246,11 +258,13 @@ class TreeofThoughtsBEST:
 
             visited_states.add(state)
 
-            thoughts = self.model.generate_thoughts(state, num_thoughts, initial_prompt)
+            thoughts = self.model.generate_thoughts(
+                state, num_thoughts, initial_prompt
+            )
             evaluated_thoughts = {
-                thought: self.model.evaluate_states({thought: 0}, initial_prompt)[
-                    thought
-                ]
+                thought: self.model.evaluate_states(
+                    {thought: 0}, initial_prompt
+                )[thought]
                 for thought in thoughts
             }
 
@@ -276,7 +290,11 @@ class TreeofThoughtsASearch:
         self.model = model
 
     def solve(
-        self, initial_prompt, num_thoughts=5, max_steps=30, pruning_threshold=0.4
+        self,
+        initial_prompt,
+        num_thoughts=5,
+        max_steps=30,
+        pruning_threshold=0.4,
     ):
         # the open set is implemented as a piorituve quue where the priority is -f_score
         open_set = PriorityQueue()
@@ -303,15 +321,17 @@ class TreeofThoughtsASearch:
             _, _, current_state = open_set.get()
 
             if self.is_goal(current_state, f_scores[current_state]):
-                return self.reconstruct_path(came_from, current_state, initial_prompt)
+                return self.reconstruct_path(
+                    came_from, current_state, initial_prompt
+                )
 
             thoughts = self.model.generate_thoughts(
                 current_state, num_thoughts, initial_prompt
             )
             evaluated_thoughts = {
-                thought: self.model.evaluate_states({thought: 0}, initial_prompt)[
-                    thought
-                ]
+                thought: self.model.evaluate_states(
+                    {thought: 0}, initial_prompt
+                )[thought]
                 for thought in thoughts
             }
 
@@ -320,11 +340,16 @@ class TreeofThoughtsASearch:
                     continue
 
                 tentative_g_score = g_scores[current_state] + 1 / value
-                if thought not in g_scores or tentative_g_score < g_scores[thought]:
+                if (
+                    thought not in g_scores
+                    or tentative_g_score < g_scores[thought]
+                ):
                     came_from[thought] = current_state
                     g_scores[thought] = tentative_g_score
                     f_scores[thought] = tentative_g_score + value
-                    open_set.put((-f_scores[thought], g_scores[thought], thought))
+                    open_set.put(
+                        (-f_scores[thought], g_scores[thought], thought)
+                    )
 
         return self.reconstruct_path(came_from, current_state, initial_prompt)
 

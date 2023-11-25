@@ -10,7 +10,12 @@ class HuggingLanguageModel:
 
     def generate_thoughts(self, state, k, max_length=100):
         state_text = " ".join(state)
-        prompt = f"Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx Given the current state of reasoning: '{state_text}', generate {k} coherent solutions to achieve {state_text}"
+        prompt = (
+            "Write down your observations in format 'Observation:xxxx', then"
+            " write down your thoughts in format 'Thoughts:xxxx Given the"
+            f" current state of reasoning: '{state_text}', generate"
+            f" {k} coherent solutions to achieve {state_text}"
+        )
 
         if self.verbose:
             print(f"Generating thoughts for state: {state_text}")
@@ -29,7 +34,11 @@ class HuggingLanguageModel:
         state_values = {}
         for state in states:
             state_text = " ".join(state)
-            prompt = f"Given the current state of reasoning: '{state_text}', pessimitically evaluate its value as a float between 0 and 1 based on it's potential to achieve {initial_prompt}"
+            prompt = (
+                f"Given the current state of reasoning: '{state_text}',"
+                " pessimitically evaluate its value as a float between 0 and 1"
+                f" based on it's potential to achieve {initial_prompt}"
+            )
 
             if self.verbose:
                 print(f"Evaluating state: {state_text}")
@@ -39,7 +48,10 @@ class HuggingLanguageModel:
                 value = float(value_text)
             except ValueError:
                 if self.verbose:
-                    print(f"Error converting value to float for state: {state_text}")
+                    print(
+                        "Error converting value to float for state:"
+                        f" {state_text}"
+                    )
                 value = 0  # Assign a default value if the conversion fails
             except Exception as e:
                 if self.verbose:

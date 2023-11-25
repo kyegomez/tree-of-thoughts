@@ -1,4 +1,4 @@
-from tree_of_thoughts.abstract_language_model import AbstractLanguageModel
+from tree_of_thoughts.base import AbstractLanguageModel
 from tree_of_thoughts.huggingface_model import (
     HuggingLanguageModel,
 )
