@@ -29,18 +29,26 @@ pip install tree-of-thoughts
 ## Usage
 ```python
 import os
-from tree_of_thoughts import OpenAILanguageModel, MonteCarloTreeofThoughts
+from tree_of_thoughts.openai_models import OpenAILanguageModel
+from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
+from dotenv import load_dotenv
 
-api_model = "gpt-3.5-turbo"
-model = OpenAILanguageModel(api_key='api key', api_model=api_model)
+load_dotenv()
+
+
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# Initialize the OpenAILanguageModel class with the API key
+model = OpenAILanguageModel(api_key=api_key)
+
 
 # Initialize the MonteCarloTreeofThoughts class with the model
 tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
-# To reproduce the same results from the Tree of Thoughts paper, or even better,
-# craft a one-shot chain of thought prompt for your task below:
+# Define the initial prompt
+initial_prompt = """
 
-initial_prompt =  """
+
 Input: 2 8 8 14
 Possible next steps:
 2 + 8 = 10 (left: 8 10 14)
@@ -52,24 +60,28 @@ Possible next steps:
 14 /  2 = 7 (left: 7 8 8)
 14 - 2 = 12 (left: 8 8 12)
 Input: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation
-
-
 Possible next steps:
 """
+
+# Define the number of thoughts to generate
 num_thoughts = 1
 max_steps = 3
 max_states = 4
 pruning_threshold = 0.5
 
+
+# Generate the thoughts
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
-    num_thoughts=num_thoughts, 
-    max_steps=max_steps, 
-    max_states=max_states, 
+    num_thoughts=num_thoughts,
+    max_steps=max_steps,
+    max_states=max_states,
     pruning_threshold=pruning_threshold,
+    # sleep_time=sleep_time
 )
 
 print(f"Solution: {solution}")
+
 ```
 
 

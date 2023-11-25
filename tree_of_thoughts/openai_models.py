@@ -1,7 +1,4 @@
 import logging
-import os
-import time
-import openai
 from tree_of_thoughts.abstract_language_model import AbstractLanguageModel
 from swarms.models import OpenAIChat
 
@@ -28,13 +25,11 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
     Examples:
     >>> from tree_of_thoughts.models.openai_models import OpenAILanguageModel
-    >>> 
-    
-    
+    >>> model = OpenAILanguageModel(api_key=api_key)
+    >>> model.generate_thoughts(state, k)
+    >>> model.evaluate_states(states, initial_prompt)
+     
     """
-
-
-
     def __init__(
         self,
         api_key,
