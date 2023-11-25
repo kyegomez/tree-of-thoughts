@@ -4,7 +4,7 @@ guidance
 langchain==0.0.196
 asyncio
 nest_asyncio
-
+swarms
 # faiss
 bs4
 playwright

@@ -1,20 +1,21 @@
 import os
-from tree_of_thoughts.models.openai_models import OpenAILanguageModel
+from tree_of_thoughts.openai_models import OpenAILanguageModel
 from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-api_model = "gpt-3.5-turbo"
+api_key = os.environ.get("OPENAI_API_KEY")
 
-api_key = os.getenv("OPENAI_API_KEY")
-model = OpenAILanguageModel(api_key=api_key, api_model=api_model)
+# Initialize the OpenAILanguageModel class with the API key
+model = OpenAILanguageModel(api_key=api_key)
 
 
 # Initialize the MonteCarloTreeofThoughts class with the model
 tree_of_thoughts = MonteCarloTreeofThoughts(model)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better,
-# craft an 1 shot chain of thought prompt for your task below
-
+# Define the initial prompt
 initial_prompt = """
 
 
@@ -30,16 +31,16 @@ Possible next steps:
 14 - 2 = 12 (left: 8 8 12)
 Input: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation
 Possible next steps:
-
-
-
 """
+
+# Define the number of thoughts to generate
 num_thoughts = 1
 max_steps = 3
 max_states = 4
 pruning_threshold = 0.5
 
 
+# Generate the thoughts
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
     num_thoughts=num_thoughts,

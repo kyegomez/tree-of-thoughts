@@ -480,4 +480,3 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         # return None
         solution = self.model.generate_solution(initial_prompt, best_state)
         return solution if solution else best_state
-
