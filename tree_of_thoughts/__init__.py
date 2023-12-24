@@ -1,7 +1,7 @@
 from tree_of_thoughts.base import AbstractLanguageModel
-from tree_of_thoughts.huggingface_model import (
-    HuggingLanguageModel,
-)
+#from tree_of_thoughts.huggingface_model import (
+    #HuggingLanguageModel,
+#)
 from tree_of_thoughts.openai_models import (
     OpenAILanguageModel,
 )
