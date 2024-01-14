@@ -1,0 +1,4 @@
+.*
+*.{png,jpeg,jpg,gif,lock}
+LICENSE
+docs

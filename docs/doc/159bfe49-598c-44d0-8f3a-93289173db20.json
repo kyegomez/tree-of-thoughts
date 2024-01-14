@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports OpenAI language model, uses Monte Carlo Tree of Thoughts algorithm to solve a problem defined by the initial prompt, and prints the solution with specified parameters.",
+    "details": [
+        {
+            "comment": "Code imports necessary packages and initializes an OpenAI language model, Monte Carlo Tree of Thoughts algorithm, sets initial prompt and parameters for generating thoughts. It then uses the Tree of Thoughts algorithm to solve a problem defined by the initial prompt.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/example.py\":0-44",
+            "content": "import os\nfrom tree_of_thoughts.openai_models import OpenAILanguageModel\nfrom tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts\nfrom dotenv import load_dotenv\nload_dotenv()\napi_key = os.environ.get(\"OPENAI_API_KEY\")\n# Initialize the OpenAILanguageModel class with the API key\nmodel = OpenAILanguageModel(api_key=api_key)\n# Initialize the MonteCarloTreeofThoughts class with the model\ntree_of_thoughts = MonteCarloTreeofThoughts(model)\n# Define the initial prompt\ninitial_prompt = \"\"\"\nInput: 2 8 8 14\nPossible next steps:\n2 + 8 = 10 (left: 8 10 14)\n8 / 2 = 4 (left: 4 8 14)\n14 + 2 = 16 (left: 8 8 16)\n2 * 8 = 16 (left: 8 14 16)\n8 - 2 = 6 (left: 6 8 14)\n14 - 8 = 6 (left: 2 6 8)\n14 /  2 = 7 (left: 7 8 8)\n14 - 2 = 12 (left: 8 8 12)\nInput: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation\nPossible next steps:\n\"\"\"\n# Define the number of thoughts to generate\nnum_thoughts = 1\nmax_steps = 3\nmax_states = 4\npruning_threshold = 0.5\n# Generate the thoughts\nsolution = tree_of_thoughts.solve(\n    initial_prompt=initial_prompt,"
+        },
+        {
+            "comment": "This code snippet is initializing an object with parameters, and then printing the solution. The variables represent the number of thoughts, maximum steps, maximum states, pruning threshold (likely for optimization), and possibly a sleep time (though commented out).",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/example.py\":45-52",
+            "content": "    num_thoughts=num_thoughts,\n    max_steps=max_steps,\n    max_states=max_states,\n    pruning_threshold=pruning_threshold,\n    # sleep_time=sleep_time\n)\nprint(f\"Solution: {solution}\")"
+        }
+    ]
+}

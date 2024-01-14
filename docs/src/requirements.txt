@@ -1,0 +1,4 @@
+transformers
+openai
+langchain
+swarms

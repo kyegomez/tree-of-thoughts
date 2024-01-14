@@ -1,0 +1,10 @@
+{
+    "summary": "This code defines an abstract base class `AbstractLanguageModel` for language models with two required methods: `generate_thoughts` and `evaluate_states`. It uses the ABC (Abstract Base Classes) module from Python's `abc` library.",
+    "details": [
+        {
+            "comment": "This code defines an abstract base class `AbstractLanguageModel` for language models with two required methods: `generate_thoughts` and `evaluate_states`. It uses the ABC (Abstract Base Classes) module from Python's `abc` library.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/tree_of_thoughts/base.py\":0-10",
+            "content": "from abc import ABC, abstractmethod\nclass AbstractLanguageModel(ABC):\n    @abstractmethod\n    def generate_thoughts(self, state, k):\n        pass\n    @abstractmethod\n    def evaluate_states(self, states):\n        pass"
+        }
+    ]
+}
