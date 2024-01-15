@@ -7,7 +7,7 @@
         "0": {
             "filepath": "/README.md",
             "entry_id": 0,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "1": {
             "filepath": "/example.py",
@@ -32,7 +32,7 @@
         "5": {
             "filepath": "/tree_of_thoughts/README.md",
             "entry_id": 38,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "6": {
             "filepath": "/tree_of_thoughts/__init__.py",
