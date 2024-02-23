@@ -1,0 +1,65 @@
+{
+    "url": {
+        "full": "https://github.com/kyegomez/tree-of-thoughts",
+        "partial": "kyegomez/tree-of-thoughts"
+    },
+    "file_mapping": {
+        "0": {
+            "filepath": "/README.md",
+            "entry_id": 0,
+            "language_id": "markdown"
+        },
+        "1": {
+            "filepath": "/example.py",
+            "entry_id": 14,
+            "language_id": "python"
+        },
+        "2": {
+            "filepath": "/prompts.txt",
+            "entry_id": 20,
+            "language_id": "plain-text"
+        },
+        "3": {
+            "filepath": "/pyproject.toml",
+            "entry_id": 28,
+            "language_id": "toml"
+        },
+        "4": {
+            "filepath": "/requirements.txt",
+            "entry_id": 34,
+            "language_id": "plain-text"
+        },
+        "5": {
+            "filepath": "/tree_of_thoughts/README.md",
+            "entry_id": 38,
+            "language_id": "markdown"
+        },
+        "6": {
+            "filepath": "/tree_of_thoughts/__init__.py",
+            "entry_id": 60,
+            "language_id": "python"
+        },
+        "7": {
+            "filepath": "/tree_of_thoughts/base.py",
+            "entry_id": 64,
+            "language_id": "python"
+        },
+        "8": {
+            "filepath": "/tree_of_thoughts/huggingface_model.py",
+            "entry_id": 68,
+            "language_id": "python"
+        },
+        "9": {
+            "filepath": "/tree_of_thoughts/openai_models.py",
+            "entry_id": 76,
+            "language_id": "python"
+        },
+        "10": {
+            "filepath": "/tree_of_thoughts/treeofthoughts.py",
+            "entry_id": 94,
+            "language_id": "python"
+        }
+    },
+    "project_name": "tree-of-thoughts",
+    "split_count": 2
+}

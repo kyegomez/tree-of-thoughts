@@ -1,0 +1,15 @@
+{
+    "summary": "The given code configures the \"pyproject.toml\" file to define project details, specify dependencies, and set up linting and formatting for Python code using Ruff and Black. It enables aggressive mode, ignores certain files, and previews changes before applying them.",
+    "details": [
+        {
+            "comment": "This code defines a project's details in the pyproject.toml file, including name, version, author, license, keywords, and classifiers. It also specifies dependencies and development dependencies for the project.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/pyproject.toml\":0-40",
+            "content": "[tool.poetry]\nname = \"tree-of-thoughts\"\nversion = \"0.3.9\"\ndescription = \"Tree of Thoughts - Pytorch\"\nauthors = [\"Kye Gomez <kye@apac.ai>\"]\nlicense = \"MIT\"\nreadme = \"README.md\"  # Assuming you have a README.md file\nhomepage = \"https://github.com/kyegomez/tree-of-thoughts\"\nkeywords = [\"artificial intelligence\", \"deep learning\", \"optimizers\", \"Prompt Engineering\"]\nclassifiers = [\n    \"Development Status :: 4 - Beta\",\n    \"Intended Audience :: Developers\",\n    \"Topic :: Scientific/Engineering :: Artificial Intelligence\",\n    \"License :: OSI Approved :: MIT License\",\n    \"Programming Language :: Python :: 3.6\",\n]\n[tool.poetry.dependencies]\npython = \"^3.6\"\ntransformers = \"*\"\nswarms = \"*\"\n[tool.poetry.dev-dependencies]\n[build-system]\nrequires = [\"poetry-core>=1.0.0\"]\nbuild-backend = \"poetry.core.masonry.api\"\n[tool.poetry.group.lint.dependencies]\nruff = \"^0.0.249\"\ntypes-toml = \"^0.10.8.1\"\ntypes-redis = \"^4.3.21.6\"\ntypes-pytz = \"^2023.3.0.0\"\nblack = \"^23.1.0\"\ntypes-chardet = \"^5.0.4.6\"\nmypy-protobuf = \"^3.0.0\"\n[tool.autopep8]\nmax_line_length = 80"
+        },
+        {
+            "comment": "The code configures the \"pyproject.toml\" file for linting and formatting Python code using Ruff and Black. It sets an ignore list, enables in-place correction, recursive scanning, and aggressive mode with a threshold of 3. The line length is set to 80, target version is py38, and previews changes before applying them.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/pyproject.toml\":41-52",
+            "content": "ignore = \"E501,W6\"  # or [\"E501\", \"W6\"]\nin-place = true\nrecursive = true\naggressive = 3\n[tool.ruff]\nline-length = 80\n[tool.black]\nline-length = 80\ntarget-version = ['py38']\npreview = true"
+        }
+    ]
+}

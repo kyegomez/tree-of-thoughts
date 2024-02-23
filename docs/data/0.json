@@ -1,0 +1,541 @@
+{
+    "0": {
+        "file_id": 0,
+        "content": "/README.md",
+        "type": "filepath"
+    },
+    "1": {
+        "file_id": 0,
+        "content": "This code offers social media sharing tools for promoting the \"tree-of-thoughts\" project, which combines the Tree of Thoughts algorithm, OpenAI Language Model API, and user model connections to improve AI reasoning. It initializes a Monte Carlo Tree of Thoughts model, sets up an initial prompt, solves problems using the algorithm with specific parameters, and prints collaborative solutions.",
+        "type": "summary"
+    },
+    "2": {
+        "file_id": 0,
+        "content": "[![Multi-Modality](agorabanner.png)](https://discord.gg/qUtxnK2NMf)\n![Tree of Thoughts Banner](treeofthoughts.png)\n![Discord](https://img.shields.io/discord/999382051935506503)\n[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)\n[![LinkedIn](https://img.shields.io/badge/Share-LinkedIn-blue?style=social&logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)\n[![Facebook](https://img.shields.io/badge/Share-Facebook-blue?style=social&logo=facebook)](https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)\n[![Reddit](https://img.shields.io/badge/Share-Reddit-orange?style=social&logo=reddit)](https://www.reddit.com/submit?url=https%3A%",
+        "type": "code",
+        "location": "/README.md:1-9"
+    },
+    "3": {
+        "file_id": 0,
+        "content": "This code is a README file that includes various sharing buttons for social media platforms like Discord, Twitter, LinkedIn, Facebook, and Reddit. These buttons allow users to easily share the project link with their networks.",
+        "type": "comment"
+    },
+    "4": {
+        "file_id": 0,
+        "content": "2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&title=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)\n[![Hacker News](https://img.shields.io/badge/Share-Hacker%20News-orange?style=social&logo=y-combinator)](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&t=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)\n[![Pinterest](https://img.shields.io/badge/Share-Pinterest-red?style=social&logo=pinterest)](https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts&media=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts%2Fraw%2Fmain%2Ftree-of-thoughts.jpeg&description=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21)\n[![WhatsApp](https://img.shields.io/badge/Share-WhatsApp-green?style=social&logo=whatsapp)](https://api.whatsapp.com/send?text=Check",
+        "type": "code",
+        "location": "/README.md:9-12"
+    },
+    "5": {
+        "file_id": 0,
+        "content": "Code snippet provides sharing options for the \"tree-of-thoughts\" project on various social media platforms like Hacker News, Pinterest, and WhatsApp using badges. The links are prefilled with a message to promote the project's purpose: improving AI reasoning through the Tree of Thoughts.",
+        "type": "comment"
+    },
+    "6": {
+        "file_id": 0,
+        "content": "%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts%21%20https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)\n[Paper link](https://arxiv.org/pdf/2305.10601.pdf)\n[Author's implementation](https://github.com/princeton-nlp/tree-of-thought-llm)\n## Introduction\nTree of Thoughts (ToT) is a powerful and flexible algorithm that significantly advances model reasoning by up to 70%. This plug-and-play version allows you to connect your own models and experience superintelligence!\n## Install\n```bash\npip install tree-of-thoughts\n```\n## Usage\n```python\nimport os\nfrom tree_of_thoughts.openai_models import OpenAILanguageModel\nfrom tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts\nfrom dotenv import load_dotenv\nload_dotenv()\napi_key = os.environ.get(\"OPENAI_API_KEY\")\n# Initialize the OpenAILanguageModel class with the API key\nmodel = OpenAILanguageModel(api_key=api_key)\n# Initialize the MonteCarloTreeofThoughts class with the model\ntree_of_thoughts = MonteCarloTreeofThoughts(model)",
+        "type": "code",
+        "location": "/README.md:12-46"
+    },
+    "7": {
+        "file_id": 0,
+        "content": "This code installs the Tree of Thoughts algorithm, which significantly improves model reasoning by up to 70%. Users can connect their own models and experience superintelligence. The code imports necessary classes, initializes an OpenAILanguageModel with an API key, and initializes a MonteCarloTreeofThoughts class with the model for improved reasoning.",
+        "type": "comment"
+    },
+    "8": {
+        "file_id": 0,
+        "content": "# Define the initial prompt\ninitial_prompt = \"\"\"\nInput: 2 8 8 14\nPossible next steps:\n2 + 8 = 10 (left: 8 10 14)\n8 / 2 = 4 (left: 4 8 14)\n14 + 2 = 16 (left: 8 8 16)\n2 * 8 = 16 (left: 8 14 16)\n8 - 2 = 6 (left: 6 8 14)\n14 - 8 = 6 (left: 2 6 8)\n14 /  2 = 7 (left: 7 8 8)\n14 - 2 = 12 (left: 8 8 12)\nInput: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation\nPossible next steps:\n\"\"\"\n# Define the number of thoughts to generate\nnum_thoughts = 1\nmax_steps = 3\nmax_states = 4\npruning_threshold = 0.5\n# Generate the thoughts\nsolution = tree_of_thoughts.solve(\n    initial_prompt=initial_prompt,\n    num_thoughts=num_thoughts,\n    max_steps=max_steps,\n    max_states=max_states,\n    pruning_threshold=pruning_threshold,\n    # sleep_time=sleep_time\n)\nprint(f\"Solution: {solution}\")\n```\n### ToT with HF LLM\nTo run Hugging Face Transformers with Tree of Thoughts:\n```python\nfrom tree_of_thoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloTreeofThoughts\nmodel_name=\"01-ai/Yi-34B\"\nmodel = HuggingLanguageModel(model_name, ",
+        "type": "code",
+        "location": "/README.md:48-96"
+    },
+    "9": {
+        "file_id": 0,
+        "content": "The code is initializing the initial prompt, defining parameters for generating thoughts (e.g., number of thoughts, maximum steps and states), and setting a pruning threshold for tree search. It then calls the solve function from tree_of_thoughts module to generate thoughts using the Hugging Face Transformers language model with the given parameters. The solution is printed at the end.",
+        "type": "comment"
+    },
+    "10": {
+        "file_id": 0,
+        "content": "                             model_tokenizer=model_name, \n                             verbose=True)\n# Initialize the MonteCarloTreeofThoughts class with the model\ntree_of_thoughts = MonteCarloTreeofThoughts(model)\n# Note to reproduce the same results from the tree of thoughts paper if not better, \n# craft an 1 shot chain of thought prompt for your task below\ninitial_prompt =  \"\"\"\nInput: 2 8 8 14\nPossible next steps:\n2 + 8 = 10 (left: 8 10 14)\n8 / 2 = 4 (left: 4 8 14)\n14 + 2 = 16 (left: 8 8 16)\n2 * 8 = 16 (left: 8 14 16)\n8 - 2 = 6 (left: 6 8 14)\n14 - 8 = 6 (left: 2 6 8)\n14 /  2 = 7 (left: 7 8 8)\n14 - 2 = 12 (left: 8 8 12)\nInput: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation\nPossible next steps:\n\"\"\"\nnum_thoughts = 1\nmax_steps = 3\nmax_states = 4\npruning_threshold = 0.5\nsolution = tree_of_thoughts.solve(\n    initial_prompt=initial_prompt,\n    num_thoughts=num_thoughts, \n    max_steps=max_steps, \n    max_states=max_states, \n    pruning_threshold=pruning_threshold,\n    # sleep_time=sleep_time",
+        "type": "code",
+        "location": "/README.md:97-140"
+    },
+    "11": {
+        "file_id": 0,
+        "content": "The code initializes a MonteCarloTreeofThoughts model, sets up an initial prompt, and then solves the problem using the Tree of Thoughts algorithm with specified parameters.",
+        "type": "comment"
+    },
+    "12": {
+        "file_id": 0,
+        "content": ")\nprint(f\"Solution: {solution}\")\n```\n### Basic Prompts\n- Copy and paste this into your llm!\n```\n\"Three experts with exceptional logical thinking skills are collaboratively answering a question using the tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The task is:\n```\n# Acknowledgements\nThanks to: Shunyu Yao Princeton University, Dian Yu Google DeepMind, Jeffrey Zhao, Google DeepMind, Izhak Shafran Google DeepMind, Thomas L. Griffiths, Princeton University, Yuan Cao Google DeepMind, Karthik Narasimha, Princeton University for sharing this amazing work with the world!\nAnd, thanks to Phil Wang or Lucidrains for inspiring me to devote myself to open source AI Research\n# License\nApache",
+        "type": "code",
+        "location": "/README.md:141-162"
+    },
+    "13": {
+        "file_id": 0,
+        "content": "Code snippet for printing the solution obtained after solving a problem collaboratively using the tree of thoughts method.",
+        "type": "comment"
+    },
+    "14": {
+        "file_id": 1,
+        "content": "/example.py",
+        "type": "filepath"
+    },
+    "15": {
+        "file_id": 1,
+        "content": "The code imports OpenAI language model, uses Monte Carlo Tree of Thoughts algorithm to solve a problem defined by the initial prompt, and prints the solution with specified parameters.",
+        "type": "summary"
+    },
+    "16": {
+        "file_id": 1,
+        "content": "import os\nfrom tree_of_thoughts.openai_models import OpenAILanguageModel\nfrom tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts\nfrom dotenv import load_dotenv\nload_dotenv()\napi_key = os.environ.get(\"OPENAI_API_KEY\")\n# Initialize the OpenAILanguageModel class with the API key\nmodel = OpenAILanguageModel(api_key=api_key)\n# Initialize the MonteCarloTreeofThoughts class with the model\ntree_of_thoughts = MonteCarloTreeofThoughts(model)\n# Define the initial prompt\ninitial_prompt = \"\"\"\nInput: 2 8 8 14\nPossible next steps:\n2 + 8 = 10 (left: 8 10 14)\n8 / 2 = 4 (left: 4 8 14)\n14 + 2 = 16 (left: 8 8 16)\n2 * 8 = 16 (left: 8 14 16)\n8 - 2 = 6 (left: 6 8 14)\n14 - 8 = 6 (left: 2 6 8)\n14 /  2 = 7 (left: 7 8 8)\n14 - 2 = 12 (left: 8 8 12)\nInput: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation\nPossible next steps:\n\"\"\"\n# Define the number of thoughts to generate\nnum_thoughts = 1\nmax_steps = 3\nmax_states = 4\npruning_threshold = 0.5\n# Generate the thoughts\nsolution = tree_of_thoughts.solve(\n    initial_prompt=initial_prompt,",
+        "type": "code",
+        "location": "/example.py:1-45"
+    },
+    "17": {
+        "file_id": 1,
+        "content": "Code imports necessary packages and initializes an OpenAI language model, Monte Carlo Tree of Thoughts algorithm, sets initial prompt and parameters for generating thoughts. It then uses the Tree of Thoughts algorithm to solve a problem defined by the initial prompt.",
+        "type": "comment"
+    },
+    "18": {
+        "file_id": 1,
+        "content": "    num_thoughts=num_thoughts,\n    max_steps=max_steps,\n    max_states=max_states,\n    pruning_threshold=pruning_threshold,\n    # sleep_time=sleep_time\n)\nprint(f\"Solution: {solution}\")",
+        "type": "code",
+        "location": "/example.py:46-53"
+    },
+    "19": {
+        "file_id": 1,
+        "content": "This code snippet is initializing an object with parameters, and then printing the solution. The variables represent the number of thoughts, maximum steps, maximum states, pruning threshold (likely for optimization), and possibly a sleep time (though commented out).",
+        "type": "comment"
+    },
+    "20": {
+        "file_id": 2,
+        "content": "/prompts.txt",
+        "type": "filepath"
+    },
+    "21": {
+        "file_id": 2,
+        "content": "The code details a tree-of-thoughts approach for collaboratively answering a question through iterative refinement and markdown table formatted response.",
+        "type": "summary"
+    },
+    "22": {
+        "file_id": 2,
+        "content": "Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they're wrong at any point then they leave. The question is...\nSimulate three brilliant, logical experts collaboratively answering a question. Each one verbosely explains their thought process in real-time, considering the prior explanations of others and openly acknowledging mistakes. At each step, whenever possible, each expert refines and builds upon the thoughts of others, acknowledging their contributions. They continue until there is a definitive answer to the question. For clarity, your entire response should be in a markdown table. The question is...\nImagine three highly intelligent experts working together to answer a question. They will follow a tree of thoughts approach, where each expert shares their thought process step by step. They will consider the input fr",
+        "type": "code",
+        "location": "/prompts.txt:1-5"
+    },
+    "23": {
+        "file_id": 2,
+        "content": "The code describes a simulation of three brilliant experts collaboratively answering a question in a tree-of-thoughts approach, sharing their thought process step by step while considering and building upon each other's thoughts.",
+        "type": "comment"
+    },
+    "24": {
+        "file_id": 2,
+        "content": "om others, refine their thoughts, and build upon the group's collective knowledge. If an expert realizes their thought is incorrect, they will acknowledge it and withdraw from the discussion. Continue this process until a definitive answer is reached. Present the entire response in a markdown table. The question is...\nThree experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...\nEnvision a group of three experts working in unison to tackle a question by employing a tree of thoughts strategy. Each expert will thoroughly explain their line of thinking at every step, w",
+        "type": "code",
+        "location": "/prompts.txt:5-9"
+    },
+    "25": {
+        "file_id": 2,
+        "content": "Code describes a collaborative problem-solving process where three experts employ the tree of thoughts method to answer a question. They iteratively refine and expand upon each other's ideas, admit errors, and credit others. The final response will be presented in a markdown table format.",
+        "type": "comment"
+    },
+    "26": {
+        "file_id": 2,
+        "content": "hile also considering the insights provided by their peers. They will openly recognize any mistakes and build upon the group's shared understanding. This iterative process will continue until a definitive solution is reached. Structure the entire response as a markdown table. The question is...",
+        "type": "code",
+        "location": "/prompts.txt:9-9"
+    },
+    "27": {
+        "file_id": 2,
+        "content": "Code snippet describes a collaborative problem-solving process where team members contribute ideas, recognize mistakes, and iterate until reaching a solution. The response should be formatted as a markdown table.",
+        "type": "comment"
+    },
+    "28": {
+        "file_id": 3,
+        "content": "/pyproject.toml",
+        "type": "filepath"
+    },
+    "29": {
+        "file_id": 3,
+        "content": "The given code configures the \"pyproject.toml\" file to define project details, specify dependencies, and set up linting and formatting for Python code using Ruff and Black. It enables aggressive mode, ignores certain files, and previews changes before applying them.",
+        "type": "summary"
+    },
+    "30": {
+        "file_id": 3,
+        "content": "[tool.poetry]\nname = \"tree-of-thoughts\"\nversion = \"0.3.9\"\ndescription = \"Tree of Thoughts - Pytorch\"\nauthors = [\"Kye Gomez <kye@apac.ai>\"]\nlicense = \"MIT\"\nreadme = \"README.md\"  # Assuming you have a README.md file\nhomepage = \"https://github.com/kyegomez/tree-of-thoughts\"\nkeywords = [\"artificial intelligence\", \"deep learning\", \"optimizers\", \"Prompt Engineering\"]\nclassifiers = [\n    \"Development Status :: 4 - Beta\",\n    \"Intended Audience :: Developers\",\n    \"Topic :: Scientific/Engineering :: Artificial Intelligence\",\n    \"License :: OSI Approved :: MIT License\",\n    \"Programming Language :: Python :: 3.6\",\n]\n[tool.poetry.dependencies]\npython = \"^3.6\"\ntransformers = \"*\"\nswarms = \"*\"\n[tool.poetry.dev-dependencies]\n[build-system]\nrequires = [\"poetry-core>=1.0.0\"]\nbuild-backend = \"poetry.core.masonry.api\"\n[tool.poetry.group.lint.dependencies]\nruff = \"^0.0.249\"\ntypes-toml = \"^0.10.8.1\"\ntypes-redis = \"^4.3.21.6\"\ntypes-pytz = \"^2023.3.0.0\"\nblack = \"^23.1.0\"\ntypes-chardet = \"^5.0.4.6\"\nmypy-protobuf = \"^3.0.0\"\n[tool.autopep8]\nmax_line_length = 80",
+        "type": "code",
+        "location": "/pyproject.toml:1-41"
+    },
+    "31": {
+        "file_id": 3,
+        "content": "This code defines a project's details in the pyproject.toml file, including name, version, author, license, keywords, and classifiers. It also specifies dependencies and development dependencies for the project.",
+        "type": "comment"
+    },
+    "32": {
+        "file_id": 3,
+        "content": "ignore = \"E501,W6\"  # or [\"E501\", \"W6\"]\nin-place = true\nrecursive = true\naggressive = 3\n[tool.ruff]\nline-length = 80\n[tool.black]\nline-length = 80\ntarget-version = ['py38']\npreview = true",
+        "type": "code",
+        "location": "/pyproject.toml:42-53"
+    },
+    "33": {
+        "file_id": 3,
+        "content": "The code configures the \"pyproject.toml\" file for linting and formatting Python code using Ruff and Black. It sets an ignore list, enables in-place correction, recursive scanning, and aggressive mode with a threshold of 3. The line length is set to 80, target version is py38, and previews changes before applying them.",
+        "type": "comment"
+    },
+    "34": {
+        "file_id": 4,
+        "content": "/requirements.txt",
+        "type": "filepath"
+    },
+    "35": {
+        "file_id": 4,
+        "content": "The code snippet is importing four libraries - transformers, openai, langchain, and swarms. These libraries are commonly used for natural language processing (transformers), text generation (openai), working with language models (langchain), and distributed computing tasks (swarms).",
+        "type": "summary"
+    },
+    "36": {
+        "file_id": 4,
+        "content": "transformers\nopenai\nlangchain\nswarms",
+        "type": "code",
+        "location": "/requirements.txt:1-4"
+    },
+    "37": {
+        "file_id": 4,
+        "content": "The code snippet is importing four libraries - transformers, openai, langchain, and swarms. These libraries are commonly used for natural language processing (transformers), text generation (openai), working with language models (langchain), and distributed computing tasks (swarms).",
+        "type": "comment"
+    },
+    "38": {
+        "file_id": 5,
+        "content": "/tree_of_thoughts/README.md",
+        "type": "filepath"
+    },
+    "39": {
+        "file_id": 5,
+        "content": "The code updates the TreeofThoughts class's changelog, adds search parameters, and includes BFS, DFS, Monte Carlo, Best First Search, and A* Search classes. The code features two inherited classes: MonteCarloTreeofThoughts for Monte Carlo Tree Search optimization and OptimizedTreeofThoughts for enhanced Tree of Thoughts algorithm using optimized search parameters.",
+        "type": "summary"
+    },
+    "40": {
+        "file_id": 5,
+        "content": "# Comprehensive Documentation and Changelog\nThis document provides a comprehensive overview of the changes made to the TreeofThoughts class and its methods to improve readability and understandability. The changes include updating variable names to be more meaningful and descriptive, as well as modifying the structure of the code for better readability.\n## Changelog\n1. TreeofThoughts Class\nUpdated the class definition to include a more descriptive docstring.\n2. __init__ Method\nNo changes were made to the __init__ method.\n3. solve Method\nUpdated variable names:\nx -> initial_prompt\nk -> num_thoughts\nT -> max_steps\nb -> max_states\nvth -> value_threshold\n4. tot_bfs Method\nUpdated variable names:\nx -> initial_prompt\nk -> num_thoughts\nT -> max_steps\nb -> max_states\nS0 -> current_states\nS0_t -> generated_states\nVt -> state_values\nSt -> selected_states\n5. tot_dfs Method\nUpdated variable names:\nx -> initial_prompt\nk -> num_thoughts\nT -> max_steps\nvth -> value_threshold\ns -> state\nt -> step\ns_prime -> next_state\nchild -> child_state",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:1-36"
+    },
+    "41": {
+        "file_id": 5,
+        "content": "The code provides a comprehensive changelog for the TreeofThoughts class, updating variable names and modifying code structure for better readability. The solve method updated variable names while keeping the __init__ method unchanged. Various methods have been renamed and updated with more meaningful variable names.",
+        "type": "comment"
+    },
+    "42": {
+        "file_id": 5,
+        "content": "### Added optional parameters for better control over the search process:\npruning_threshold\nconfidence_threshold\nmax_iterations\nconvergence_threshold\nconvergence_count\n6. save_tree_to_json Method\nNo changes were made to the save_tree_to_json method.\n7. print_tree Method\nNo changes were made to the print_tree method.\n# Documentation\nTreeofThoughts Class\nThe TreeofThoughts class is designed to solve problems using a tree-based search algorithm. It takes a model and a search algorithm (either 'BFS' or 'DFS') as input and provides methods to solve problems using the chosen algorithm.\n## Initialization\nThe __init__ method initializes the TreeofThoughts class with the given model and search algorithm. It also initializes an empty tree structure to store the search results.\n## Solve Method\nThe solve method is the main entry point for solving problems using the TreeofThoughts class. It takes the following parameters:\ninitial_prompt: The initial problem or prompt to be solved.\nnum_thoughts: The number of thoughts to generate at each step.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:38-60"
+    },
+    "43": {
+        "file_id": 5,
+        "content": "Code snippet outlines the initialization, main entry point for solving problems (solve method), and optional parameters added for better control over the search process. No changes were made to save_tree_to_json or print_tree methods. The code introduces TreeofThoughts class which utilizes a tree-based search algorithm to solve problems using given model and search algorithm.",
+        "type": "comment"
+    },
+    "44": {
+        "file_id": 5,
+        "content": "max_steps: The maximum number of steps to perform in the search.\nmax_states: The maximum number of states to consider at each step (for BFS).\nvalue_threshold: The threshold value for pruning states (for DFS).\ntimeout: The maximum time allowed for the search process.\nconfidence_threshold: The confidence threshold for stopping the search.\nmax_iterations: The maximum number of iterations allowed for the search.\nconvergence_threshold: The threshold for determining convergence.\nconvergence_count: The number of consecutive convergences required to stop the search.\nBased on the chosen search algorithm, the solve method calls either the tot_bfs or tot_dfs method to perform the search.\n## tot_bfs Method\nThe tot_bfs method performs a breadth-first search to solve the problem. It takes the following parameters:\ninitial_prompt: The initial problem or prompt to be solved.\nnum_thoughts: The number of thoughts to generate at each step.\nmax_steps: The maximum number of steps to perform in the search.\nmax_states: The maximum number of states to consider at each step.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:61-77"
+    },
+    "45": {
+        "file_id": 5,
+        "content": "The code defines maximum search parameters and uses either BFS or DFS to solve the problem based on the chosen algorithm. The tot_bfs method performs a breadth-first search with given parameters, while the solve method calls the appropriate search method depending on the chosen algorithm.",
+        "type": "comment"
+    },
+    "46": {
+        "file_id": 5,
+        "content": "pruning_threshold: The threshold value for pruning states.\nThe method generates and evaluates states at each step, selecting the best states based on their values. The search continues until the maximum number of steps is reached, and the best state is returned.\n## tot_dfs Method\nThe tot_dfs method performs a depth-first search to solve the problem. It takes the following parameters:\ninitial_prompt: The initial problem or prompt to be solved.\nnum_thoughts: The number of thoughts to generate at each step.\nmax_steps: The maximum number of steps to perform in the search.\nvalue_threshold: The threshold value for pruning states.\npruning_threshold: The threshold value for pruning states based on their values.\nconfidence_threshold: The confidence threshold for stopping the search.\nmax_iterations: The maximum number of iterations allowed for the search.\nconvergence_threshold: The threshold for determining convergence.\nconvergence_count: The number of consecutive convergences required to stop the search.\nTh",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:78-94"
+    },
+    "47": {
+        "file_id": 5,
+        "content": "The `pruning_threshold` is a value used to prune states during the search process. The method generates and evaluates states at each step, selecting the best states based on their values until either the maximum number of steps is reached or the best state is found.",
+        "type": "comment"
+    },
+    "48": {
+        "file_id": 5,
+        "content": "e method uses a recursive depth-first search approach to explore the state space. It generates and evaluates states at each step, and if a state's value is above the value_threshold and pruning_threshold, it continues the search with the new state. The search stops when the maximum number of steps is reached, the confidence threshold is met, or the convergence criteria are satisfied. The best state is then returned.\n## save_tree_to_json Method\nThe save_tree_to_json method saves the current tree structure and metrics to a JSON file. It takes the following parameter:\nfile_name: The name of the JSON file to save the tree structure and metrics.\nThis method is useful for logging the search process and analyzing the results later.\n## print_tree Method\nThe print_tree method prints the tree structure in a human-readable format. It takes the following parameters:\nnode: The current node in the tree.\ndepth: The depth of the current node in the tree (default is 0).\nThis method is useful for visualizing the tree structure and understanding the search process.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:94-107"
+    },
+    "49": {
+        "file_id": 5,
+        "content": "This code describes a recursive depth-first search algorithm for exploring a state space. It evaluates states and stops based on thresholds, maximum steps, or convergence criteria. The save_tree_to_json method saves the tree structure and metrics to a JSON file, while the print_tree method visualizes the tree structure.",
+        "type": "comment"
+    },
+    "50": {
+        "file_id": 5,
+        "content": "## Usage\nTo use the TreeofThoughts class, follow these steps:\nInitialize the class with a model and a search algorithm (either 'BFS' or 'DFS').\nCall the solve method with the required parameters to perform the search and obtain the best state.\n(Optional) Use the save_tree_to_json method to save the tree structure and metrics to a JSON file.\n(Optional) Use the print_tree method to visualize the tree structure.\nHere's an example of how to use the TreeofThoughts class:\n# V2 with Monte Carlo, A* Search Algorithm, BFS, Best First Search\n### Class: TreeofThoughts\nThis class represents the base class for the Tree of Thoughts search algorithm. It contains the following methods:\n- `__init__(self, model)`: Initializes the TreeofThoughts object with the given model.\n- `save_tree_to_json(self, file_name)`: Saves the tree to a JSON file with the given file name.\n- `logNewState(self, state, evaluation)`: Logs a new state and its evaluation to the tree.\n- `adjust_pruning_threshold_precentile(self, evaluated_thoughts, percentile)`: Adjusts the pruning threshold based on the percentile of evaluated thoughts.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:109-127"
+    },
+    "51": {
+        "file_id": 5,
+        "content": "The code defines the \"TreeofThoughts\" class for implementing a Tree of Thoughts search algorithm, with methods like initialization, saving tree structure to JSON file, logging new state and adjusting pruning threshold percentile based on evaluated thoughts. The example provided demonstrates using the class with Monte Carlo, A* Search Algorithm, BFS, Best First Search.",
+        "type": "comment"
+    },
+    "52": {
+        "file_id": 5,
+        "content": "- `adjust_pruning_threshold_moving_average(self, evaluated_thoughts, window_size)`: Adjusts the pruning threshold based on the moving average of evaluated thoughts.\n### Class: TreeofThoughtsBFS\nThis class represents the Breadth-First Search (BFS) variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:\n- `solve(self, initial_prompt, num_thoughts, max_steps, max_states, value_threshold, pruning_threshold=0.5)`: Solves the problem using BFS with the given parameters.\n### Class: TreeofThoughtsDFS\nThis class represents the Depth-First Search (DFS) variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:\n- `solve(self, initial_prompt, num_thoughts, max_steps, value_threshold, pruning_threshold=0.5)`: Solves the problem using DFS with the given parameters.\n### Class: TreeofThoughtsBEST\nThis class represents the Best-First Search variant of the Tree of Thoughts search algorithm. It contains the following methods:",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:128-141"
+    },
+    "53": {
+        "file_id": 5,
+        "content": "The code defines three classes: TreeofThoughtsBFS, TreeofThoughtsDFS, and TreeofThoughtsBEST. Each class represents a different search algorithm variant of the Tree of Thoughts search algorithm. The classes inherit from the TreeofThoughts class and contain methods to solve problems using BFS, DFS, or Best-First Search with given parameters.",
+        "type": "comment"
+    },
+    "54": {
+        "file_id": 5,
+        "content": "- `__init__(self, model)`: Initializes the TreeofThoughtsBEST object with the given model.\n- `save_tree_to_json(self, file_name)`: Saves the tree to a JSON file with the given file name.\n- `log_new_state(self, state, evaluation)`: Logs a new state and its evaluation to the tree.\n- `solve(self, initial_prompt, num_thoughts, max_steps, pruning_threshold)`: Solves the problem using Best-First Search with the given parameters.\n### Class: TreeofThoughtsASearch\nThis class represents the A* Search variant of the Tree of Thoughts search algorithm. It contains the following methods:\n- `__init__(self, model)`: Initializes the TreeofThoughtsASearch object with the given model.\n- `solve(self, initial_prompt, num_thoughts=5, max_steps=30, pruning_threshold=0.4)`: Solves the problem using A* Search with the given parameters.\n- `is_goal(self, state, score)`: Determines if the given state is a goal state based on its score.\n- `reconstruct_path(self, came_from, current_state, initial_prompt)`: Reconstructs the path from the initial state to the current state using the came_from dictionary.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:143-154"
+    },
+    "55": {
+        "file_id": 5,
+        "content": "This code snippet represents two classes, TreeofThoughtsBEST and TreeofThoughtsASearch, for solving problems using the Best-First Search and A* Search variants of the Tree of Thoughts algorithm. The classes have initialization methods (__init__), a method to save trees in JSON format (save_tree_to_json), a method to log new states with their evaluations (log_new_state), and a solve method that takes initial prompt, number of thoughts, maximum steps, and pruning threshold as parameters. The TreeofThoughtsASearch class also has an is_goal method for determining if a state is a goal state based on its score and a reconstruct_path method to reconstruct the path from the initial state to the current state using the came_from dictionary.",
+        "type": "comment"
+    },
+    "56": {
+        "file_id": 5,
+        "content": "### Class: MonteCarloTreeofThoughts\nThis class represents the Monte Carlo Tree Search variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following methods:\n- `__init__(self, model, objective=\"balance\")`: Initializes the MonteCarloTreeofThoughts object with the given model and objective.\n- `optimize_params(self, num_thoughts, max_steps, max_states)`: Optimizes the search parameters based on the objective.\n- `solve(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)`: Solves the problem using\n Monte Carlo Tree Search with the given parameters.\n- `monte_carlo_search(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)`: Performs the Monte Carlo Tree Search with the given parameters.\n### Class: OptimizedTreeofThoughts\nThis class represents an optimized version of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following method:\n- `solve(self,",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:156-169"
+    },
+    "57": {
+        "file_id": 5,
+        "content": "The code defines two classes, MonteCarloTreeofThoughts and OptimizedTreeofThoughts, both of which are derived from TreeofThoughts. MonteCarloTreeofThoughts uses Monte Carlo Tree Search to solve problems while optimizing search parameters based on the objective. On the other hand, OptimizedTreeofThoughts provides an optimized version of the Tree of Thoughts algorithm with a solve method.",
+        "type": "comment"
+    },
+    "58": {
+        "file_id": 5,
+        "content": " x, k=None, T=None, b=None, vth=None, timeout=None, confidence_threshold=None, max_iterations=None, convergence_threshold=None, convergence_count=None)`: Solves the problem using an optimized search algorithm with the given parameters.",
+        "type": "code",
+        "location": "/tree_of_thoughts/README.md:169-169"
+    },
+    "59": {
+        "file_id": 5,
+        "content": "Solves problem with optimized search algorithm using given parameters (x, k, T, b, vth, timeout, confidence_threshold, max_iterations, convergence_threshold, convergence_count).",
+        "type": "comment"
+    },
+    "60": {
+        "file_id": 6,
+        "content": "/tree_of_thoughts/__init__.py",
+        "type": "filepath"
+    },
+    "61": {
+        "file_id": 6,
+        "content": "This code imports various language models and thought tree modules from different packages and adds them to the `__all__` list for importing in this package. It includes OpenAI's LanguageModel, TreeofThoughts, MonteCarloTreeofThoughts, and several search algorithm implementations of the ThoughtTree.",
+        "type": "summary"
+    },
+    "62": {
+        "file_id": 6,
+        "content": "from tree_of_thoughts.base import AbstractLanguageModel\n#from tree_of_thoughts.huggingface_model import (\n    #HuggingLanguageModel,\n#)\nfrom tree_of_thoughts.openai_models import (\n    OpenAILanguageModel,\n)\nfrom tree_of_thoughts.treeofthoughts import (\n    MonteCarloTreeofThoughts,\n    TreeofThoughts,\n    TreeofThoughtsASearch,\n    TreeofThoughtsBEST,\n    TreeofThoughtsBFS,\n    TreeofThoughtsDFS,\n)\n__all__ = [\n    \"OpenAILanguageModel\",\n    \"TreeofThoughts\",\n    \"MonteCarloTreeofThoughts\",\n    \"TreeofThoughtsBFS\",\n    \"TreeofThoughtsDFS\",\n    \"TreeofThoughtsBEST\",\n    \"TreeofThoughtsASearch\",\n    \"AbstractLanguageModel\",\n    \"HuggingLanguageModel\",\n]",
+        "type": "code",
+        "location": "/tree_of_thoughts/__init__.py:1-27"
+    },
+    "63": {
+        "file_id": 6,
+        "content": "This code imports various language models and thought tree modules from different packages and adds them to the `__all__` list for importing in this package. It includes OpenAI's LanguageModel, TreeofThoughts, MonteCarloTreeofThoughts, and several search algorithm implementations of the ThoughtTree.",
+        "type": "comment"
+    },
+    "64": {
+        "file_id": 7,
+        "content": "/tree_of_thoughts/base.py",
+        "type": "filepath"
+    },
+    "65": {
+        "file_id": 7,
+        "content": "This code defines an abstract base class `AbstractLanguageModel` for language models with two required methods: `generate_thoughts` and `evaluate_states`. It uses the ABC (Abstract Base Classes) module from Python's `abc` library.",
+        "type": "summary"
+    },
+    "66": {
+        "file_id": 7,
+        "content": "from abc import ABC, abstractmethod\nclass AbstractLanguageModel(ABC):\n    @abstractmethod\n    def generate_thoughts(self, state, k):\n        pass\n    @abstractmethod\n    def evaluate_states(self, states):\n        pass",
+        "type": "code",
+        "location": "/tree_of_thoughts/base.py:1-11"
+    },
+    "67": {
+        "file_id": 7,
+        "content": "This code defines an abstract base class `AbstractLanguageModel` for language models with two required methods: `generate_thoughts` and `evaluate_states`. It uses the ABC (Abstract Base Classes) module from Python's `abc` library.",
+        "type": "comment"
+    },
+    "68": {
+        "file_id": 8,
+        "content": "/tree_of_thoughts/huggingface_model.py",
+        "type": "filepath"
+    },
+    "69": {
+        "file_id": 8,
+        "content": "The `HuggingLanguageModel` class generates solutions using the HuggingfaceLLM model, while the function evaluates states and handles errors by printing them and resetting state values to 0.",
+        "type": "summary"
+    },
+    "70": {
+        "file_id": 8,
+        "content": "from swarms.models import HuggingfaceLLM\nclass HuggingLanguageModel:\n    def __init__(\n        self, model_name, model_tokenizer=None, verbose=False, *args, **kwargs\n    ):\n        self.model = HuggingfaceLLM(model_name, *args, **kwargs)\n        self.verbose = verbose\n    def generate_thoughts(self, state, k, max_length=100):\n        state_text = \" \".join(state)\n        prompt = (\n            \"Write down your observations in format 'Observation:xxxx', then\"\n            \" write down your thoughts in format 'Thoughts:xxxx Given the\"\n            f\" current state of reasoning: '{state_text}', generate\"\n            f\" {k} coherent solutions to achieve {state_text}\"\n        )\n        if self.verbose:\n            print(f\"Generating thoughts for state: {state_text}\")\n        try:\n            self.model.run(prompt)\n        except Exception as e:\n            if self.verbose:\n                print(f\"Error generating thoughts for state: {state_text}\")\n                print(f\"Error: {e}\")\n            thoughts = []\n        return thoughts",
+        "type": "code",
+        "location": "/tree_of_thoughts/huggingface_model.py:1-31"
+    },
+    "71": {
+        "file_id": 8,
+        "content": "This code defines a class `HuggingLanguageModel` that uses a HuggingfaceLLM model for generating coherent solutions based on a given state. The `generate_thoughts` method takes a state, number of thoughts to generate (k), and optional maximum length of generated thoughts, and returns the generated thoughts as a list. If an error occurs while generating thoughts, it prints an error message and returns an empty list.",
+        "type": "comment"
+    },
+    "72": {
+        "file_id": 8,
+        "content": "    def evaluate_states(self, states, initial_prompt, max_length=10):\n        state_values = {}\n        for state in states:\n            state_text = \" \".join(state)\n            prompt = (\n                f\"Given the current state of reasoning: '{state_text}',\"\n                \" pessimitically evaluate its value as a float between 0 and 1\"\n                f\" based on it's potential to achieve {initial_prompt}\"\n            )\n            if self.verbose:\n                print(f\"Evaluating state: {state_text}\")\n            try:\n                value_text = self.model(prompt)\n                value = float(value_text)\n            except ValueError:\n                if self.verbose:\n                    print(\n                        \"Error converting value to float for state:\"\n                        f\" {state_text}\"\n                    )\n                value = 0  # Assign a default value if the conversion fails\n            except Exception as e:\n                if self.verbose:\n                    print(f\"Error evaluating state: {state_text}\")",
+        "type": "code",
+        "location": "/tree_of_thoughts/huggingface_model.py:33-58"
+    },
+    "73": {
+        "file_id": 8,
+        "content": "This function evaluates states and their potential to achieve a given prompt using the model. It joins state elements into a string, constructs a prompt for the model, tries to predict value as float between 0 and 1, handles ValueError if conversion fails, assigning default value, and handles other exceptions.",
+        "type": "comment"
+    },
+    "74": {
+        "file_id": 8,
+        "content": "                    print(f\"Error: {e}\")\n                value = 0\n            state_values[state] = value\n        return state_values",
+        "type": "code",
+        "location": "/tree_of_thoughts/huggingface_model.py:59-64"
+    },
+    "75": {
+        "file_id": 8,
+        "content": "Catching and printing an error, then setting state values to 0 if an error occurs.",
+        "type": "comment"
+    },
+    "76": {
+        "file_id": 9,
+        "content": "/tree_of_thoughts/openai_models.py",
+        "type": "filepath"
+    },
+    "77": {
+        "file_id": 9,
+        "content": "This code initializes an OpenAI language model, generating text using the Chat API. It supports ReAct prompting, generates solutions, learns from errors, and evaluates states with an API.",
+        "type": "summary"
+    },
+    "78": {
+        "file_id": 9,
+        "content": "import logging\nfrom tree_of_thoughts.base import AbstractLanguageModel\nfrom swarms.models import OpenAIChat\n# Logging\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nlogger = logging.getLogger(__name__)\nclass OpenAILanguageModel(AbstractLanguageModel):\n    \"\"\"\n    OpenAI Language Model\n    Args:\n        api_key (str): OpenAI API key\n        strategy (str): Strategy for generating thoughts. Choose from 'cot' (Chain of Thoughts) or 'gpt' (GPT-3)\n        evaluation_strategy (str): Strategy for evaluating thoughts. Choose from 'value' or 'vote'\n        api_base (str): Base path for OpenAI API\n        api_model (str): Model name for OpenAI API\n        enable_ReAct_prompting (bool): Enable ReAct prompting\n    Examples:\n    >>> from tree_of_thoughts.models.openai_models import OpenAILanguageModel\n    >>> model = OpenAILanguageModel(api_key=api_key)\n    >>> model.generate_thoughts(state, k)\n    >>> model.evaluate_states(states, initial_prompt)\n    \"\"\"\n    def __init__(",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:1-34"
+    },
+    "79": {
+        "file_id": 9,
+        "content": "This code is initializing a logging configuration and defining the OpenAILanguageModel class, which extends AbstractLanguageModel. The OpenAILanguageModel is an OpenAI language model with options for strategy, evaluation_strategy, api_base, api_model, enable_ReAct_prompting, and more. It allows for generating and evaluating thoughts using OpenAI API.",
+        "type": "comment"
+    },
+    "80": {
+        "file_id": 9,
+        "content": "        self,\n        api_key,\n        strategy=\"cot\",\n        evaluation_strategy=\"value\",\n        enable_ReAct_prompting=True,\n        *args,\n        **kwargs,\n    ):\n        self.api_key = api_key\n        self.use_chat_api = True\n        self.enable_ReAct_prompting = enable_ReAct_prompting\n        self.strategy = strategy\n        self.evaluation_strategy = evaluation_strategy\n        # reference : https://www.promptingguide.ai/techniques/react\n        self.ReAct_prompt = \"\"\n        if enable_ReAct_prompting:\n            self.ReAct_prompt = (\n                \"Write down your observations in format 'Observation:xxxx',\"\n                \" then write down your thoughts in format 'Thoughts:xxxx'.\"\n            )\n        self.model = OpenAIChat(openai_api_key=api_key, *args, **kwargs)\n    def generate_text(self, prompt: str, k: int = 3):\n        \"\"\"Generate text from prompt using OpenAI API\"\"\"\n        if self.use_chat_api:\n            thoughts = []\n            for _ in range(k):\n                response = self.model(prompt)",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:35-64"
+    },
+    "81": {
+        "file_id": 9,
+        "content": "Class initializes OpenAI Chat API for generating text. It allows ReAct prompting, which requires a specific format of observations and thoughts. Uses generate_text() function to produce text based on the given prompt.",
+        "type": "comment"
+    },
+    "82": {
+        "file_id": 9,
+        "content": "                thoughts += [response]\n                # print(f'thoughts: {thoughts}')\n            return thoughts\n    def generate_thoughts(\n        self, state, k, initial_prompt, rejected_solutions=None\n    ):\n        \"\"\"\n        Generate thoughts from state using OpenAI API\n        Args:\n            state (str or list): State of reasoning\n            k (int): Number of thoughts to generate\n            initial_prompt (str): Initial prompt\n            rejected_solutions (list): List of rejected solutions\n        Returns:\n            list: List of thoughts\n        \"\"\"\n        if type(state) == str:\n            state_text = state\n        else:\n            state_text = \"\\n\".join(state)\n        print(\"New state generating thought:\", state, \"\\n\\n\")\n        prompt = f\"\"\"You're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of de",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:65-92"
+    },
+    "83": {
+        "file_id": 9,
+        "content": "The code defines a class with two methods: `generate_thoughts` and `openai_models`. The `generate_thoughts` method takes a state, number of thoughts to generate, initial prompt, and list of rejected solutions as input. It converts the state into a string and passes it along with other parameters to the `openai_models` method which generates a list of thoughts using OpenAI API. The thoughts are then returned by the `generate_thoughts` method.",
+        "type": "comment"
+    },
+    "84": {
+        "file_id": 9,
+        "content": "termining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. \n        Considering the reasoning provided:\\n\\n\n        ###'{state_text}'\\n\\n###\n        Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: \n        ###{rejected_solutions}###, \n        complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them.\"\"\"\n        prompt += self.ReAct_prompt\n        thoughts = self.generate_text(prompt, k)\n        return thoughts\n    def generate_solution(self, initial_prompt, state, rejected_solutions=None):\n        try:\n            if isinstance(state, list):\n                state_text = \"\\n\".join(state)\n            else:\n                state_text = state\n            prompt = f\"\"\"You're an TreeofThoughts, an superintelligent AI model devoted to ",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:92-110"
+    },
+    "85": {
+        "file_id": 9,
+        "content": "This code is generating a prompt for an AI model to find the best solution, taking into account rejected solutions and learning from them. The function generates_solution is used to generate a solution given a prompt, state, and optionally a list of rejected solutions. It creates a formatted prompt including the initial prompt, the current state, and either all rejected solutions or none. Then it calls another function, generate_text, with this prompt and some variable k to generate thoughts based on this prompt. Finally, it returns these thoughts as the generated solution.",
+        "type": "comment"
+    },
+    "86": {
+        "file_id": 9,
+        "content": "helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. \n            Considering the reasoning provided:\\n\\n\n            ###'{state_text}'\\n\\n###\n            Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: \n            ###{rejected_solutions}###, \n            complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them.\"\"\"\n            answer = self.generate_text(prompt, 1)\n            print(f\"Answerrrrrr {answer}\")\n            # print(thoughts)\n            # print(f\"General Solution : {answer}\")\n            return answer\n        except Exception as e:\n            logger.error(f\"Error in generate_solutions: {e}\")",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:110-122"
+    },
+    "87": {
+        "file_id": 9,
+        "content": "This code aims to generate a solution for a task based on user instructions, learning from rejected solutions and avoiding the same mistakes. It generates one textual answer with simplicity and directness. If an exception occurs, it logs the error.",
+        "type": "comment"
+    },
+    "88": {
+        "file_id": 9,
+        "content": "            return None\n    def evaluate_states(self, states, initial_prompt):\n        if not states:\n            return {}\n        if self.evaluation_strategy == \"value\":\n            state_values = {}\n            for state in states:\n                if type(state) == str:\n                    state_text = state\n                else:\n                    state_text = \"\\n\".join(state)\n                print(\n                    \"We receive a state of type\",\n                    type(state),\n                    \"For state: \",\n                    state,\n                    \"\\n\\n\",\n                )\n                prompt = f\"\"\" To achieve the following goal: '{initial_prompt}', pessimistically value the context of the past solutions and more importantly the latest generated solution you had AS A FLOAT BETWEEN 0 AND 1\\n\n                    Past solutions:\\n\\n\n                    {state_text}\\n       \n                    If the solutions is not directly concretely making fast progress in achieving the goal, give it a lower score.",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:123-146"
+    },
+    "89": {
+        "file_id": 9,
+        "content": "The code defines a function `evaluate_states` that takes in a list of states and an initial prompt. It iterates over each state, checks its type, and prints details about the state. If the evaluation strategy is set to \"value\", it calculates the value of each state by pessimistically valuing the context of past solutions and the latest generated solution as a float between 0 and 1.",
+        "type": "comment"
+    },
+    "90": {
+        "file_id": 9,
+        "content": "                    Evaluate all solutions AS A FLOAT BETWEEN 0 and 1:\\n,  DO NOT RETURN ANYTHING ELSE\n                \"\"\"\n                response = self.openai_api_call_handler(prompt, 10, 1)\n                try:\n                    value_text = self.openai_choice2text_handler(\n                        response.choices[0]\n                    )\n                    # print(f'state: {value_text}')\n                    value = float(value_text)\n                    print(f\"Evaluated Thought Value: {value}\")\n                except ValueError:\n                    value = 0  # Assign a default value if the conversion fails\n                state_values[state] = value\n            return state_values\n        elif self.evaluation_strategy == \"vote\":\n            states_text = \"\\n\".join([\" \".join(state) for state in states])\n            prompt = (\n                \"Given the following states of reasoning, vote for the best\"\n                \" state utilizing an scalar value\"\n                f\" 1-10:\\n{states_text}\\n\\nVote, on the probability of this\"",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:147-168"
+    },
+    "91": {
+        "file_id": 9,
+        "content": "The code evaluates thought values using an open-source API call, converts the response to a float value between 0 and 1, and stores the results in a dictionary. It handles conversion errors by assigning a default value of 0 for invalid input. The evaluation strategy can be either \"float\" or \"vote\", with the latter requiring a user to choose the best state from multiple options.",
+        "type": "comment"
+    },
+    "92": {
+        "file_id": 9,
+        "content": "                f\" state of reasoning achieveing {initial_prompt} and become\"\n                \" very pessimistic very NOTHING ELSE\"\n            )\n            response = self.openai_api_call_handler(prompt, 50, 1)\n            print(f\"state response: {response}\")\n            best_state_text = self.openai_choice2text_handler(\n                response.choices[0]\n            )\n            print(f\"Best state text: {best_state_text}\")\n            best_state = tuple(best_state_text.split())\n            print(f\"best_state: {best_state}\")\n            return {state: 1 if state == best_state else 0 for state in states}\n        else:\n            raise ValueError(\n                \"Invalid evaluation strategy. Choose 'value' or 'vote'.\"\n            )",
+        "type": "code",
+        "location": "/tree_of_thoughts/openai_models.py:169-186"
+    },
+    "93": {
+        "file_id": 9,
+        "content": "Code makes an OpenAI API call to generate a response based on the provided prompt. It then selects the best state from the generated text, assigns a value of 1 if it matches the best state and 0 otherwise for each state in the input states. If an invalid evaluation strategy is provided, it raises a ValueError.",
+        "type": "comment"
+    },
+    "94": {
+        "file_id": 10,
+        "content": "/tree_of_thoughts/treeofthoughts.py",
+        "type": "filepath"
+    },
+    "95": {
+        "file_id": 10,
+        "content": "The code defines a `TreeofThoughts` class with JSON saving, logging, and BFS/DFS-based subclass for solving problems concurrently. It uses A* search, PriorityQueue, Monte Carlo tree search, transposition table, pruning, UCB1, and checks solution validity.",
+        "type": "summary"
+    },
+    "96": {
+        "file_id": 10,
+        "content": "import concurrent.futures\nimport json\nimport logging\nimport os\nimport time\nfrom queue import PriorityQueue\nfrom typing import Any, Dict, Union\nimport numpy as np\nDATA_PATH = \"./data\"\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nlogger = logging.getLogger(__name__)\nclass TreeofThoughts:\n    def __init__(self, model):\n        self.model = model\n        self.tree: Dict[str, Dict[str, Union[float, Dict[str, Any]]]] = {\n            \"nodes\": {},\n        }\n        self.best_state = None\n        self.best_value = float(\"-inf\")\n        self.history = []  # added line initalize history\n    def save_tree_to_json(self, file_name):\n        os.makedirs(os.path.dirname(file_name), exist_ok=True)\n        with open(file_name, \"w\") as json_file:\n            json.dump(self.tree, json_file, indent=4)\n    def logNewState(self, state, evaluation):\n        if not (type(state) == str):\n            state = \" | \".join(state)\n        if state in self.tree[\"nodes\"]:\n            self.tree[\"nodes\"][state][\"thoughts\"].append(evaluation)",
+        "type": "code",
+        "location": "/tree_of_thoughts/treeofthoughts.py:1-40"
+    },
+    "97": {
+        "file_id": 10,
+        "content": "The code defines a class called TreeofThoughts with an init method that initializes object attributes, including a dictionary for the tree structure. It also includes methods to save the tree to JSON and log new states along with their associated thoughts or evaluations. The history attribute is added in the init method as an empty list.",
+        "type": "comment"
+    },
+    "98": {
+        "file_id": 10,
+        "content": "        else:\n            self.tree[\"nodes\"][state] = {\"thoughts\": [evaluation]}\n    def adjust_pruning_threshold_precentile(\n        self, evaluated_thoughts, percentile\n    ):\n        values = np.array(list(evaluated_thoughts.values()))\n        if values.size == 0:\n            return 0\n        return max(np.percentile(values, percentile), 0.1)\n    def adjust_pruning_threshold_moving_average(\n        self, evaluated_thoughts, window_size\n    ):\n        values = list(evaluated_thoughts.values())\n        if len(values) < window_size:\n            return np.mean(values) if values else 0\n        else:\n            return max(np.mean(values[-window_size:]), 0.1)\n######################\nclass TreeofThoughtsBFS(TreeofThoughts):\n    def solve(\n        self,\n        initial_prompt,\n        num_thoughts,\n        max_steps,\n        max_states,\n        value_threshold,\n        pruning_threshold=0.5,\n    ):\n        current_states = [initial_prompt]\n        state_values = {}\n        dynamic_pruning_threshold = pruning_threshold\n        try:",
+        "type": "code",
+        "location": "/tree_of_thoughts/treeofthoughts.py:41-79"
+    },
+    "99": {
+        "file_id": 10,
+        "content": "This code defines a class `TreeofThoughtsBFS` that inherits from `TreeofThoughts`. It has methods for adjusting pruning thresholds based on percentile and moving average. The `solve()` method takes an initial prompt, number of thoughts, max steps, max states, value threshold, and pruning threshold. It uses BFS to explore the tree of thoughts.",
+        "type": "comment"
+    }
+}

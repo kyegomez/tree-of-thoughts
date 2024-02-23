@@ -1,0 +1,20 @@
+{
+    "summary": "The code details a tree-of-thoughts approach for collaboratively answering a question through iterative refinement and markdown table formatted response.",
+    "details": [
+        {
+            "comment": "The code describes a simulation of three brilliant experts collaboratively answering a question in a tree-of-thoughts approach, sharing their thought process step by step while considering and building upon each other's thoughts.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/prompts.txt\":0-4",
+            "content": "Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they're wrong at any point then they leave. The question is...\nSimulate three brilliant, logical experts collaboratively answering a question. Each one verbosely explains their thought process in real-time, considering the prior explanations of others and openly acknowledging mistakes. At each step, whenever possible, each expert refines and builds upon the thoughts of others, acknowledging their contributions. They continue until there is a definitive answer to the question. For clarity, your entire response should be in a markdown table. The question is...\nImagine three highly intelligent experts working together to answer a question. They will follow a tree of thoughts approach, where each expert shares their thought process step by step. They will consider the input fr"
+        },
+        {
+            "comment": "Code describes a collaborative problem-solving process where three experts employ the tree of thoughts method to answer a question. They iteratively refine and expand upon each other's ideas, admit errors, and credit others. The final response will be presented in a markdown table format.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/prompts.txt\":4-8",
+            "content": "om others, refine their thoughts, and build upon the group's collective knowledge. If an expert realizes their thought is incorrect, they will acknowledge it and withdraw from the discussion. Continue this process until a definitive answer is reached. Present the entire response in a markdown table. The question is...\nThree experts with exceptional logical thinking skills are collaboratively answering a question using a tree of thoughts method. Each expert will share their thought process in detail, taking into account the previous thoughts of others and admitting any errors. They will iteratively refine and expand upon each other's ideas, giving credit where it's due. The process continues until a conclusive answer is found. Organize the entire response in a markdown table format. The question is...\nEnvision a group of three experts working in unison to tackle a question by employing a tree of thoughts strategy. Each expert will thoroughly explain their line of thinking at every step, w"
+        },
+        {
+            "comment": "Code snippet describes a collaborative problem-solving process where team members contribute ideas, recognize mistakes, and iterate until reaching a solution. The response should be formatted as a markdown table.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/prompts.txt\":8-8",
+            "content": "hile also considering the insights provided by their peers. They will openly recognize any mistakes and build upon the group's shared understanding. This iterative process will continue until a definitive solution is reached. Structure the entire response as a markdown table. The question is..."
+        }
+    ]
+}

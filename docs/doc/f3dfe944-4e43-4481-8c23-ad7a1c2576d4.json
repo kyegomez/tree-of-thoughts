@@ -1,0 +1,20 @@
+{
+    "summary": "The `HuggingLanguageModel` class generates solutions using the HuggingfaceLLM model, while the function evaluates states and handles errors by printing them and resetting state values to 0.",
+    "details": [
+        {
+            "comment": "This code defines a class `HuggingLanguageModel` that uses a HuggingfaceLLM model for generating coherent solutions based on a given state. The `generate_thoughts` method takes a state, number of thoughts to generate (k), and optional maximum length of generated thoughts, and returns the generated thoughts as a list. If an error occurs while generating thoughts, it prints an error message and returns an empty list.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/tree_of_thoughts/huggingface_model.py\":0-30",
+            "content": "from swarms.models import HuggingfaceLLM\nclass HuggingLanguageModel:\n    def __init__(\n        self, model_name, model_tokenizer=None, verbose=False, *args, **kwargs\n    ):\n        self.model = HuggingfaceLLM(model_name, *args, **kwargs)\n        self.verbose = verbose\n    def generate_thoughts(self, state, k, max_length=100):\n        state_text = \" \".join(state)\n        prompt = (\n            \"Write down your observations in format 'Observation:xxxx', then\"\n            \" write down your thoughts in format 'Thoughts:xxxx Given the\"\n            f\" current state of reasoning: '{state_text}', generate\"\n            f\" {k} coherent solutions to achieve {state_text}\"\n        )\n        if self.verbose:\n            print(f\"Generating thoughts for state: {state_text}\")\n        try:\n            self.model.run(prompt)\n        except Exception as e:\n            if self.verbose:\n                print(f\"Error generating thoughts for state: {state_text}\")\n                print(f\"Error: {e}\")\n            thoughts = []\n        return thoughts"
+        },
+        {
+            "comment": "This function evaluates states and their potential to achieve a given prompt using the model. It joins state elements into a string, constructs a prompt for the model, tries to predict value as float between 0 and 1, handles ValueError if conversion fails, assigning default value, and handles other exceptions.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/tree_of_thoughts/huggingface_model.py\":32-57",
+            "content": "    def evaluate_states(self, states, initial_prompt, max_length=10):\n        state_values = {}\n        for state in states:\n            state_text = \" \".join(state)\n            prompt = (\n                f\"Given the current state of reasoning: '{state_text}',\"\n                \" pessimitically evaluate its value as a float between 0 and 1\"\n                f\" based on it's potential to achieve {initial_prompt}\"\n            )\n            if self.verbose:\n                print(f\"Evaluating state: {state_text}\")\n            try:\n                value_text = self.model(prompt)\n                value = float(value_text)\n            except ValueError:\n                if self.verbose:\n                    print(\n                        \"Error converting value to float for state:\"\n                        f\" {state_text}\"\n                    )\n                value = 0  # Assign a default value if the conversion fails\n            except Exception as e:\n                if self.verbose:\n                    print(f\"Error evaluating state: {state_text}\")"
+        },
+        {
+            "comment": "Catching and printing an error, then setting state values to 0 if an error occurs.",
+            "location": "\"/media/root/Prima/works/tree-of-thoughts/docs/src/tree_of_thoughts/huggingface_model.py\":58-63",
+            "content": "                    print(f\"Error: {e}\")\n                value = 0\n            state_values[state] = value\n        return state_values"
+        }
+    ]
+}
