@@ -12,20 +12,20 @@ class ToTAgent:
     """
 
     OpenAI Language Model API Wrapper
-    
+
     Args:
         agent (Agent): Agent class from swarms
         strategy (str): Strategy to use for generating thoughts
         evaluation_strategy (str): Strategy to use for evaluating states
         enable_react (bool): Enable ReAct prompting
         k (int): Number of thoughts to generate
-        
+
     Methods:
         run(task: str) -> list: Generate text from prompt using OpenAI API
         generate_thoughts(state, k, initial_prompt, rejected_solutions=None) -> list: Generate thoughts from state using OpenAI API
         generate_solution(initial_prompt, state, rejected_solutions=None) -> str: Generate solution from state using OpenAI API
         evaluate_states(states, initial_prompt) -> dict: Evaluate states of reasoning using OpenAI API
-        
+
     Examples:
         >>> from tree_of_thoughts.tot_agent import ToTAgent
         >>> from swarms import Agent
@@ -103,7 +103,7 @@ class ToTAgent:
         complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
 
         prompt += self.react_prompt
-        thoughts = self.generate_text(prompt)
+        thoughts = self.run(prompt)
         return thoughts
 
     def generate_solution(self, initial_prompt, state, rejected_solutions=None):
@@ -119,7 +119,7 @@ class ToTAgent:
             Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
             ###{rejected_solutions}###, 
             complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
-            answer = self.generate_text(prompt, 1)
+            answer = self.run(prompt)
             print(f"Answerrrrrr {answer}")
             # print(thoughts)
             # print(f"General Solution : {answer}")

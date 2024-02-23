@@ -113,6 +113,8 @@ class TreeofThoughts:
 
 
 class BFS(TreeofThoughts):
+    """Class representing the Breadth-First Search algorithm for Tree of Thoughts."""
+
     def solve(
         self,
         initial_prompt,
@@ -122,6 +124,20 @@ class BFS(TreeofThoughts):
         value_threshold,
         pruning_threshold=0.5,
     ):
+        """
+        Solve the Tree of Thoughts problem using the Breadth-First Search algorithm.
+
+        Args:
+            initial_prompt (str): The initial prompt for generating thoughts.
+            num_thoughts (int): The number of thoughts to generate at each state.
+            max_steps (int): The maximum number of steps to take in the search.
+            max_states (int): The maximum number of states to keep track of.
+            value_threshold (float): The threshold value for selecting states.
+            pruning_threshold (float, optional): The threshold for dynamic pruning. Defaults to 0.5.
+
+        Returns:
+            str or None: The generated solution or the highest rated state.
+        """
         current_states = [initial_prompt]
         state_values = {}
         dynamic_pruning_threshold = pruning_threshold
@@ -177,18 +193,6 @@ class BFS(TreeofThoughts):
                                 self.logNewState(state, value)
                                 logger.debug(f"State Values: {state_values}")
 
-            # if state_values:
-            #     highest_rated_solution = max(state_values.items(), key=lambda x: x[1])
-            #     print(f"highest rated solution: {highest_rated_solution}")
-            #     highest_rated_state = highest_rated_solution[0]  # Use a different name to avoid confusion
-            #     print(f'highest rated state: {highest_rated_state}')
-            #     try:
-            #         solution = self.model.generate_solution(initial_prompt, highest_rated_state)
-            #     except Exception as e:
-            #         logger.error(f"Error in generating solution: {e}")
-            #         solution = None  # Set a fallback value for solution
-
-            #     return solution if solution is not None else highest_rated_state  # Return highest rated state if solution is None
             if state_values:
                 highest_rated_solution = max(
                     state_values.items(), key=lambda x: x[1]

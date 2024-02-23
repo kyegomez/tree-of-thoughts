@@ -1,0 +1,115 @@
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/thop/profile.py:12: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+  if LooseVersion(torch.__version__) < LooseVersion("1.0.0"):
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/thop/profile.py:68: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+  if LooseVersion(torch.__version__) >= LooseVersion("1.1.0"):
+distutils Version classes are deprecated. Use packaging.version instead.
+distutils Version classes are deprecated. Use packaging.version instead.
+Traceback (most recent call last):
+  File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/example.py", line 62, in <module>
+    solution = tree_of_thoughts.solve(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/tree_of_thoughts/treeofthoughts.py", line 559, in solve
+    return self.monte_carlo_search(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/tree_of_thoughts/treeofthoughts.py", line 604, in monte_carlo_search
+    thoughts = self.model.generate_thoughts(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/tree_of_thoughts/tot_agent.py", line 106, in generate_thoughts
+    thoughts = self.run(prompt)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/defalt/Desktop/Athena/research/tree-of-thoughts/tree_of_thoughts/tot_agent.py", line 70, in run
+    response = self.agent(task)
+               ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/swarms/structs/agent.py", line 649, in __call__
+    self.run(task, img, *args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/swarms/structs/agent.py", line 570, in run
+    response = self.llm(
+               ^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/langchain/llms/base.py", line 876, in __call__
+    self.generate(
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/langchain/llms/base.py", line 656, in generate
+    output = self._generate_helper(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/langchain/llms/base.py", line 544, in _generate_helper
+    raise e
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/langchain/llms/base.py", line 531, in _generate_helper
+    self._generate(
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/swarms/models/openai_models.py", line 1082, in _generate
+    full_response = completion_with_retry(
+                    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/swarms/models/openai_models.py", line 212, in completion_with_retry
+    return _completion_with_retry(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/tenacity/__init__.py", line 289, in wrapped_f
+    return self(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/tenacity/__init__.py", line 379, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/tenacity/__init__.py", line 314, in iter
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/tenacity/__init__.py", line 382, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/swarms/models/openai_models.py", line 210, in _completion_with_retry
+    return llm.client.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/api_resources/chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/api_resources/abstract/engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+                           ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/api_requestor.py", line 288, in request
+    result = self.request_raw(
+             ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/api_requestor.py", line 596, in request_raw
+    result = _thread_context.session.request(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1374, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1278, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py", line 1134, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Implicitly cleaning up <TemporaryDirectory '/var/folders/zl/0vgkvtm52vjcs1skpnlqnssw0000gn/T/tmpk9wgadbgwandb'>
+Implicitly cleaning up <TemporaryDirectory '/var/folders/zl/0vgkvtm52vjcs1skpnlqnssw0000gn/T/tmpeqcgk3h9wandb-artifacts'>
+Implicitly cleaning up <TemporaryDirectory '/var/folders/zl/0vgkvtm52vjcs1skpnlqnssw0000gn/T/tmpoadrfcapwandb-media'>
+Implicitly cleaning up <TemporaryDirectory '/var/folders/zl/0vgkvtm52vjcs1skpnlqnssw0000gn/T/tmp431qofrrwandb-media'>
+Implicitly cleaning up <TemporaryDirectory '/var/folders/zl/0vgkvtm52vjcs1skpnlqnssw0000gn/T/tmpichwdx5i'>

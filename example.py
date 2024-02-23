@@ -3,6 +3,7 @@ from tree_of_thoughts import ToTAgent, MonteCarloSearch
 from dotenv import load_dotenv
 from swarms import Agent, OpenAIChat
 
+# Load the environment variables
 load_dotenv()
 
 # Get the API key from the environment
@@ -11,9 +12,12 @@ api_key = os.environ.get("OPENAI_API_KEY")
 # Initialize an agent from swarms
 agent = Agent(
     agent_name="tree_of_thoughts",
-    agent_description="This agent uses the tree_of_thoughts library to generate thoughts.",
+    agent_description=(
+        "This agent uses the tree_of_thoughts library to generate thoughts."
+    ),
     system_prompt=None,
-    llm = OpenAIChat(),   
+    llm=OpenAIChat(),
+    max_loops=1,
 )
 
 # Initialize the ToTAgent class with the API key
