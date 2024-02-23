@@ -1,6 +1,5 @@
 import logging
-from tree_of_thoughts.base import AbstractLanguageModel
-from swarms.models import OpenAIChat
+from swarms import Agent
 
 # Logging
 logging.basicConfig(
@@ -9,61 +8,67 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class OpenAILanguageModel(AbstractLanguageModel):
+class ToTAgent:
     """
 
-    OpenAI Language Model
-
-
+    OpenAI Language Model API Wrapper
+    
     Args:
-        api_key (str): OpenAI API key
-        strategy (str): Strategy for generating thoughts. Choose from 'cot' (Chain of Thoughts) or 'gpt' (GPT-3)
-        evaluation_strategy (str): Strategy for evaluating thoughts. Choose from 'value' or 'vote'
-        api_base (str): Base path for OpenAI API
-        api_model (str): Model name for OpenAI API
-        enable_ReAct_prompting (bool): Enable ReAct prompting
-
+        agent (Agent): Agent class from swarms
+        strategy (str): Strategy to use for generating thoughts
+        evaluation_strategy (str): Strategy to use for evaluating states
+        enable_react (bool): Enable ReAct prompting
+        k (int): Number of thoughts to generate
+        
+    Methods:
+        run(task: str) -> list: Generate text from prompt using OpenAI API
+        generate_thoughts(state, k, initial_prompt, rejected_solutions=None) -> list: Generate thoughts from state using OpenAI API
+        generate_solution(initial_prompt, state, rejected_solutions=None) -> str: Generate solution from state using OpenAI API
+        evaluate_states(states, initial_prompt) -> dict: Evaluate states of reasoning using OpenAI API
+        
     Examples:
-    >>> from tree_of_thoughts.models.openai_models import OpenAILanguageModel
-    >>> model = OpenAILanguageModel(api_key=api_key)
-    >>> model.generate_thoughts(state, k)
-    >>> model.evaluate_states(states, initial_prompt)
+        >>> from tree_of_thoughts.tot_agent import ToTAgent
+        >>> from swarms import Agent
+        >>> agent = Agent()
+        >>> model = ToTAgent(agent)
+        >>> thoughts = model.run("Write down your observations in format 'Observation:xxxx', then write down your thoughts in format 'Thoughts:xxxx'.")
+        >>> print(thoughts)
+        ['Observation:xxxx', 'Thoughts:xxxx']
 
     """
 
     def __init__(
         self,
-        api_key: str,
+        agent: Agent,
         strategy: str = "cot",
         evaluation_strategy: str = "value",
-        enable_ReAct_prompting: bool = True,
+        enable_react: bool = True,
+        k: int = 3,
         *args,
         **kwargs,
     ):
-        self.api_key = api_key
+        self.agent = agent
         self.use_chat_api = True
-        self.enable_ReAct_prompting = enable_ReAct_prompting
+        self.enable_react = enable_react
         self.strategy = strategy
         self.evaluation_strategy = evaluation_strategy
+        self.k = k
 
         # reference : https://www.promptingguide.ai/techniques/react
         self.ReAct_prompt = ""
-        if enable_ReAct_prompting:
-            self.ReAct_prompt = (
+        if enable_react:
+            self.react_prompt = (
                 "Write down your observations in format 'Observation:xxxx',"
                 " then write down your thoughts in format 'Thoughts:xxxx'."
             )
 
-        self.model = OpenAIChat(openai_api_key=api_key, *args, **kwargs)
-
-    def generate_text(self, prompt: str, k: int = 3):
-        """Generate text from prompt using OpenAI API"""
+    def run(self, task: str):
+        """Generate text from prompt using"""
         if self.use_chat_api:
             thoughts = []
-            for _ in range(k):
-                response = self.model(prompt)
+            for _ in range(self.k):
+                response = self.agent(task)
                 thoughts += [response]
-                # print(f'thoughts: {thoughts}')
             return thoughts
 
     def generate_thoughts(
@@ -89,15 +94,16 @@ class OpenAILanguageModel(AbstractLanguageModel):
         else:
             state_text = "\n".join(state)
         print("New state generating thought:", state, "\n\n")
-        prompt = f"""You're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
+        prompt = f"""Y
+        ou're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
         Considering the reasoning provided:\n\n
         ###'{state_text}'\n\n###
         Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
         ###{rejected_solutions}###, 
         complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
 
-        prompt += self.ReAct_prompt
-        thoughts = self.generate_text(prompt, k)
+        prompt += self.react_prompt
+        thoughts = self.generate_text(prompt)
         return thoughts
 
     def generate_solution(self, initial_prompt, state, rejected_solutions=None):
@@ -147,7 +153,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                     Evaluate all solutions AS A FLOAT BETWEEN 0 and 1:\n,  DO NOT RETURN ANYTHING ELSE
                 """
 
-                response = self.openai_api_call_handler(prompt, 10, 1)
+                response = self.agent(prompt)
                 try:
                     value_text = self.openai_choice2text_handler(
                         response.choices[0]
@@ -169,11 +175,9 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 f" state of reasoning achieveing {initial_prompt} and become"
                 " very pessimistic very NOTHING ELSE"
             )
-            response = self.openai_api_call_handler(prompt, 50, 1)
+            response = self.agent(prompt)
             print(f"state response: {response}")
-            best_state_text = self.openai_choice2text_handler(
-                response.choices[0]
-            )
+            best_state_text = self.agent(response.choices[0])
             print(f"Best state text: {best_state_text}")
             best_state = tuple(best_state_text.split())
             print(f"best_state: {best_state}")

@@ -1,6 +1,6 @@
-[![Multi-Modality](agorabanner.png)](https://discord.gg/qUtxnK2NMf)
+[![Multi-Modality](imags/agorabanner.png)](https://discord.gg/qUtxnK2NMf)
 
-![Tree of Thoughts Banner](treeofthoughts.png)
+![Tree of Thoughts Banner](images/treeofthoughts.png)
 
 ![Discord](https://img.shields.io/discord/999382051935506503)
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fkyegomez%2Ftree-of-thoughts)](https://twitter.com/intent/tweet?text=Check%20out%20this%20amazing%20project%20on%20improving%20AI%20reasoning%20-%20Tree%20of%20Thoughts!%20https://github.com/kyegomez/tree-of-thoughts)
@@ -29,17 +29,31 @@ pip install tree-of-thoughts
 ## Usage
 ```python
 import os
-from tree_of_thoughts.openai_models import OpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import MonteCarloSearch
+from tree_of_thoughts import ToTAgent, MonteCarloSearch
 from dotenv import load_dotenv
+from swarms import Agent, OpenAIChat
 
 load_dotenv()
 
-
+# Get the API key from the environment
 api_key = os.environ.get("OPENAI_API_KEY")
 
-# Initialize the OpenAILanguageModel class with the API key
-model = OpenAILanguageModel(api_key=api_key)
+# Initialize an agent from swarms
+agent = Agent(
+    agent_name="tree_of_thoughts",
+    agent_description="This agent uses the tree_of_thoughts library to generate thoughts.",
+    system_prompt=None,
+    llm = OpenAIChat(),   
+)
+
+# Initialize the ToTAgent class with the API key
+model = ToTAgent(
+    agent,
+    strategy="cot",
+    evaluation_strategy="value",
+    enable_react=True,
+    k=3,
+)
 
 
 # Initialize the MonteCarloSearch class with the model
@@ -82,6 +96,7 @@ solution = tree_of_thoughts.solve(
 
 print(f"Solution: {solution}")
 
+
 ```
 
 
@@ -89,22 +104,39 @@ print(f"Solution: {solution}")
 
 To run Hugging Face Transformers with Tree of Thoughts:
 ```python
-from tree_of_thoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloSearch
+import os
+from tree_of_thoughts import ToTAgent, MonteCarloSearch
+from dotenv import load_dotenv
+from swarms import Agent, HuggingfaceLLM
 
-model_name="01-ai/Yi-34B"
+load_dotenv()
 
-model = HuggingLanguageModel(model_name, 
-                             model_tokenizer=model_name, 
-                             verbose=True)
-                             
+# Get the API key from the environment
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# Initialize an agent from swarms
+agent = Agent(
+    agent_name="tree_of_thoughts",
+    agent_description="This agent uses the tree_of_thoughts library to generate thoughts.",
+    system_prompt=None,
+    llm = HuggingfaceLLM(model),   
+)
+
+# Initialize the ToTAgent class with the API key
+model = ToTAgent(
+    agent,
+    strategy="cot",
+    evaluation_strategy="value",
+    enable_react=True,
+    k=3,
+)
+
 
 # Initialize the MonteCarloSearch class with the model
 tree_of_thoughts = MonteCarloSearch(model)
 
-# Note to reproduce the same results from the tree of thoughts paper if not better, 
-# craft an 1 shot chain of thought prompt for your task below
-
-initial_prompt =  """
+# Define the initial prompt
+initial_prompt = """
 
 
 Input: 2 8 8 14
@@ -119,28 +151,27 @@ Possible next steps:
 14 - 2 = 12 (left: 8 8 12)
 Input: use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation
 Possible next steps:
-
-
-
 """
+
+# Define the number of thoughts to generate
 num_thoughts = 1
 max_steps = 3
 max_states = 4
 pruning_threshold = 0.5
 
 
-
-
+# Generate the thoughts
 solution = tree_of_thoughts.solve(
     initial_prompt=initial_prompt,
-    num_thoughts=num_thoughts, 
-    max_steps=max_steps, 
-    max_states=max_states, 
+    num_thoughts=num_thoughts,
+    max_steps=max_steps,
+    max_states=max_states,
     pruning_threshold=pruning_threshold,
     # sleep_time=sleep_time
 )
 
 print(f"Solution: {solution}")
+
 ```
 
 ### Basic Prompts
