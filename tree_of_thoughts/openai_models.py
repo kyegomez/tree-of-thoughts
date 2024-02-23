@@ -169,7 +169,7 @@ class OpenAILanguageModel(AbstractLanguageModel):
                 f" state of reasoning achieveing {initial_prompt} and become"
                 " very pessimistic very NOTHING ELSE"
             )
-            response = self.openai_api_call_handler(prompt, 50, 1)
+            response = self.model(prompt)
             print(f"state response: {response}")
             best_state_text = self.openai_choice2text_handler(
                 response.choices[0]
