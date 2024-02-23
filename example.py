@@ -1,6 +1,6 @@
 import os
 from tree_of_thoughts.openai_models import OpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
+from tree_of_thoughts.treeofthoughts import MonteCarloSearch
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,8 +12,8 @@ api_key = os.environ.get("OPENAI_API_KEY")
 model = OpenAILanguageModel(api_key=api_key)
 
 
-# Initialize the MonteCarloTreeofThoughts class with the model
-tree_of_thoughts = MonteCarloTreeofThoughts(model)
+# Initialize the MonteCarloSearch class with the model
+tree_of_thoughts = MonteCarloSearch(model)
 
 # Define the initial prompt
 initial_prompt = """

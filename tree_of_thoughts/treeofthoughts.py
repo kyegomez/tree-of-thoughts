@@ -19,6 +19,23 @@ logger = logging.getLogger(__name__)
 
 
 class TreeofThoughts:
+    """
+    A class representing a tree of thoughts.
+
+    Attributes:
+        model: The model used for evaluation.
+        tree: The tree structure containing the nodes and their evaluations.
+        best_state: The best state found so far.
+        best_value: The best value found so far.
+        history: The history of evaluated states.
+
+    Methods:
+        save_tree_to_json: Saves the tree structure to a JSON file.
+        logNewState: Logs a new state and its evaluation.
+        adjust_pruning_threshold_precentile: Adjusts the pruning threshold based on the evaluated thoughts using percentile.
+        adjust_pruning_threshold_moving_average: Adjusts the pruning threshold based on the evaluated thoughts using moving average.
+    """
+
     def __init__(self, model):
         self.model = model
         self.tree: Dict[str, Dict[str, Union[float, Dict[str, Any]]]] = {
@@ -29,11 +46,24 @@ class TreeofThoughts:
         self.history = []  # added line initalize history
 
     def save_tree_to_json(self, file_name):
+        """
+        Saves the tree structure to a JSON file.
+
+        Args:
+            file_name: The name of the JSON file to save the tree structure to.
+        """
         os.makedirs(os.path.dirname(file_name), exist_ok=True)
         with open(file_name, "w") as json_file:
             json.dump(self.tree, json_file, indent=4)
 
     def logNewState(self, state, evaluation):
+        """
+        Logs a new state and its evaluation.
+
+        Args:
+            state: The state to log.
+            evaluation: The evaluation of the state.
+        """
         if not (type(state) == str):
             state = " | ".join(state)
         if state in self.tree["nodes"]:
@@ -44,6 +74,16 @@ class TreeofThoughts:
     def adjust_pruning_threshold_precentile(
         self, evaluated_thoughts, percentile
     ):
+        """
+        Adjusts the pruning threshold based on the evaluated thoughts using percentile.
+
+        Args:
+            evaluated_thoughts: A dictionary of evaluated thoughts.
+            percentile: The percentile value to use for adjusting the threshold.
+
+        Returns:
+            The adjusted pruning threshold.
+        """
         values = np.array(list(evaluated_thoughts.values()))
         if values.size == 0:
             return 0
@@ -52,6 +92,16 @@ class TreeofThoughts:
     def adjust_pruning_threshold_moving_average(
         self, evaluated_thoughts, window_size
     ):
+        """
+        Adjusts the pruning threshold based on the evaluated thoughts using moving average.
+
+        Args:
+            evaluated_thoughts: A dictionary of evaluated thoughts.
+            window_size: The size of the moving average window.
+
+        Returns:
+            The adjusted pruning threshold.
+        """
         values = list(evaluated_thoughts.values())
         if len(values) < window_size:
             return np.mean(values) if values else 0
@@ -62,7 +112,7 @@ class TreeofThoughts:
 ######################
 
 
-class TreeofThoughtsBFS(TreeofThoughts):
+class BFS(TreeofThoughts):
     def solve(
         self,
         initial_prompt,
@@ -166,7 +216,20 @@ class TreeofThoughtsBFS(TreeofThoughts):
 ###########
 
 
-class TreeofThoughtsDFS(TreeofThoughts):
+class DFS(TreeofThoughts):
+    """
+    Depth-first search implementation for the TreeofThoughts class.
+
+    Args:
+        TreeofThoughts (class): Base class for the TreeofThoughtsDFS class.
+
+    Methods:
+        solve: Solves the problem using depth-first search algorithm.
+
+    Attributes:
+        None.
+    """
+
     def solve(
         self,
         initial_prompt,
@@ -224,17 +287,44 @@ class TreeofThoughtsDFS(TreeofThoughts):
 
 # v2 => best first search => explores state space of the quality of the states
 # priority que or greedy BFS
-class TreeofThoughtsBEST:
+class BESTSearch(TreeofThoughts):
+    """
+    Represents a tree of thoughts.
+
+    Attributes:
+        model: The model used for generating and evaluating thoughts.
+        tree: The tree structure to store the thoughts and evaluations.
+    """
+
     def __init__(self, model):
+        """
+        Initializes a TreeofThoughtsBEST object.
+
+        Args:
+            model: The model used for generating and evaluating thoughts.
+        """
         self.model = model
         self.tree = {"nodes": {}}
 
     def save_tree_to_json(self, file_name):
-        os.makdirs(os.path.dirname(file_name), exist_ok=True)
+        """
+        Saves the tree structure to a JSON file.
+
+        Args:
+            file_name: The name of the JSON file to save the tree structure to.
+        """
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
         with open(file_name, "w") as json_file:
             json.dump(self.tree, json_file, indent=4)
 
     def log_new_state(self, state, evaluation):
+        """
+        Logs a new state and its evaluation in the tree structure.
+
+        Args:
+            state: The state to log.
+            evaluation: The evaluation of the state.
+        """
         state_key = " | ".join(state) if isinstance(state, tuple) else state
         if state_key in self.tree["nodes"]:
             self.tree["nodes"][state_key]["thoughts"].append(evaluation)
@@ -242,6 +332,18 @@ class TreeofThoughtsBEST:
             self.tree["nodes"]["state_key"] = {"thoughts": [evaluation]}
 
     def solve(self, initial_prompt, num_thoughts, max_steps, pruning_threshold):
+        """
+        Solves the tree of thoughts problem.
+
+        Args:
+            initial_prompt: The initial prompt for generating thoughts.
+            num_thoughts: The number of thoughts to generate at each step.
+            max_steps: The maximum number of steps to perform.
+            pruning_threshold: The threshold for pruning thoughts.
+
+        Returns:
+            The solution to the tree of thoughts problem.
+        """
         visited_states = set()
         state_queue = PriorityQueue()
 
@@ -285,7 +387,7 @@ class TreeofThoughtsBEST:
 
 
 # A* search algorithm
-class TreeofThoughtsASearch:
+class ASearch:
     def __init__(self, model):
         self.model = model
 
@@ -370,7 +472,23 @@ class TreeofThoughtsASearch:
         return solution if solution else path
 
 
-class MonteCarloTreeofThoughts(TreeofThoughts):
+class MonteCarloSearch(TreeofThoughts):
+    """
+    A class representing a Monte Carlo Tree of Thoughts.
+
+    Attributes:
+        model (Model): The model used for generating thoughts and evaluating states.
+        objective (str): The objective of the optimization process.
+        solution_found (bool): Indicates whether a solution has been found.
+        tree (Dict[str, Dict[str, Union[float, Dict[str, Any]]]]): The tree structure containing nodes, thoughts, and evaluations.
+
+    Methods:
+        __init__(self, model, objective="balance"): Initializes a MonteCarloSearch instance.
+        optimize_params(self, num_thoughts, max_steps, max_states): Optimizes the parameters based on the objective.
+        solve(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold): Solves the problem using Monte Carlo search.
+        monte_carlo_search(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold): Performs the Monte Carlo search algorithm.
+    """
+
     def __init__(self, model, objective="balance"):
         super().__init__(model)
         self.objective = objective
@@ -381,6 +499,17 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         }
 
     def optimize_params(self, num_thoughts, max_steps, max_states):
+        """
+        Optimizes the parameters based on the objective.
+
+        Args:
+            num_thoughts (int): The number of thoughts to generate.
+            max_steps (int): The maximum number of steps in the search.
+            max_states (int): The maximum number of states to consider.
+
+        Returns:
+            Tuple[int, int, int]: The optimized values of num_thoughts, max_steps, and max_states.
+        """
         if self.objective == "speed":
             num_thoughts = max(1, num_thoughts - 1)
             max_steps = max(1, max_steps - 1)
@@ -389,7 +518,7 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
             num_thoughts += 1
             max_steps += 1
             max_states += 1
-        elif self.objective == "balanace":
+        elif self.objective == "balance":
             if self.solution_found:
                 num_thoughts = max(1, num_thoughts - 1)
                 max_steps = max(1, max_steps - 1)
@@ -408,8 +537,20 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         max_steps: int,
         max_states: int,
         pruning_threshold: float,
-        #   sleep_time: float,
     ):
+        """
+        Solves the problem using Monte Carlo search.
+
+        Args:
+            initial_prompt (str): The initial prompt for the search.
+            num_thoughts (int): The number of thoughts to generate.
+            max_steps (int): The maximum number of steps in the search.
+            max_states (int): The maximum number of states to consider.
+            pruning_threshold (float): The threshold for pruning states.
+
+        Returns:
+            Union[str, Tuple]: The solution generated by the model or the best state found.
+        """
         self.file_name = "logs/tree_of_thoughts_output_montecarlo.json"
         return self.monte_carlo_search(
             initial_prompt,
@@ -417,10 +558,8 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
             max_steps,
             max_states,
             pruning_threshold,
-            # sleep_time,
         )
 
-    # v3
     def monte_carlo_search(
         self,
         initial_prompt: str,
@@ -429,6 +568,19 @@ class MonteCarloTreeofThoughts(TreeofThoughts):
         max_states: int,
         pruning_threshold: float,
     ):
+        """
+        Performs the Monte Carlo search algorithm.
+
+        Args:
+            initial_prompt (str): The initial prompt for the search.
+            num_thoughts (int): The number of thoughts to generate.
+            max_steps (int): The maximum number of steps in the search.
+            max_states (int): The maximum number of states to consider.
+            pruning_threshold (float): The threshold for pruning states.
+
+        Returns:
+            Union[str, Tuple]: The solution generated by the model or the best state found.
+        """
         current_states = [initial_prompt]
         state_values = {}
         visit_counts = {initial_prompt: 0}

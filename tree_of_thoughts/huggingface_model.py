@@ -2,6 +2,17 @@ from swarms.models import HuggingfaceLLM
 
 
 class HuggingLanguageModel:
+    """
+    Initializes a HuggingLanguageModel object.
+
+    Args:
+        model_name (str): The name of the Huggingface language model.
+        model_tokenizer (object, optional): The tokenizer object for the language model.
+        verbose (bool, optional): Flag indicating whether to print verbose output.
+        *args: Variable length argument list.
+        **kwargs: Arbitrary keyword arguments.
+    """
+
     def __init__(
         self, model_name, model_tokenizer=None, verbose=False, *args, **kwargs
     ):
@@ -9,6 +20,20 @@ class HuggingLanguageModel:
         self.verbose = verbose
 
     def generate_thoughts(self, state, k, max_length=100):
+        """
+        Generates coherent thoughts based on a given state.
+
+        Args:
+            state (list): The current state of reasoning.
+            k (int): The number of coherent solutions to generate.
+            max_length (int, optional): The maximum length of the generated thoughts.
+
+        Returns:
+            list: A list of generated thoughts.
+
+        Raises:
+            Exception: If there is an error generating thoughts.
+        """
         state_text = " ".join(state)
         prompt = (
             "Write down your observations in format 'Observation:xxxx', then"
@@ -31,6 +56,20 @@ class HuggingLanguageModel:
         return thoughts
 
     def evaluate_states(self, states, initial_prompt, max_length=10):
+        """
+        Evaluates the value of multiple states based on an initial prompt.
+
+        Args:
+            states (list): A list of states to evaluate.
+            initial_prompt (str): The initial prompt for evaluation.
+            max_length (int, optional): The maximum length of the evaluation.
+
+        Returns:
+            dict: A dictionary mapping each state to its evaluated value.
+
+        Raises:
+            Exception: If there is an error evaluating states.
+        """
         state_values = {}
         for state in states:
             state_text = " ".join(state)

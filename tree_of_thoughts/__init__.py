@@ -6,22 +6,22 @@ from tree_of_thoughts.openai_models import (
     OpenAILanguageModel,
 )
 from tree_of_thoughts.treeofthoughts import (
-    MonteCarloTreeofThoughts,
+    MonteCarloSearch,
     TreeofThoughts,
-    TreeofThoughtsASearch,
-    TreeofThoughtsBEST,
-    TreeofThoughtsBFS,
-    TreeofThoughtsDFS,
+    ASearch,
+    BESTSearch,
+    BFS,
+    DFS,
 )
 
 __all__ = [
     "OpenAILanguageModel",
     "TreeofThoughts",
-    "MonteCarloTreeofThoughts",
-    "TreeofThoughtsBFS",
-    "TreeofThoughtsDFS",
-    "TreeofThoughtsBEST",
-    "TreeofThoughtsASearch",
+    "MonteCarloSearch",
+    "BFS",
+    "DFS",
+    "BESTSearch",
+    "ASearch",
     "AbstractLanguageModel",
     "HuggingLanguageModel",
 ]

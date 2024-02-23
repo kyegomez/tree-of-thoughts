@@ -30,7 +30,7 @@ pip install tree-of-thoughts
 ```python
 import os
 from tree_of_thoughts.openai_models import OpenAILanguageModel
-from tree_of_thoughts.treeofthoughts import MonteCarloTreeofThoughts
+from tree_of_thoughts.treeofthoughts import MonteCarloSearch
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,8 +42,8 @@ api_key = os.environ.get("OPENAI_API_KEY")
 model = OpenAILanguageModel(api_key=api_key)
 
 
-# Initialize the MonteCarloTreeofThoughts class with the model
-tree_of_thoughts = MonteCarloTreeofThoughts(model)
+# Initialize the MonteCarloSearch class with the model
+tree_of_thoughts = MonteCarloSearch(model)
 
 # Define the initial prompt
 initial_prompt = """
@@ -89,7 +89,7 @@ print(f"Solution: {solution}")
 
 To run Hugging Face Transformers with Tree of Thoughts:
 ```python
-from tree_of_thoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloTreeofThoughts
+from tree_of_thoughts import TreeofThoughts, HuggingLanguageModel, MonteCarloSearch
 
 model_name="01-ai/Yi-34B"
 
@@ -98,8 +98,8 @@ model = HuggingLanguageModel(model_name,
                              verbose=True)
                              
 
-# Initialize the MonteCarloTreeofThoughts class with the model
-tree_of_thoughts = MonteCarloTreeofThoughts(model)
+# Initialize the MonteCarloSearch class with the model
+tree_of_thoughts = MonteCarloSearch(model)
 
 # Note to reproduce the same results from the tree of thoughts paper if not better, 
 # craft an 1 shot chain of thought prompt for your task below

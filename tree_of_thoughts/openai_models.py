@@ -33,10 +33,10 @@ class OpenAILanguageModel(AbstractLanguageModel):
 
     def __init__(
         self,
-        api_key,
-        strategy="cot",
-        evaluation_strategy="value",
-        enable_ReAct_prompting=True,
+        api_key: str,
+        strategy: str = "cot",
+        evaluation_strategy: str = "value",
+        enable_ReAct_prompting: bool = True,
         *args,
         **kwargs,
     ):

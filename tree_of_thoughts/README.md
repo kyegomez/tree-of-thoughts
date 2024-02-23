@@ -153,10 +153,10 @@ This class represents the A* Search variant of the Tree of Thoughts search algor
 - `is_goal(self, state, score)`: Determines if the given state is a goal state based on its score.
 - `reconstruct_path(self, came_from, current_state, initial_prompt)`: Reconstructs the path from the initial state to the current state using the came_from dictionary.
 
-### Class: MonteCarloTreeofThoughts
+### Class: MonteCarloSearch
 This class represents the Monte Carlo Tree Search variant of the Tree of Thoughts search algorithm. It inherits from the TreeofThoughts class and contains the following methods:
 
-- `__init__(self, model, objective="balance")`: Initializes the MonteCarloTreeofThoughts object with the given model and objective.
+- `__init__(self, model, objective="balance")`: Initializes the MonteCarloSearch object with the given model and objective.
 - `optimize_params(self, num_thoughts, max_steps, max_states)`: Optimizes the search parameters based on the objective.
 - `solve(self, initial_prompt, num_thoughts, max_steps, max_states, pruning_threshold)`: Solves the problem using
 
