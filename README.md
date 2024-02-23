@@ -117,9 +117,13 @@ api_key = os.environ.get("OPENAI_API_KEY")
 # Initialize an agent from swarms
 agent = Agent(
     agent_name="tree_of_thoughts",
-    agent_description="This agent uses the tree_of_thoughts library to generate thoughts.",
+    agent_description=(
+        "This agent uses the tree_of_thoughts library to generate thoughts."
+    ),
     system_prompt=None,
-    llm = HuggingfaceLLM(model),   
+    llm=HuggingfaceLLM(
+        "EleutherAI/gpt-neo-2.7B",
+    ),
 )
 
 # Initialize the ToTAgent class with the API key
