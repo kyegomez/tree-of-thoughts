@@ -76,9 +76,7 @@ def main():
     ]
     threads = []
     for cls in classes:
-        thread = threading.Thread(
-            target=process_documentation, args=(cls,)
-        )
+        thread = threading.Thread(target=process_documentation, args=(cls,))
         threads.append(thread)
         thread.start()
 

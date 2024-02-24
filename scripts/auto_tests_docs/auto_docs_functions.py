@@ -52,17 +52,13 @@ def main():
     # Gathering all functions from the swarms.utils module
     functions = [
         obj
-        for name, obj in inspect.getmembers(
-            sys.modules["swarms.utils"]
-        )
+        for name, obj in inspect.getmembers(sys.modules["swarms.utils"])
         if inspect.isfunction(obj)
     ]
 
     threads = []
     for func in functions:
-        thread = threading.Thread(
-            target=process_documentation, args=(func,)
-        )
+        thread = threading.Thread(target=process_documentation, args=(func,))
         threads.append(thread)
         thread.start()
 

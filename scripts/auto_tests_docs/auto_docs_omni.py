@@ -42,9 +42,7 @@ def process_documentation(
     )
 
     # Process with OpenAI model
-    processed_content = model(
-        DOCUMENTATION_WRITER_SOP(input_content, module)
-    )
+    processed_content = model(DOCUMENTATION_WRITER_SOP(input_content, module))
 
     doc_content = f"# {item.__name__}\n\n{processed_content}\n"
 
@@ -57,9 +55,7 @@ def process_documentation(
     with open(file_path, "w") as file:
         file.write(doc_content)
 
-    print(
-        f"Processed documentation for {item.__name__}. at {file_path}"
-    )
+    print(f"Processed documentation for {item.__name__}. at {file_path}")
 
 
 def main(module: str = "docs/swarms/structs"):
@@ -67,9 +63,7 @@ def main(module: str = "docs/swarms/structs"):
 
     threads = []
     for item in items:
-        thread = threading.Thread(
-            target=process_documentation, args=(item,)
-        )
+        thread = threading.Thread(target=process_documentation, args=(item,))
         threads.append(thread)
         thread.start()
 

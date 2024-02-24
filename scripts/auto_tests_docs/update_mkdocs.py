@@ -26,9 +26,7 @@ def update_mkdocs(
 
     if zeta_modules_section is None:
         zeta_modules_section = {}
-        mkdocs_config["nav"].append(
-            {"zeta.nn.modules": zeta_modules_section}
-        )
+        mkdocs_config["nav"].append({"zeta.nn.modules": zeta_modules_section})
 
     # Add the documentation paths to the 'zeta.nn.modules' section
     for class_name in class_names:

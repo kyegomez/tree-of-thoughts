@@ -21,6 +21,7 @@ from tree_of_thoughts.treeofthoughts import (
     BFS,
     DFS,
 )
+
 load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
