@@ -123,7 +123,7 @@ This class represents the base class for the Tree of Thoughts search algorithm. 
 
 - `__init__(self, model)`: Initializes the TreeofThoughts object with the given model.
 - `save_tree_to_json(self, file_name)`: Saves the tree to a JSON file with the given file name.
-- `logNewState(self, state, evaluation)`: Logs a new state and its evaluation to the tree.
+- `log_new_state(self, state, evaluation)`: Logs a new state and its evaluation to the tree.
 - `adjust_pruning_threshold_precentile(self, evaluated_thoughts, percentile)`: Adjusts the pruning threshold based on the percentile of evaluated thoughts.
 - `adjust_pruning_threshold_moving_average(self, evaluated_thoughts, window_size)`: Adjusts the pruning threshold based on the moving average of evaluated thoughts.
 

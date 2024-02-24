@@ -31,7 +31,7 @@ class TreeofThoughts:
 
     Methods:
         save_tree_to_json: Saves the tree structure to a JSON file.
-        logNewState: Logs a new state and its evaluation.
+        log_new_state: Logs a new state and its evaluation.
         adjust_pruning_threshold_precentile: Adjusts the pruning threshold based on the evaluated thoughts using percentile.
         adjust_pruning_threshold_moving_average: Adjusts the pruning threshold based on the evaluated thoughts using moving average.
     """
@@ -56,7 +56,7 @@ class TreeofThoughts:
         with open(file_name, "w") as json_file:
             json.dump(self.tree, json_file, indent=4)
 
-    def logNewState(self, state, evaluation):
+    def log_new_state(self, state, evaluation):
         """
         Logs a new state and its evaluation.
 
@@ -190,7 +190,7 @@ class BFS(TreeofThoughts):
                         for state, value in selected_states:
                             if value >= dynamic_pruning_threshold:
                                 state_values[state] = value
-                                self.logNewState(state, value)
+                                self.log_new_state(state, value)
                                 logger.debug(f"State Values: {state_values}")
 
             if state_values:
@@ -236,11 +236,11 @@ class DFS(TreeofThoughts):
 
     def solve(
         self,
-        initial_prompt,
-        num_thoughts,
-        max_steps,
-        value_threshold,
-        pruning_threshold=0.5,
+        initial_prompt: str = None,
+        num_thoughts: int = None,
+        max_steps: int = 4,
+        value_threshold: float = 0.9,
+        pruning_threshold: float = 0.5,
     ):
         output = []
 
@@ -391,7 +391,7 @@ class BESTSearch(TreeofThoughts):
 
 
 # A* search algorithm
-class ASearch:
+class ASearch(TreeofThoughts):
     def __init__(self, model):
         self.model = model
 
