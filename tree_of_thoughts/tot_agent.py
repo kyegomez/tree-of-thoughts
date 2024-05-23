@@ -1,7 +1,6 @@
 import logging
 from swarms import Agent
 from pydantic import BaseModel, Field
-from typing import List, Dict
 
 # Logging
 logging.basicConfig(
@@ -17,7 +16,6 @@ class TreeOfThoughtsResponseFormat(BaseModel):
     evaluation: float = Field(
         ..., description="Evaluation of the response", example=0.5
     )
-
 
 
 class ToTAgent:
@@ -84,7 +82,11 @@ class ToTAgent:
             return thoughts
 
     def generate_thoughts(
-        self, state, k: int = None, initial_prompt: str = None, rejected_solutions: list = None
+        self,
+        state,
+        k: int = None,
+        initial_prompt: str = None,
+        rejected_solutions: list = None,
     ):
         """
         Generate thoughts from state using OpenAI API
@@ -169,9 +171,7 @@ class ToTAgent:
 
                 response = self.agent(prompt)
                 try:
-                    value_text = self.run(
-                        response
-                    )
+                    value_text = self.run(response)
                     # print(f'state: {value_text}')
                     value = float(value_text)
                     print(f"Evaluated Thought Value: {value}")

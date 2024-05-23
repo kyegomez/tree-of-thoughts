@@ -1,2 +1,4 @@
-transformers
+queue
 swarms
+numpy
+pydantic
