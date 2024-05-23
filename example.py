@@ -18,6 +18,7 @@ agent = Agent(
     system_prompt="You are a helpful assistant that helps people solve problems.",
     llm=llama3Hosted(),
     max_loops=1,
+    # swearch_algo
 )
 
 # Initialize the ToTAgent class with the API key

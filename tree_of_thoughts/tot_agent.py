@@ -1,11 +1,23 @@
 import logging
 from swarms import Agent
+from pydantic import BaseModel, Field
+from typing import List, Dict
 
 # Logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+
+class TreeOfThoughtsResponseFormat(BaseModel):
+    response: str = Field(
+        ..., description="Response from the model", example="Observation:xxxx"
+    )
+    evaluation: float = Field(
+        ..., description="Evaluation of the response", example=0.5
+    )
+
 
 
 class ToTAgent:
@@ -62,12 +74,12 @@ class ToTAgent:
                 " then write down your thoughts in format 'Thoughts:xxxx'."
             )
 
-    def run(self, task: str):
+    def run(self, task: str, *args, **kwargs):
         """Generate text from prompt using"""
         if self.use_chat_api:
             thoughts = []
             for _ in range(self.k):
-                response = self.agent(task)
+                response = self.agent.run(task, *args, **kwargs)
                 thoughts += [response]
             return thoughts
 
@@ -94,10 +106,12 @@ class ToTAgent:
         else:
             state_text = "\n".join(state)
         print("New state generating thought:", state, "\n\n")
-        prompt = f"""Y
-        ou're an TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
-        Considering the reasoning provided:\n\n
-        ###'{state_text}'\n\n###
+        prompt = f"""
+        You're TreeofThoughts, an superintelligent AI model devoted to helping Humans by any means necessary. 
+        You're purpose is to generate a series of solutions to comply with the user's instructions, you must generate solutions on the basis of determining the most reliable solution in the shortest amount of time, while taking rejected solutions into account and learning from them. 
+        Considering the reasoning provided:
+        
+        \n\n###'{state_text}'\n\n###
         Devise the best possible solution for the task: {initial_prompt}, Here are evaluated solutions that were rejected: 
         ###{rejected_solutions}###, 
         complete the {initial_prompt} without making the same mistakes you did with the evaluated rejected solutions. Be simple. Be direct. Provide intuitive solutions as soon as you think of them."""
@@ -155,8 +169,8 @@ class ToTAgent:
 
                 response = self.agent(prompt)
                 try:
-                    value_text = self.openai_choice2text_handler(
-                        response.choices[0]
+                    value_text = self.run(
+                        response
                     )
                     # print(f'state: {value_text}')
                     value = float(value_text)

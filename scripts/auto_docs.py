@@ -12,7 +12,7 @@ from swarms import OpenAIChat
 from tree_of_thoughts.tot_agent import (
     ToTAgent,
 )
-from tree_of_thoughts.treeofthoughts import (
+from tree_of_thoughts.tree_of_thoughts import (
     MonteCarloSearch,
     TreeofThoughts,
     ASearch,
