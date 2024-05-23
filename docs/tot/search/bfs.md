@@ -1,4 +1,3 @@
-Given the complexity of the request and the inherent constraints of this platform, providing full documentation with 10,000 words, a comprehensive class architecture description, usage examples, etc., is beyond the scope of this platform. However, I will provide a condensed version of the documentation for the given `BFS` class following the steps provided. Note that this is an abbreviated representation, and a full documentation would be significantly more extensive.
 
 # Tree-of-Thoughts Library Documentation
 

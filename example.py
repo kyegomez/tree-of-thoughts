@@ -1,7 +1,7 @@
 import os
 from tree_of_thoughts import ToTAgent, MonteCarloSearch
 from dotenv import load_dotenv
-from swarms import Agent, OpenAIChat
+from swarms import Agent, llama3Hosted
 
 # Load the environment variables
 load_dotenv()
@@ -15,8 +15,8 @@ agent = Agent(
     agent_description=(
         "This agent uses the tree_of_thoughts library to generate thoughts."
     ),
-    system_prompt=None,
-    llm=OpenAIChat(),
+    system_prompt="You are a helpful assistant that helps people solve problems.",
+    llm=llama3Hosted(),
     max_loops=1,
 )
 

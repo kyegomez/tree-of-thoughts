@@ -72,7 +72,7 @@ class ToTAgent:
             return thoughts
 
     def generate_thoughts(
-        self, state, k, initial_prompt, rejected_solutions=None
+        self, state, k: int = None, initial_prompt: str = None, rejected_solutions: list = None
     ):
         """
         Generate thoughts from state using OpenAI API

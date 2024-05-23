@@ -1,5 +1,3 @@
-Creating full documentation that meets your request would far exceed the character limit for this platform. However, I will provide you with an outline detailing how you could structure the documentation for your `ASearch` class and its respective `TreeofThoughts` library, along with a brief example for each section. You can then expand upon this framework and fill in the details according to your library's functionality and design.
-
 # Tree-of-Thoughts Library Documentation
 
 ## Introduction
