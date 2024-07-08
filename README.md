@@ -23,7 +23,7 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm that significantly a
 ## Install
 
 ```bash
-pip install tree-of-thoughts
+$ pip3 install -U tree-of-thoughts
 ```
 
 ## Usage
