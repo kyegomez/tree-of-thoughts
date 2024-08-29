@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tree-of-thoughts"
-version = "0.5.6"
+version = "0.6.1"
 description = "Tree of Thoughts - Pytorch"
 authors = ["Kye Gomez <kye@apac.ai>"]
 license = "MIT"
@@ -17,11 +17,12 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-transformers = "*"
 swarms = "*"
 numpy = "*"
 queue = "*"
 pydantic = "*"
+loguru = "*"
+python-dotenv = "*"
 
 
 

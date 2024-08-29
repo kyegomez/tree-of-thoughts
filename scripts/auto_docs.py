@@ -9,7 +9,7 @@ from scripts.auto_tests_docs.docs import DOCUMENTATION_WRITER_SOP
 from swarms import OpenAIChat
 
 ##########
-from tree_of_thoughts.tot_agent import (
+from tree_of_thoughts.agent import (
     ToTAgent,
 )
 from tree_of_thoughts.search_algorithms import (
