@@ -11,11 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def string_to_dict(thought_string):
-    return eval(thought_string)
-
-
-class DFSWithTotAgent:
+class ToTDFSAgent:
     """
     A class to perform Depth-First Search (DFS) using the TotAgent, with pruning based on evaluation scores.
 
@@ -37,7 +33,7 @@ class DFSWithTotAgent:
         **kwargs,
     ):
         """
-        Initialize the DFSWithTotAgent class.
+        Initialize the ToTDFSAgent class.
 
         Args:
             agent (TotAgent): An instance of the TotAgent class to generate and evaluate thoughts.

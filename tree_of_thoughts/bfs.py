@@ -144,9 +144,7 @@ class BFSWithTotAgent:
     def _run_agent(self, task: str) -> Optional[Dict[str, Any]]:
         """Run the agent to generate a thought and its evaluation."""
         try:
-            agent_output = self.agent.run(task)
-
-            return string_to_dict(agent_output)
+            return self.agent.run(task)
         except Exception as e:
             logger.error(f"Error in agent run: {e}")
         return None

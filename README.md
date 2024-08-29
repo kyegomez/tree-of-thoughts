@@ -28,12 +28,12 @@ $ pip3 install -U tree-of-thoughts
 
 ## Example
 ```python
-from tree_of_thoughts import TotAgent, DFSWithTotAgent
+from tree_of_thoughts import TotAgent, ToTDFSAgent
 
 tot_agent = TotAgent()
 
-# Create the DFSWithTotAgent class with a threshold, max steps, and pruning threshold
-dfs_agent = DFSWithTotAgent(
+# Create the ToTDFSAgent class with a threshold, max steps, and pruning threshold
+dfs_agent = ToTDFSAgent(
     agent=tot_agent,
     threshold=0.8,
     max_loops=1,
