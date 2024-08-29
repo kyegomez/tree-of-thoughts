@@ -26,6 +26,12 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm that significantly a
 $ pip3 install -U tree-of-thoughts
 ```
 
+And, swarms requires that you establish a folder to store all the metadata, copy and paste the following into your terminal
+
+```bash
+export WORKSPACE_DIR="artifacts"
+```
+
 ## Example
 ```python
 from tree_of_thoughts import TotAgent, ToTDFSAgent
