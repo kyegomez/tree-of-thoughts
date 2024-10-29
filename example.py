@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Create an instance of the TotAgent class
-tot_agent = TotAgent()
+tot_agent = TotAgent(use_openai_caller=False)  # Use openai caller
 
 # Create an instance of the ToTDFSAgent class with specified parameters
 dfs_agent = ToTDFSAgent(

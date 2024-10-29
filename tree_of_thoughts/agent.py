@@ -1,7 +1,8 @@
 import uuid
 from pydantic import BaseModel, Field
 from typing import Optional
-from swarms import OpenAIFunctionCaller, Agent
+from swarms import Agent
+from swarm_models import OpenAIFunctionCaller
 from typing import Any
 import os
 from dotenv import load_dotenv
@@ -69,7 +70,13 @@ class TotAgent:
     """
 
     def __init__(
-        self, id: str = uuid.uuid4().hex, max_loops: int = None, *args, **kwargs
+        self,
+        id: str = uuid.uuid4().hex,
+        max_loops: int = None,
+        use_openai_caller: bool = True,
+        model: Optional[Any] = None,
+        *args,
+        **kwargs,
     ):
         """
         Initializes a new instance of the TotAgent class.
@@ -82,14 +89,16 @@ class TotAgent:
         """
         self.id = id
         self.max_loops = max_loops
+        self.model = model
 
-        self.model = OpenAIFunctionCaller(
-            system_prompt=TREE_OF_THOUGHTS_SYS_PROMPT,
-            base_model=Thought,
-            parallel_tool_calls=False,
-            openai_api_key=os.getenv("OPENAI_API_KEY"),
-            max_tokens=3000,
-        )
+        if use_openai_caller:
+            self.model = OpenAIFunctionCaller(
+                system_prompt=TREE_OF_THOUGHTS_SYS_PROMPT,
+                base_model=Thought,
+                parallel_tool_calls=False,
+                openai_api_key=os.getenv("OPENAI_API_KEY"),
+                max_tokens=3000,
+            )
 
         self.agent = Agent(
             agent_name=f"ToT-Agent-{self.id}",

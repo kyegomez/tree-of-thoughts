@@ -26,10 +26,12 @@ Tree of Thoughts (ToT) is a powerful and flexible algorithm that significantly a
 $ pip3 install -U tree-of-thoughts
 ```
 
-And, swarms requires that you establish a folder to store all the metadata, copy and paste the following into your terminal
+## Requirements 
+In your .env file, you need to have the following variables:
 
 ```bash
-export WORKSPACE_DIR="artifacts"
+WORKSPACE_DIR="artifacts"
+OPENAI_API_KEY="your_openai_api_key"
 ```
 
 ## Example
@@ -40,7 +42,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Create an instance of the TotAgent class
-tot_agent = TotAgent()
+tot_agent = TotAgent(use_openai_caller=False)  # Use openai caller
 
 # Create an instance of the ToTDFSAgent class with specified parameters
 dfs_agent = ToTDFSAgent(
@@ -55,6 +57,14 @@ dfs_agent = ToTDFSAgent(
 initial_state = """
 
 Your task: is to use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation, return only the math
+
+"""
+
+# Run the DFS algorithm to solve the problem and obtain the final thought
+final_thought = dfs_agent.run(initial_state)
+
+# Print the final thought in JSON format for easy reading
+print(final_thought)
 
 """
 
