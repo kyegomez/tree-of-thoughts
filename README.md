@@ -1,4 +1,3 @@
-[![Multi-Modality](images/agorabanner.png)](https://discord.gg/qUtxnK2NMf)
 
 ![Tree of Thoughts Banner](images/treeofthoughts.png)
 
