@@ -114,13 +114,41 @@ tree = result.to_dict()               # the whole tree as JSON-serializable data
 
 ## Examples
 
-| Example | Search | Task |
+Each example states its expected answer in its docstring, and each uses a different combination of settings.
+
+### Game of 24
+
+| Example | Search | Expected answer |
 |---|---|---|
-| [examples/bfs.py](examples/bfs.py) | BFS, beam of 3 | Game of 24 |
-| [examples/dfs.py](examples/dfs.py) | DFS with backtracking, `max_expansions` cap | Game of 24 |
+| [bfs.py](examples/bfs.py) | BFS, beam of 3 | (10 - 4) * (13 - 9) = 24 |
+| [dfs.py](examples/dfs.py) | DFS with backtracking, `max_expansions` cap | (10 - 4) * (13 - 9) = 24 |
+
+### Physics
+
+| Example | Problem | Search | Expected answer |
+|---|---|---|---|
+| [relativistic_threshold.py](examples/physics/relativistic_threshold.py) | Threshold energy for antiproton production | DFS, `value_threshold=0.6` | 6 m_p c² ≈ 5.63 GeV |
+| [hohmann_transfer.py](examples/physics/hohmann_transfer.py) | Hohmann transfer from a 300 km orbit to GEO | BFS, beam of 3, 2 ratings averaged per candidate | Δv ≈ 3.90 km/s, ≈ 5.27 h |
+| [particle_in_a_box.py](examples/physics/particle_in_a_box.py) | Photon from an n = 3 → 1 transition in a 1 nm well | BFS, `generation_strategy="sample"` | ≈ 412 nm |
+
+### Reasoning
+
+| Example | Problem | Search | Expected answer |
+|---|---|---|---|
+| [logic_grid.py](examples/reasoning/logic_grid.py) | Match four researchers to floors, fields and drinks | BFS, beam of 3 | Unique assignment, given in the docstring |
+| [missionaries_and_cannibals.py](examples/reasoning/missionaries_and_cannibals.py) | Get everyone across the river safely | DFS, one round trip per step, `max_expansions=20` | 11 crossings |
+| [cheryls_birthday.py](examples/reasoning/cheryls_birthday.py) | Deduce a date from what others know | BFS, `evaluation_strategy="vote"`, 3 votes | July 16 |
+
+### Frontier math
+
+| Example | Problem | Search | Expected answer |
+|---|---|---|---|
+| [domino_tilings.py](examples/frontier_math/domino_tilings.py) | Count domino tilings of the 8 × 8 board | BFS, `sample`, 2 ratings averaged per candidate | 12,988,816 |
+| [mordell_curve.py](examples/frontier_math/mordell_curve.py) | All integer solutions of y² = x³ − 2, with proof | DFS, `value_threshold=0.7`, custom `system_prompt` | (3, ±5) |
+| [putnam_integral.py](examples/frontier_math/putnam_integral.py) | ∫₀¹ ln(1 + x) / (1 + x²) dx (Putnam 2005 A5) | BFS, beam of 2 | (π / 8) ln 2 ≈ 0.2722 |
 
 ```bash
-python examples/dfs.py
+python examples/physics/hohmann_transfer.py
 ```
 
 More examples in mathematics, physics and logic, each with a checkable answer, are in the [Swarms Tree of Thoughts examples](https://github.com/kyegomez/swarms/tree/master/examples/reasoning_agents/tree_of_thoughts_examples).
