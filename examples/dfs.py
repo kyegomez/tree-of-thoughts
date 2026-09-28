@@ -1,29 +1,42 @@
-from tree_of_thoughts import TotAgent, ToTDFSAgent
-from dotenv import load_dotenv
+"""Game of 24 with depth-first search.
 
-load_dotenv()
+Depth-first search follows the most promising thought first and backtracks
+when a state scores below value_threshold, i.e. when the evaluator judges
+that the remaining numbers can no longer reach 24. max_expansions bounds the
+cost of a search that backtracks often.
 
-# Create an instance of the TotAgent class
-tot_agent = TotAgent()
-
-# Create an instance of the ToTDFSAgent class with specified parameters
-dfs_agent = ToTDFSAgent(
-    agent=tot_agent,  # Use the TotAgent instance as the agent for the DFS algorithm
-    threshold=0.8,  # Set the threshold for evaluating the quality of thoughts
-    max_loops=1,  # Set the maximum number of loops for the DFS algorithm
-    prune_threshold=0.5,  # Branches with evaluation < 0.5 will be pruned
-    number_of_agents=4,  # Set the number of agents to be used in the DFS algorithm
-)
-
-# Define the initial state for the DFS algorithm
-initial_state = """
-
-Your task: is to use 4 numbers and basic arithmetic operations (+-*/) to obtain 24 in 1 equation, return only the math
-
+Expected answer: (10 - 4) * (13 - 9) = 24.
 """
 
-# Run the DFS algorithm to solve the problem and obtain the final thought
-final_thought = dfs_agent.run(initial_state)
+from swarms import TreeOfThoughts
 
-# Print the final thought in JSON format for easy reading
-print(final_thought)
+tot = TreeOfThoughts(
+    name="Game-of-24-DFS",
+    model_name="gpt-5.4",
+    search_algorithm="dfs",
+    generation_strategy="propose",
+    evaluation_strategy="value",
+    num_thoughts=3,
+    max_depth=3,
+    value_threshold=0.5,
+    max_expansions=10,
+    thought_description=(
+        "One arithmetic operation on two of the remaining numbers, "
+        "followed by the numbers left, e.g. '13 - 9 = 4 (left: 4 4 10)'."
+    ),
+    evaluation_criteria=(
+        "Is the arithmetic correct, and is every input number used exactly "
+        "once? Can the remaining numbers still reach 24?"
+    ),
+)
+
+answer = tot.run("Use 4, 9, 10 and 13 with + - * / to obtain 24.")
+print(f"Answer: {answer}\n")
+
+result = tot.last_result
+for number, step in enumerate(result.steps, 1):
+    print(f"{number}. {step}")
+print(
+    f"\nsolved={result.solved} nodes_expanded={result.nodes_expanded} "
+    f"llm_calls={result.llm_calls} tokens={result.usage['total_tokens']}"
+)
