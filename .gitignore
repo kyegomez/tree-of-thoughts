@@ -9,7 +9,9 @@ __pycache__/
 .vscode
 artifacts/
 
+agent_workspace
 errors/
+.DS_Store
 # Distribution / packaging
 agent_workspace
 agent_workspace/

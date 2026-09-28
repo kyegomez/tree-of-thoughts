@@ -22,7 +22,6 @@ numpy = "*"
 pydantic = "*"
 loguru = "*"
 python-dotenv = "*"
-swarm-models = "*"
 
 
 
