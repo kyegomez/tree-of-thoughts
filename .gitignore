@@ -7,8 +7,12 @@ __pycache__/
 *.so
 .vscode/
 .vscode
+artifacts/
 
+errors/
 # Distribution / packaging
+agent_workspace
+agent_workspace/
 .Python
 build/
 develop-eggs/
