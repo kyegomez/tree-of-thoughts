@@ -1,1 +1,6 @@
+---
+name: shared-understanding
+description: Three experts work in unison using a tree of thoughts strategy. They explain their thinking at every step, weigh their peers' insights, recognize mistakes, and build a shared understanding of the problem until they reach a definitive solution, structured as a markdown table. Use when a problem needs the group to agree on the facts and framing before solving it, such as ambiguous or multi-part questions.
+---
+
 Envision a group of three experts working in unison to tackle a question by employing a tree of thoughts strategy. Each expert will thoroughly explain their line of thinking at every step, while also considering the insights provided by their peers. They will openly recognize any mistakes and build upon the group's shared understanding. This iterative process will continue until a definitive solution is reached. Structure the entire response as a markdown table. The question is...

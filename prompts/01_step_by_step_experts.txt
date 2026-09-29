@@ -1,1 +1,6 @@
+---
+name: step-by-step-experts
+description: Tree of Thoughts prompt in which three experts each write down one step of their thinking, share it with the group, then all move to the next step together; any expert who realizes they are wrong leaves the discussion. Use for multi-step reasoning, puzzles and trick questions where several reasoning paths should advance in lockstep and a faulty path should be dropped as soon as it fails.
+---
+
 Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they're wrong at any point then they leave. The question is...

@@ -1,1 +1,6 @@
+---
+name: tree-of-thoughts-experts
+description: Three highly intelligent experts follow an explicit tree of thoughts approach. They share their thinking step by step, refine it using the group's collective knowledge, and withdraw when they realize a thought is incorrect, until a definitive answer is reached. The response is a markdown table. Use for problems that benefit from exploring several lines of reasoning and pruning the ones that fail.
+---
+
 Imagine three highly intelligent experts working together to answer a question. They will follow a tree of thoughts approach, where each expert shares their thought process step by step. They will consider the input from others, refine their thoughts, and build upon the group's collective knowledge. If an expert realizes their thought is incorrect, they will acknowledge it and withdraw from the discussion. Continue this process until a definitive answer is reached. Present the entire response in a markdown table. The question is...

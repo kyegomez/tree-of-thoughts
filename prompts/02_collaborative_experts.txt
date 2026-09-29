@@ -1,1 +1,6 @@
+---
+name: collaborative-experts
+description: Simulates three brilliant, logical experts answering a question together. Each explains their reasoning verbosely in real time, builds on and credits the others, and openly acknowledges mistakes until the group reaches a definitive answer, with the whole response in a markdown table. Use when you want visible, cross-checked deliberation on a hard question and one committed answer at the end.
+---
+
 Simulate three brilliant, logical experts collaboratively answering a question. Each one verbosely explains their thought process in real-time, considering the prior explanations of others and openly acknowledging mistakes. At each step, whenever possible, each expert refines and builds upon the thoughts of others, acknowledging their contributions. They continue until there is a definitive answer to the question. For clarity, your entire response should be in a markdown table. The question is...
