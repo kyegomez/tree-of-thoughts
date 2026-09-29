@@ -1,4 +1,8 @@
+
+# Tree of Thoughts
+
 ![Tree of Thoughts Banner](treeofthoughts.png)
+
 
 [![Built with Swarms](https://img.shields.io/badge/Built%20with-Swarms-3670A0?style=flat-square)](https://github.com/kyegomez/swarms)
 [![arXiv](https://img.shields.io/badge/arXiv-2305.10601-b31b1b?style=flat-square)](https://arxiv.org/abs/2305.10601)
@@ -8,7 +12,6 @@
 [![Docs](https://img.shields.io/badge/docs-swarms.world-3670A0?style=flat-square)](https://docs.swarms.world)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/EamjgSaEQf)
 
-# Tree of Thoughts
 
 **[Paper](https://arxiv.org/abs/2305.10601)** · **[Authors' implementation](https://github.com/princeton-nlp/tree-of-thought-llm)** · **[Swarms](https://github.com/kyegomez/swarms)**
 
