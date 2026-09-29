@@ -1,4 +1,4 @@
-![Tree of Thoughts Banner](images/treeofthoughts.png)
+![Tree of Thoughts Banner](treeofthoughts.png)
 
 [![Built with Swarms](https://img.shields.io/badge/Built%20with-Swarms-3670A0?style=flat-square)](https://github.com/kyegomez/swarms)
 [![arXiv](https://img.shields.io/badge/arXiv-2305.10601-b31b1b?style=flat-square)](https://arxiv.org/abs/2305.10601)
